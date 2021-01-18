@@ -1,11 +1,11 @@
 ﻿#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
-#ifdef linux
-#include <unistd.h>
-#else
-#include <Windows.h>
-#endif
+// #ifdef linux
+// #include <unistd.h>
+// #else
+// #include <Windows.h>
+// #endif
 
 #include <stdlib.h>
 #include <signal.h>
@@ -26,6 +26,8 @@
 #define DARK_GRAY "DARK_GRAY"
 #define LIGHT_GRAY "LIGHT_GRAY"
 #define MAGENTA "MAGENTA"
+
+using namespace std;
 
 /**
  * Classe que guarda o grafo e o representa. Todas as suas funções retornam um booleano a indicar

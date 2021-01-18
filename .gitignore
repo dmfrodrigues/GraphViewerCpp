@@ -28,4 +28,7 @@ modules.xml
 # Ignore by-products of compilation
 lib/
 obj/
+build/
+
+example
 

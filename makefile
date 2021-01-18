@@ -1,13 +1,15 @@
-SDIR=./cpp
+SDIR=./src
+IDIR=./include
 ODIR=./obj
 LDIR=./lib
 LIB=$(LDIR)/libgraphviewer.a
 
 CC     =g++
 
-CFLAGS =$(IFLAGS) -Dlinux
+IFLAGS =-I$(IDIR)
+CFLAGS =$(IFLAGS)
 
-O_FILES=$(ODIR)/graphviewer.o $(ODIR)/connection.o
+O_FILES=$(ODIR)/graphviewer.o
 
 all: $(LIB)
 
