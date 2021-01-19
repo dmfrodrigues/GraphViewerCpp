@@ -118,12 +118,11 @@ public:
 };
 
 GraphViewer::Node::Node(){}
-GraphViewer::Node::Node(int id, int x, int y):id(id),x(x),y(y){}
+GraphViewer::Node::Node(int id, const sf::Vector2f &position):id(id),position(position){}
 
 GraphViewer::Node& GraphViewer::Node::operator=(const GraphViewer::Node &u){
-    id = u.id;
-    x  = u.x;
-    y  = u.y;
+    id       = u.id;
+    position = u.position;
     return *this;
 }
 
@@ -181,7 +180,7 @@ bool GraphViewer::closeWindow(){
 bool GraphViewer::addNode(int id, int x, int y){
     lock_guard<mutex> lock(graphMutex);
     if(nodes.count(id)) return false;
-    nodes[id] = Node(id, x, y);
+    nodes[id] = Node(id, sf::Vector2f(x,y));
     nodes[id].color = nodeColor;
     nodes[id].size = nodeSize;
     nodes[id].icon = nodeIcon; if(nodes[id].icon != "") nodes[id].iconTex.loadFromFile(nodes[id].icon);
@@ -487,8 +486,8 @@ void GraphViewer::draw() {
         const Edge &edge = edgeIt.second;
         const Node &u = nodes.at(edge.v1);
         const Node &v = nodes.at(edge.v2);
-        const sf::Vector2f uPos(u.x, u.y);
-        const sf::Vector2f vPos(v.x, v.y);
+        const sf::Vector2f uPos = u.position;
+        const sf::Vector2f vPos = v.position;
 
         if(!edge.dashed){
             FullLineShape line(uPos, vPos, edge.thickness);
@@ -505,7 +504,7 @@ void GraphViewer::draw() {
         if(node.icon == ""){
             sf::CircleShape nodeShape(node.size/2.0);
             nodeShape.setOrigin(node.size/2.0, node.size/2.0);
-            nodeShape.setPosition(node.x, node.y);
+            nodeShape.setPosition(node.position);
             nodeShape.setFillColor(colorStringToSFColor(node.color));
             nodeShape.setOutlineThickness(node.outlineThickness);
             nodeShape.setOutlineColor(colorStringToSFColor(node.outlineColor));
@@ -513,7 +512,7 @@ void GraphViewer::draw() {
         } else {
             sf::RectangleShape nodeShape(sf::Vector2f(node.size,node.size));
             nodeShape.setOrigin(node.size/2.0, node.size/2.0);
-            nodeShape.setPosition(node.x, node.y);
+            nodeShape.setPosition(node.position);
             // nodeShape.setFillColor(colorStringToSFColor(node.color));
             // nodeShape.setOutlineThickness(node.outlineThickness);
             // nodeShape.setOutlineColor(colorStringToSFColor(node.outlineColor));
@@ -525,8 +524,8 @@ void GraphViewer::draw() {
         const Edge &edge = edgeIt.second;
         const Node &u = nodes.at(edge.v1);
         const Node &v = nodes.at(edge.v2);
-        const sf::Vector2f uPos(u.x, u.y);
-        const sf::Vector2f vPos(v.x, v.y);
+        const sf::Vector2f uPos = u.position;
+        const sf::Vector2f vPos = v.position;
         string label = edge.label;
         if(edge.weight != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*edge.weight);
         if(edge.flow   != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*edge.flow  );
@@ -543,7 +542,7 @@ void GraphViewer::draw() {
         if(node.label != ""){
             sf::Text text(node.label, font, FONT_SIZE);
             sf::FloatRect bounds = text.getLocalBounds();
-            text.setPosition(sf::Vector2f(node.x,node.y) - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
+            text.setPosition(node.position - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
             text.setFillColor(sf::Color::Black);
             window->draw(text);
         }

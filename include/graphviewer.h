@@ -374,8 +374,7 @@ private:
 
 	struct Node {
 		int id;
-		int x;
-		int y;
+		sf::Vector2f position;
 		string label = "";
 		string color = RED;
 		int size = 10;
@@ -384,7 +383,7 @@ private:
 		float outlineThickness = 1.0;
 		string outlineColor = BLACK;
 		Node();
-		Node(int id, int x, int y);
+		Node(int id, const sf::Vector2f &position);
 		Node& operator=(const Node &u);
 	};
 
