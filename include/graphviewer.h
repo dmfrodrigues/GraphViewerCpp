@@ -380,6 +380,7 @@ private:
 		string color = RED;
 		int size = 10;
 		string icon = "";
+		sf::Texture iconTex;
 		float outlineThickness = 1.0;
 		string outlineColor = BLACK;
 		Node();

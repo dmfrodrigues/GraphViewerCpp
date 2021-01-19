@@ -184,7 +184,7 @@ bool GraphViewer::addNode(int id, int x, int y){
     nodes[id] = Node(id, x, y);
     nodes[id].color = nodeColor;
     nodes[id].size = nodeSize;
-    nodes[id].icon = nodeIcon;
+    nodes[id].icon = nodeIcon; if(nodes[id].icon != "") nodes[id].iconTex.loadFromFile(nodes[id].icon);
     nodes[id].outlineThickness = nodeOutlineThickness;
     nodes[id].outlineColor = nodeOutlineColor;
     return true;
@@ -281,7 +281,7 @@ bool GraphViewer::setVertexIcon(int id, string filepath){
     lock_guard<mutex> lock(graphMutex);
     auto nodeIt = nodes.find(id);
     if(nodeIt == nodes.end()) return false;
-    nodeIt->second.icon = filepath;
+    nodeIt->second.icon = filepath; if(nodeIt->second.icon != "") nodeIt->second.iconTex.loadFromFile(nodeIt->second.icon);
     return true;
 }
 
@@ -502,13 +502,24 @@ void GraphViewer::draw() {
     }
     for(const auto &nodeIt: nodes){
         const Node &node = nodeIt.second;
-        sf::CircleShape nodeShape(node.size/2.0);
-        nodeShape.setOrigin(node.size/2.0, node.size/2.0);
-        nodeShape.setPosition(node.x, node.y);
-        nodeShape.setFillColor(colorStringToSFColor(node.color));
-        nodeShape.setOutlineThickness(node.outlineThickness);
-        nodeShape.setOutlineColor(colorStringToSFColor(node.outlineColor));
-        window->draw(nodeShape);
+        if(node.icon == ""){
+            sf::CircleShape nodeShape(node.size/2.0);
+            nodeShape.setOrigin(node.size/2.0, node.size/2.0);
+            nodeShape.setPosition(node.x, node.y);
+            nodeShape.setFillColor(colorStringToSFColor(node.color));
+            nodeShape.setOutlineThickness(node.outlineThickness);
+            nodeShape.setOutlineColor(colorStringToSFColor(node.outlineColor));
+            window->draw(nodeShape);
+        } else {
+            sf::RectangleShape nodeShape(sf::Vector2f(node.size,node.size));
+            nodeShape.setOrigin(node.size/2.0, node.size/2.0);
+            nodeShape.setPosition(node.x, node.y);
+            // nodeShape.setFillColor(colorStringToSFColor(node.color));
+            // nodeShape.setOutlineThickness(node.outlineThickness);
+            // nodeShape.setOutlineColor(colorStringToSFColor(node.outlineColor));
+            nodeShape.setTexture(&node.iconTex);
+            window->draw(nodeShape);
+        }
     }
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
@@ -527,6 +538,16 @@ void GraphViewer::draw() {
             window->draw(text);
         }
     }
+    for(const auto &nodeIt: nodes){
+        const Node &node = nodeIt.second;
+        if(node.label != ""){
+            sf::Text text(node.label, font, FONT_SIZE);
+            sf::FloatRect bounds = text.getLocalBounds();
+            text.setPosition(sf::Vector2f(node.x,node.y) - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
+            text.setFillColor(sf::Color::Black);
+            window->draw(text);
+        }
+    }
 }
 
 void GraphViewer::onResize(){
@@ -540,11 +561,10 @@ void GraphViewer::onScroll(float delta){
 }
 
 void GraphViewer::recalculateView(){
-    cout << "Recalculating view" << endl;
     sf::Vector2f size = static_cast<sf::Vector2f>(window->getSize());
     sf::View windowView(sf::Vector2f(x0, y0), sf::Vector2f(size.x*scale, size.y*scale));
 	window->setView(windowView);
-    
+
     backgroundSprite.setPosition(x0, y0);
     auto bounds = backgroundSprite.getLocalBounds();
     sf::Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
