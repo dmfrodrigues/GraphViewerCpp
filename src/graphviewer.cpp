@@ -202,13 +202,22 @@ void GraphViewer::Node::update(){
     text.setPosition(getPosition() - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
 }
 
-GraphViewer::Edge::Edge(){}
+GraphViewer::Edge::Edge(){
+    text.setFont(GraphViewer::font);
+    text.setCharacterSize(GraphViewer::FONT_SIZE);
+    text.setFillColor(sf::Color::Black);
+}
 GraphViewer::Edge::Edge(int id, const GraphViewer::Node *u, const GraphViewer::Node *v, int edgeType):
     id(id),
     u(u),
     v(v),
     edgeType(edgeType)
 {
+    text.setFont(GraphViewer::font);
+    text.setCharacterSize(GraphViewer::FONT_SIZE);
+    text.setFillColor(sf::Color::Black);
+    
+    update();
 }
 
 GraphViewer::Edge& GraphViewer::Edge::operator=(const GraphViewer::Edge &e){
@@ -226,30 +235,54 @@ GraphViewer::Edge& GraphViewer::Edge::operator=(const GraphViewer::Edge &e){
 }
 
 int GraphViewer::Edge::getId() const{ return id; }
-void GraphViewer::Edge::setFrom(const Node *u){ this->u = u; }
+void GraphViewer::Edge::setFrom(const Node *u){ this->u = u; update(); }
 const GraphViewer::Node* GraphViewer::Edge::getFrom() const{ return u; }
-void GraphViewer::Edge::setTo(const Node *v){ this->v = v; }
+void GraphViewer::Edge::setTo(const Node *v){ this->v = v; update(); }
 const GraphViewer::Node* GraphViewer::Edge::getTo() const{ return v; }
-void GraphViewer::Edge::setEdgeType(int edgeType){ this->edgeType = edgeType; }
+void GraphViewer::Edge::setEdgeType(int edgeType){ this->edgeType = edgeType; update(); }
 int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
-void GraphViewer::Edge::setLabel(const string &label){ this->label = label; }
+void GraphViewer::Edge::setLabel(const string &label){ this->label = label; update(); }
 string GraphViewer::Edge::getLabel() const{ return label; }
-void GraphViewer::Edge::setColor(const sf::Color &color){ this->color = color; }
+void GraphViewer::Edge::setColor(const sf::Color &color){ this->color = color; update(); }
 const sf::Color& GraphViewer::Edge::getColor() const{ return color; }
-void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; }
+void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; update(); }
 bool GraphViewer::Edge::getDashed() const{ return dashed; }
-void GraphViewer::Edge::setThickness(int thickness){ this->thickness = thickness; }
+void GraphViewer::Edge::setThickness(int thickness){ this->thickness = thickness; update(); }
 int GraphViewer::Edge::getThickness() const{ return thickness; }
 void GraphViewer::Edge::setWeight(int weight){
     delete this->weight;
     this->weight = new int(weight);
+    update();
 }
 const int* GraphViewer::Edge::getWeight() const{ return weight; }
 void GraphViewer::Edge::setFlow(int flow){
     delete this->flow;
     this->flow = new int(flow);
+    update();
 }
 const int* GraphViewer::Edge::getFlow() const{ return flow; }
+const sf::Drawable* GraphViewer::Edge::getShape() const { return shape; }
+sf::Text GraphViewer::Edge::getText() const { return text; }
+void GraphViewer::Edge::update(){
+    delete shape;
+    shape = nullptr;
+    if(!getDashed()){
+        FullLineShape *line = new FullLineShape(u->getPosition(), v->getPosition(), getThickness());
+        line->setFillColor(getColor());
+        shape = line;
+    } else {
+        DashedLineShape *line = new DashedLineShape(u->getPosition(), v->getPosition(), getThickness());
+        line->setFillColor(getColor());
+        shape = line;
+    }
+
+    string label = getLabel();
+    if(getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*getWeight());
+    if(getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*getFlow  ());
+    text.setString(label);
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setPosition((u->getPosition() + v->getPosition())/2.0f - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
+}
 
 const int DEFAULT_WIDTH  = 800;
 const int DEFAULT_HEIGHT = 600;
@@ -587,20 +620,7 @@ void GraphViewer::draw() {
     window->draw(backgroundSprite);
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
-        const Node &u = *edge.getFrom();
-        const Node &v = *edge.getTo();
-        const sf::Vector2f uPos = u.getPosition();
-        const sf::Vector2f vPos = v.getPosition();
-
-        if(!edge.getDashed()){
-            FullLineShape line(uPos, vPos, edge.getThickness());
-            line.setFillColor(edge.getColor());
-            window->draw(line);
-        } else {
-            DashedLineShape line(uPos, vPos, edge.getThickness());
-            line.setFillColor(edge.getColor());
-            window->draw(line);
-        }
+        window->draw(*edge.getShape());
     }
     for(const auto &nodeIt: nodes){
         const Node &node = nodeIt.second;
@@ -608,20 +628,7 @@ void GraphViewer::draw() {
     }
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
-        const Node &u = *edge.getFrom();
-        const Node &v = *edge.getTo();
-        const sf::Vector2f uPos = u.getPosition();
-        const sf::Vector2f vPos = v.getPosition();
-        string label = edge.getLabel();
-        if(edge.getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*edge.getWeight());
-        if(edge.getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*edge.getFlow  ());
-        if(label != ""){
-            sf::Text text(label, font, FONT_SIZE);
-            sf::FloatRect bounds = text.getLocalBounds();
-            text.setPosition((uPos+vPos)/2.0f - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
-            text.setFillColor(sf::Color::Black);
-            window->draw(text);
-        }
+        window->draw(edge.getText());
     }
     for(const auto &nodeIt: nodes){
         const Node &node = nodeIt.second;

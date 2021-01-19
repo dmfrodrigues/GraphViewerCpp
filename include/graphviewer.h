@@ -423,6 +423,9 @@ private:
 		int thickness = 5;
 		int *weight = nullptr;
 		int *flow = nullptr;
+		sf::Drawable *shape = nullptr;
+		sf::Text text;
+		void update();
 	public:
 		Edge();
 		Edge(int id, const Node *u, const Node *v, int edgeType);
@@ -446,6 +449,8 @@ private:
 		const int* getWeight() const;
         void setFlow(int flow);
 		const int* getFlow() const;
+		const sf::Drawable* getShape() const;
+		sf::Text getText() const;
 	};
 
 	mutex graphMutex;
