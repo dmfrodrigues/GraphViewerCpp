@@ -360,6 +360,9 @@ private:
 	float y0 = 0.0;
 
 	string backgroundPath = "";
+	bool isBackgroundUpdated = false;
+	sf::Texture backgroundTex;
+	sf::Sprite backgroundSprite;
 	sf::RenderWindow *window = nullptr;
 	thread *mainThread = nullptr;
 

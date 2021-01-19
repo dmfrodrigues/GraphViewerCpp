@@ -395,12 +395,20 @@ bool GraphViewer::resetVertexIcon(){
 }
 
 bool GraphViewer::setBackground(string path){
+    lock_guard<mutex> lock(graphMutex);
     backgroundPath = path;
+    backgroundTex.loadFromFile(path);
+    backgroundSprite.setTexture(backgroundTex);
+    auto bounds = backgroundSprite.getLocalBounds();
+    backgroundSprite.setOrigin(bounds.width/2.0, bounds.height/2.0);
     return true;
 }
 
 bool GraphViewer::clearBackground(){
+    lock_guard<mutex> lock(graphMutex);
     backgroundPath = "";
+    backgroundTex = sf::Texture();
+    backgroundSprite.setTexture(backgroundTex);
     return true;
 }
 
@@ -458,8 +466,8 @@ void GraphViewer::run(){
                     if(isLeftClickPressed){
                         x0 = x0Initial - scale*(event.mouseMove.x - xMouseInitial);
                         y0 = y0Initial - scale*(event.mouseMove.y - yMouseInitial);
+                        recalculateView();
                     }
-                    recalculateView();
                     break;
                 default: break;
             }
@@ -474,6 +482,7 @@ void GraphViewer::run(){
 void GraphViewer::draw() {
     lock_guard<mutex> lock(graphMutex);
     window->clear(sf::Color::White);
+    window->draw(backgroundSprite);
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
         const Node &u = nodes.at(edge.v1);
@@ -531,7 +540,13 @@ void GraphViewer::onScroll(float delta){
 }
 
 void GraphViewer::recalculateView(){
+    cout << "Recalculating view" << endl;
     sf::Vector2f size = static_cast<sf::Vector2f>(window->getSize());
     sf::View windowView(sf::Vector2f(x0, y0), sf::Vector2f(size.x*scale, size.y*scale));
 	window->setView(windowView);
+    
+    backgroundSprite.setPosition(x0, y0);
+    auto bounds = backgroundSprite.getLocalBounds();
+    sf::Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
+    backgroundSprite.setScale(scaleVec);
 }
