@@ -2,23 +2,28 @@
 #include <string>
 #include <sstream>
 #include <stdio.h>
+
 #include "graphviewer.h"
 
-void drawGraphFromFile(std::string name, unsigned int port);
+#include <X11/Xlib.h>
+
+void drawGraphFromFile(std::string name);
 
 int main() {
-    drawGraphFromFile("random", 7772);
-    drawGraphFromFile("star", 7773);
-    drawGraphFromFile("rainbow", 7774);
+    XInitThreads();
+
+    // drawGraphFromFile("random");
+    // drawGraphFromFile("star");
+    drawGraphFromFile("rainbow");
     getchar();
 
     return 0;
 }
 
-void drawGraphFromFile(std::string name, unsigned int port){
-    std::ifstream nodes("../resources/graphs/"+name+"/nodes.txt");
-    std::ifstream edges("../resources/graphs/"+name+"/edges.txt");
-    std::ifstream window("../resources/graphs/"+name+"/window.txt");
+void drawGraphFromFile(std::string name){
+    std::ifstream nodes("resources/graphs/"+name+"/nodes.txt");
+    std::ifstream edges("resources/graphs/"+name+"/edges.txt");
+    std::ifstream window("resources/graphs/"+name+"/window.txt");
     std::string line, background_path;
     std::istringstream iss;
     unsigned int n_nodes, n_edges, height, width, v1, v2, type, scale, dynamic, thickness, size, dashed, curved;
@@ -26,11 +31,11 @@ void drawGraphFromFile(std::string name, unsigned int port){
     char color[20], label[256], icon_path[256], flow[256], weight[256];
 
     window >> width >> height >> dynamic >> scale >> dashed >> curved >> background_path;
-    GraphViewer *gv = new GraphViewer(width, height, dynamic, port);
+    GraphViewer *gv = new GraphViewer();
     gv->setBackground(background_path);
     gv->createWindow(width, height);
     gv->defineEdgeDashed(dashed);
-    gv->defineEdgeCurved(curved);
+    // gv->defineEdgeCurved(curved);
 
     // read num of nodes
     std::getline(nodes, line);
@@ -69,5 +74,5 @@ void drawGraphFromFile(std::string name, unsigned int port){
             gv->setEdgeWeight(i, atoi(weight));
     }
 
-    gv->rearrange();
+    // gv->rearrange();
 }

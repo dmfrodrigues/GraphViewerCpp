@@ -11,11 +11,18 @@
 #include <signal.h>
 #include <string>
 
+#include <thread>
+#include <mutex>
+#include <unordered_map>
+
+#include <SFML/Graphics.hpp>
+
 #include "edgetype.h"
 
 #define BLUE "BLUE"
 #define RED "RED"
 #define PINK "PINK"
+#define PURPLE "PURPLE"
 #define BLACK "BLACK"
 #define WHITE "WHITE"
 #define ORANGE "ORANGE"
@@ -45,24 +52,7 @@ public:
 	 * @param dynamic Booleano que determina se a localização dos nós é automaticamente.
 	 * determinado pelo programa (true) ou se deve ser determinado pelo utilizador (false).
 	 */
-	GraphViewer(int width, int height, bool dynamic);
-
-	/**
-	 * Construtor que cria um novo grafo, utilizando uma porta especificada pelo utilizador para a ligação.
-	 *
-	 * Exemplo: GraphViewer *gv = new GraphViewer(600, 600, false, 3000); instancia um grafo
-	 * 600x600, onde a posição dos nós é determinada pelo utilizador
-	 * (usando a versão de addNode onde se pode especificar as coordenadas), sendo que a porta
-	 * a usar para a comunicação é a 3000.
-	 *
-	 * @param width Inteiro que representa a lagura da área do grafo.
-	 * @param height Inteiro que representa a altura da área do grafo.
-	 * @param dynamic Booleano que determina se a localização dos nós é automaticamente.
-	 * determinado pelo programa (true) ou se deve ser determinado pelo utilizador (false).
-	 * @param port_n Inteiro que determina a porta a utilizar. Deve-se ter cuidado para não utilizar uma porta
-	 * já usada por outro programa ou pelo sistema.
-	 */
-	GraphViewer(int width, int height, bool dynamic, int port_n);
+	GraphViewer();
 
 	/**
 	 * Função que cria a janela para visualização.
@@ -91,17 +81,6 @@ public:
 	 * @param y Posição vertical do nó.
 	 */
 	bool addNode(int id, int x, int y);
-
-	/**
-	 * Acrescenta um nó à representação do grafo, numa posição ao critério do programa.
-	 * Só pode ser usado se o grafo for dinâmico, ou seja, se as posições de todos
-	 * os nós forem atribuídas automaticamente. Caso contrário, não adiciona o nó.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer com isDynamic = true:
-	 * gv->addNode(0); adiciona um nó com ID 0
-	 *
-	 * @param id Identificador único do nó.
-	 */
-	bool addNode(int id);
 
 	/**
 	 * Acrescenta uma aresta à representação do grafo.
@@ -273,6 +252,10 @@ public:
 	 */
 	bool setEdgeFlow(int id, int flow);
 
+	bool setVertexOutlineThickness(int id, float outlineThickness);
+	
+	bool setVertexOutlineColor(int id, string outlineColor);
+
 	/**
 	 * Função que define se as arestas do grafo serão desenhadas como curvas ou retas.
 	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
@@ -343,6 +326,14 @@ public:
 	 */
 	bool resetVertexIcon();
 
+	bool defineVertexOutlineThickness(float outlineThickness);
+
+	bool resetVertexOutlineThickness();
+
+	bool defineVertexOutlineColor(string outlineColor);
+
+	bool resetVertexOutlineColor();
+
 	/**
 	 * Função que altera a imagem de fundo do grafo.
 	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
@@ -358,16 +349,70 @@ public:
 	 */
 	bool clearBackground();
 
-	/**
-	 * Função que actualiza a visualização do grafo.
-	 */
-	bool rearrange();
-
 private:
-	int width, height;
-	bool isDynamic;
 
-	void initialize(int, int, bool, int);
+	sf::Font font;
+	const int FONT_SIZE = 16;
+
+	float scale = 1.0;
+	const float scaleDelta = 1.5;
+	float x0 = 0.0;
+	float y0 = 0.0;
+
+	string backgroundPath = "";
+	sf::RenderWindow *window = nullptr;
+	thread *mainThread = nullptr;
+
+	string nodeColor = RED;
+	int nodeSize = 10;
+	string nodeIcon = "";
+	float nodeOutlineThickness = 1.0;
+	string nodeOutlineColor = BLACK;
+
+	struct Node {
+		int id;
+		int x;
+		int y;
+		string label = "";
+		string color = RED;
+		int size = 10;
+		string icon = "";
+		float outlineThickness = 1.0;
+		string outlineColor = BLACK;
+		Node();
+		Node(int id, int x, int y);
+		Node& operator=(const Node &u);
+	};
+
+	string edgeColor = BLACK;
+	bool edgeDashed = false;
+
+	struct Edge {
+		int id;
+		int v1;
+		int v2;
+		int edgeType;
+		string label = "";
+		string color = BLACK;
+		bool dashed = false;
+		int thickness = 5;
+		int *weight = nullptr;
+		int *flow = nullptr;
+		Edge();
+		Edge(int id, int v1, int v2, int edgeType);
+		Edge& operator=(const Edge &u);
+	};
+
+	mutex graphMutex;
+	unordered_map<int, Node> nodes;
+	unordered_map<int, Edge> edges;
+
+	void run();
+	void draw();
+
+	void onResize();
+	void onScroll(float delta);
+	void recalculateView();
 };
 
 #endif
