@@ -136,11 +136,19 @@ public:
     }
 };
 
-GraphViewer::Node::Node(){}
-GraphViewer::Node::Node(int id, const sf::Vector2f &position, const sf::Font &font, int font_size):
+GraphViewer::Node::Node(){
+    text.setFont(GraphViewer::font);
+    text.setCharacterSize(GraphViewer::FONT_SIZE);
+    text.setFillColor(sf::Color::Black);
+}
+GraphViewer::Node::Node(int id, const sf::Vector2f &position):
     id(id),
     position(position)
-{}
+{
+    text.setFont(GraphViewer::font);
+    text.setCharacterSize(GraphViewer::FONT_SIZE);
+    text.setFillColor(sf::Color::Black);
+}
 
 GraphViewer::Node& GraphViewer::Node::operator=(const GraphViewer::Node &u){
     id       = u.id;
@@ -153,8 +161,8 @@ void GraphViewer::Node::setPosition(const sf::Vector2f &position){ this->positio
 const sf::Vector2f& GraphViewer::Node::getPosition() const{ return position; }
 void GraphViewer::Node::setSize(int size){ this->size = size; update(); }
 int GraphViewer::Node::getSize() const{ return size; }
-void GraphViewer::Node::setLabel(const string &label){ this->label = label; update(); }
-const string& GraphViewer::Node::getLabel() const{ return label; }
+void GraphViewer::Node::setLabel(const string &label){ text.setString(label); update(); }
+string GraphViewer::Node::getLabel() const{ return text.getString(); }
 void GraphViewer::Node::setColor(const sf::Color &color){ this->color = color; update(); }
 const sf::Color& GraphViewer::Node::getColor() const{ return color; }
 void GraphViewer::Node::setIcon(const string &path){
@@ -169,7 +177,7 @@ int GraphViewer::Node::getOutlineThickness() const{ return outlineThickness; }
 void GraphViewer::Node::setOutlineColor(const sf::Color &outlineColor){ this->outlineColor = outlineColor; update(); }
 const sf::Color& GraphViewer::Node::getOutlineColor() const{ return outlineColor; }
 const sf::Shape* GraphViewer::Node::getShape() const { return shape; }
-const sf::Text& GraphViewer::Node::getText() const { return text; }
+sf::Text GraphViewer::Node::getText() const { return text; }
 
 void GraphViewer::Node::update(){
     delete shape;
@@ -189,6 +197,9 @@ void GraphViewer::Node::update(){
         newShape->setTexture(&getIcon());
         shape = newShape;
     }
+
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setPosition(getPosition() - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
 }
 
 GraphViewer::Edge::Edge(){}
@@ -214,10 +225,19 @@ string getPath(const string &filename){
     return directory;
 }
 
-GraphViewer::GraphViewer(){
+sf::Font getFont(){
+    sf::Font font;
     string fontPath = getPath(__FILE__)+"/../resources/fonts/arial.ttf";
     if(!font.loadFromFile(fontPath))
         throw runtime_error("Failed to load font from file; check if arial.ttf exists under resources/fonts/");
+    return font;
+}
+sf::Font GraphViewer::font = getFont();
+
+GraphViewer::GraphViewer(){
+    // string fontPath = getPath(__FILE__)+"/../resources/fonts/arial.ttf";
+    // if(!font.loadFromFile(fontPath))
+    //     throw runtime_error("Failed to load font from file; check if arial.ttf exists under resources/fonts/");
 }
 
 bool GraphViewer::createWindow(int width, int height){
@@ -245,7 +265,7 @@ bool GraphViewer::closeWindow(){
 bool GraphViewer::addNode(int id, int x, int y){
     lock_guard<mutex> lock(graphMutex);
     if(nodes.count(id)) return false;
-    nodes[id] = Node(id, sf::Vector2f(x,y), font, FONT_SIZE);
+    nodes[id] = Node(id, sf::Vector2f(x,y));
     nodes[id].setColor(nodeColor);
     nodes[id].setSize(nodeSize);
     nodes[id].setIcon(nodeIcon);
@@ -569,13 +589,7 @@ void GraphViewer::draw() {
     }
     for(const auto &nodeIt: nodes){
         const Node &node = nodeIt.second;
-        if(node.getLabel() != ""){
-            sf::Text text(node.getLabel(), font, FONT_SIZE);
-            sf::FloatRect bounds = text.getLocalBounds();
-            text.setPosition(node.getPosition() - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
-            text.setFillColor(sf::Color::Black);
-            window->draw(text);
-        }
+        window->draw(node.getText());
     }
 }
 

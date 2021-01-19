@@ -350,9 +350,8 @@ public:
 	bool clearBackground();
 
 private:
-
-	sf::Font font;
-	const int FONT_SIZE = 16;
+	static sf::Font font;
+	static const int FONT_SIZE = 16;
 
 	float scale = 1.0;
 	const float scaleDelta = 1.5;
@@ -387,7 +386,7 @@ private:
 		void update();
 	public:
 		Node();
-		Node(int id, const sf::Vector2f &position, const sf::Font &font, int font_size);
+		Node(int id, const sf::Vector2f &position);
 		Node& operator=(const Node &u);
 		int getId() const;
 		void setPosition(const sf::Vector2f &position);
@@ -395,7 +394,7 @@ private:
 		void setSize(int size);
 		int getSize() const;
 		void setLabel(const string &label);
-		const string& getLabel() const;
+		string getLabel() const;
 		void setColor(const sf::Color &color);
 		const sf::Color& getColor() const;
 		void setIcon(const string &path);
@@ -406,7 +405,7 @@ private:
 		void setOutlineColor(const sf::Color &outlineColor);
 		const sf::Color& getOutlineColor() const;
 		const sf::Shape* getShape() const;
-		const sf::Text& getText() const;
+		sf::Text getText() const;
 	};
 
 	string edgeColor = BLACK;
