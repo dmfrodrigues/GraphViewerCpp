@@ -1,4 +1,4 @@
-﻿#ifndef _GRAPH_VIEWER_H_
+#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
 // #ifdef linux
@@ -366,25 +366,45 @@ private:
 	sf::RenderWindow *window = nullptr;
 	thread *mainThread = nullptr;
 
-	string nodeColor = RED;
+	sf::Color nodeColor = sf::Color::Red;
 	int nodeSize = 10;
 	string nodeIcon = "";
 	float nodeOutlineThickness = 1.0;
-	string nodeOutlineColor = BLACK;
+	sf::Color nodeOutlineColor = sf::Color::Black;
 
 	struct Node {
+	private:
 		int id;
 		sf::Vector2f position;
-		string label = "";
-		string color = RED;
 		int size = 10;
-		string icon = "";
-		sf::Texture iconTex;
+		string label = "";
+		sf::Color color = sf::Color::Red;
+		sf::Texture icon; bool isIcon = false;
 		float outlineThickness = 1.0;
-		string outlineColor = BLACK;
+		sf::Color outlineColor = sf::Color::Black;
+		sf::Shape *shape = nullptr;
+		void update();
+	public:
 		Node();
-		Node(int id, const sf::Vector2f &position);
+		Node(int id, const sf::Vector2f &position, const sf::Font &font, int font_size);
 		Node& operator=(const Node &u);
+		int getId() const;
+		void setPosition(const sf::Vector2f &position);
+		const sf::Vector2f& getPosition() const;
+		void setSize(int size);
+		int getSize() const;
+		void setLabel(const string &label);
+		const string& getLabel() const;
+		void setColor(const sf::Color &color);
+		const sf::Color& getColor() const;
+		void setIcon(const string &path);
+		const sf::Texture& getIcon() const;
+		bool getIsIcon() const;
+		void setOutlineThickness(int outlineThickness);
+		int getOutlineThickness() const;
+		void setOutlineColor(const sf::Color &outlineColor);
+		const sf::Color& getOutlineColor() const;
+		const sf::Shape* getShape() const;
 	};
 
 	string edgeColor = BLACK;
