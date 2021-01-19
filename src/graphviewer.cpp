@@ -137,7 +137,10 @@ public:
 };
 
 GraphViewer::Node::Node(){}
-GraphViewer::Node::Node(int id, const sf::Vector2f &position):id(id),position(position){}
+GraphViewer::Node::Node(int id, const sf::Vector2f &position, const sf::Font &font, int font_size):
+    id(id),
+    position(position)
+{}
 
 GraphViewer::Node& GraphViewer::Node::operator=(const GraphViewer::Node &u){
     id       = u.id;
@@ -566,10 +569,10 @@ void GraphViewer::draw() {
     }
     for(const auto &nodeIt: nodes){
         const Node &node = nodeIt.second;
-        if(node.label != ""){
-            sf::Text text(node.label, font, FONT_SIZE);
+        if(node.getLabel() != ""){
+            sf::Text text(node.getLabel(), font, FONT_SIZE);
             sf::FloatRect bounds = text.getLocalBounds();
-            text.setPosition(node.position - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
+            text.setPosition(node.getPosition() - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
             text.setFillColor(sf::Color::Black);
             window->draw(text);
         }

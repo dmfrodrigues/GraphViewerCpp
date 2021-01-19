@@ -1,4 +1,4 @@
-#ifndef _GRAPH_VIEWER_H_
+﻿#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
 // #ifdef linux
@@ -383,6 +383,7 @@ private:
 		float outlineThickness = 1.0;
 		sf::Color outlineColor = sf::Color::Black;
 		sf::Shape *shape = nullptr;
+		sf::Text text;
 		void update();
 	public:
 		Node();
@@ -405,6 +406,7 @@ private:
 		void setOutlineColor(const sf::Color &outlineColor);
 		const sf::Color& getOutlineColor() const;
 		const sf::Shape* getShape() const;
+		const sf::Text& getText() const;
 	};
 
 	string edgeColor = BLACK;
