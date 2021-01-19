@@ -322,7 +322,6 @@ bool GraphViewer::createWindow(int width, int height){
     y0 = height/2.0;
     window->setActive(false);
     mainThread = new thread(&GraphViewer::run, this);
-    mainThread->detach();
     return true;
 }
 
@@ -565,6 +564,9 @@ bool GraphViewer::clearBackground(){
     return true;
 }
 
+void GraphViewer::join(){
+    mainThread->join();
+}
 
 void GraphViewer::run(){
     bool isLeftClickPressed = false;
@@ -607,8 +609,6 @@ void GraphViewer::run(){
                 default: break;
             }
         }
-
-        window->clear(sf::Color::Black);
         draw();
         window->display();
     }

@@ -349,6 +349,8 @@ public:
 	 */
 	bool clearBackground();
 
+	void join();
+
 private:
 	static sf::Font font;
 	static const int FONT_SIZE = 16;

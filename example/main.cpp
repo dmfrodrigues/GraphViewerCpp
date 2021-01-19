@@ -7,20 +7,25 @@
 
 #include <X11/Xlib.h>
 
-void drawGraphFromFile(std::string name);
+GraphViewer* drawGraphFromFile(std::string name);
 
 int main() {
     XInitThreads();
 
-    drawGraphFromFile("random");
-    drawGraphFromFile("star");
-    drawGraphFromFile("rainbow");
-    getchar();
-
+    GraphViewer *gv1 = drawGraphFromFile("random");
+    GraphViewer *gv2 = drawGraphFromFile("star");
+    GraphViewer *gv3 = drawGraphFromFile("rainbow");
+    gv1->join();
+    gv2->join();
+    gv3->join();
+    delete gv1;
+    delete gv2;
+    delete gv3;
+    
     return 0;
 }
 
-void drawGraphFromFile(std::string name){
+GraphViewer* drawGraphFromFile(std::string name){
     std::ifstream nodes("resources/graphs/"+name+"/nodes.txt");
     std::ifstream edges("resources/graphs/"+name+"/edges.txt");
     std::ifstream window("resources/graphs/"+name+"/window.txt");
@@ -75,5 +80,5 @@ void drawGraphFromFile(std::string name){
             gv->setEdgeWeight(i, atoi(weight));
     }
 
-    // gv->rearrange();
+    return gv;
 }
