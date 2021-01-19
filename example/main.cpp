@@ -12,8 +12,8 @@ void drawGraphFromFile(std::string name);
 int main() {
     XInitThreads();
 
-    // drawGraphFromFile("random");
-    // drawGraphFromFile("star");
+    drawGraphFromFile("random");
+    drawGraphFromFile("star");
     drawGraphFromFile("rainbow");
     getchar();
 
@@ -32,7 +32,8 @@ void drawGraphFromFile(std::string name){
 
     window >> width >> height >> dynamic >> scale >> dashed >> curved >> background_path;
     GraphViewer *gv = new GraphViewer();
-    gv->setBackground(background_path);
+    if (background_path[0] != '-')
+        gv->setBackground(background_path);
     gv->createWindow(width, height);
     gv->defineEdgeDashed(dashed);
     // gv->defineEdgeCurved(curved);
