@@ -371,7 +371,7 @@ private:
 	float nodeOutlineThickness = 1.0;
 	sf::Color nodeOutlineColor = sf::Color::Black;
 
-	struct Node {
+	class Node {
 	private:
 		int id;
 		sf::Vector2f position;
@@ -408,23 +408,44 @@ private:
 		sf::Text getText() const;
 	};
 
-	string edgeColor = BLACK;
+	sf::Color edgeColor = sf::Color::Black;
 	bool edgeDashed = false;
 
 	struct Edge {
+	private:
 		int id;
-		int v1;
-		int v2;
+		const Node *u = nullptr;
+		const Node *v = nullptr;
 		int edgeType;
 		string label = "";
-		string color = BLACK;
+		sf::Color color = sf::Color::Black;
 		bool dashed = false;
 		int thickness = 5;
 		int *weight = nullptr;
 		int *flow = nullptr;
+	public:
 		Edge();
-		Edge(int id, int v1, int v2, int edgeType);
+		Edge(int id, const Node *u, const Node *v, int edgeType);
 		Edge& operator=(const Edge &u);
+		int getId() const;
+		void setFrom(const Node *u);
+		const Node* getFrom() const;
+		void setTo(const Node *v);
+		const Node* getTo() const;
+		void setEdgeType(int edgeType);
+		int getEdgeType() const;
+		void setLabel(const string &label);
+		string getLabel() const;
+		void setColor(const sf::Color &color);
+		const sf::Color& getColor() const;
+		void setDashed(bool dashed);
+		bool getDashed() const;
+		void setThickness(int thickness);
+		int getThickness() const;
+		void setWeight(int weight);
+		const int* getWeight() const;
+        void setFlow(int flow);
+		const int* getFlow() const;
 	};
 
 	mutex graphMutex;

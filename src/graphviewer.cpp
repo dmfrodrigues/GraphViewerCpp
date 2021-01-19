@@ -203,15 +203,53 @@ void GraphViewer::Node::update(){
 }
 
 GraphViewer::Edge::Edge(){}
-GraphViewer::Edge::Edge(int id, int v1, int v2, int edgeType):id(id),v1(v1),v2(v2),edgeType(edgeType){}
+GraphViewer::Edge::Edge(int id, const GraphViewer::Node *u, const GraphViewer::Node *v, int edgeType):
+    id(id),
+    u(u),
+    v(v),
+    edgeType(edgeType)
+{
+}
 
 GraphViewer::Edge& GraphViewer::Edge::operator=(const GraphViewer::Edge &e){
     id       = e.id;
-    v1       = e.v1;
-    v2       = e.v2;
+    u        = e.u;
+    v        = e.v;
     edgeType = e.edgeType;
+    label    = e.label;
+    color    = e.color;
+    dashed   = e.dashed;
+    thickness= e.thickness;
+    if(e.weight != nullptr) weight = new int(*e.weight);
+    if(e.flow   != nullptr) flow   = new int(*e.flow  );
     return *this;
 }
+
+int GraphViewer::Edge::getId() const{ return id; }
+void GraphViewer::Edge::setFrom(const Node *u){ this->u = u; }
+const GraphViewer::Node* GraphViewer::Edge::getFrom() const{ return u; }
+void GraphViewer::Edge::setTo(const Node *v){ this->v = v; }
+const GraphViewer::Node* GraphViewer::Edge::getTo() const{ return v; }
+void GraphViewer::Edge::setEdgeType(int edgeType){ this->edgeType = edgeType; }
+int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
+void GraphViewer::Edge::setLabel(const string &label){ this->label = label; }
+string GraphViewer::Edge::getLabel() const{ return label; }
+void GraphViewer::Edge::setColor(const sf::Color &color){ this->color = color; }
+const sf::Color& GraphViewer::Edge::getColor() const{ return color; }
+void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; }
+bool GraphViewer::Edge::getDashed() const{ return dashed; }
+void GraphViewer::Edge::setThickness(int thickness){ this->thickness = thickness; }
+int GraphViewer::Edge::getThickness() const{ return thickness; }
+void GraphViewer::Edge::setWeight(int weight){
+    delete this->weight;
+    this->weight = new int(weight);
+}
+const int* GraphViewer::Edge::getWeight() const{ return weight; }
+void GraphViewer::Edge::setFlow(int flow){
+    delete this->flow;
+    this->flow = new int(flow);
+}
+const int* GraphViewer::Edge::getFlow() const{ return flow; }
 
 const int DEFAULT_WIDTH  = 800;
 const int DEFAULT_HEIGHT = 600;
@@ -277,9 +315,9 @@ bool GraphViewer::addNode(int id, int x, int y){
 bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType){
     lock_guard<mutex> lock(graphMutex);
     if(edges.count(id)) return false;
-    edges[id] = Edge(id, v1, v2, edgeType);
-    edges[id].color = edgeColor;
-    edges[id].dashed = edgeDashed;
+    edges[id] = Edge(id, &nodes.at(v1), &nodes.at(v2), edgeType);
+    edges[id].setColor(edgeColor);
+    edges[id].setDashed(edgeDashed);
     return true;
 }
 
@@ -310,7 +348,7 @@ bool GraphViewer::setEdgeLabel(int id, string label){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.label = label;
+    edgeIt->second.setLabel(label);
     return true;
 }
 
@@ -323,7 +361,7 @@ bool GraphViewer::setEdgeColor(int id, string color){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.color = color;
+    edgeIt->second.setColor(colorStringToSFColor(color));
     return true;
 }
 
@@ -336,7 +374,7 @@ bool GraphViewer::setEdgeDashed(int id, bool dashed){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.dashed = dashed;
+    edgeIt->second.setDashed(dashed);
     return true;
 }
 
@@ -378,7 +416,7 @@ bool GraphViewer::setEdgeThickness(int id, int thickness){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.thickness = thickness;
+    edgeIt->second.setThickness(thickness);
     return true;
 }
 
@@ -386,7 +424,7 @@ bool GraphViewer::setEdgeWeight(int id, int weight){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.weight = new int(weight);
+    edgeIt->second.setWeight(weight);
     return true;
 }
 
@@ -394,7 +432,7 @@ bool GraphViewer::setEdgeFlow(int id, int flow){
     lock_guard<mutex> lock(graphMutex);
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
-    edgeIt->second.flow = new int(flow);
+    edgeIt->second.setFlow(flow);
     return true;
 }
 
@@ -421,13 +459,12 @@ bool GraphViewer::defineEdgeCurved(bool curved){
 */
 
 bool GraphViewer::defineEdgeColor(string color){
-    edgeColor = color;
+    edgeColor = colorStringToSFColor(color);
     return true;
 }
 
 bool GraphViewer::resetEdgeColor(){
-    edgeColor = BLACK;
-    return true;
+    return defineEdgeColor(BLACK);
 }
 
 bool GraphViewer::defineEdgeDashed(bool dashed){
@@ -441,8 +478,7 @@ bool GraphViewer::defineVertexColor(string color){
 }
 
 bool GraphViewer::resetVertexColor(){
-    nodeColor = sf::Color::Black;
-    return true;
+    return defineVertexColor(BLACK);
 }
 
 bool GraphViewer::defineVertexSize(int size){
@@ -551,18 +587,18 @@ void GraphViewer::draw() {
     window->draw(backgroundSprite);
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
-        const Node &u = nodes.at(edge.v1);
-        const Node &v = nodes.at(edge.v2);
+        const Node &u = *edge.getFrom();
+        const Node &v = *edge.getTo();
         const sf::Vector2f uPos = u.getPosition();
         const sf::Vector2f vPos = v.getPosition();
 
-        if(!edge.dashed){
-            FullLineShape line(uPos, vPos, edge.thickness);
-            line.setFillColor(colorStringToSFColor(edge.color));
+        if(!edge.getDashed()){
+            FullLineShape line(uPos, vPos, edge.getThickness());
+            line.setFillColor(edge.getColor());
             window->draw(line);
         } else {
-            DashedLineShape line(uPos, vPos, edge.thickness);
-            line.setFillColor(colorStringToSFColor(edge.color));
+            DashedLineShape line(uPos, vPos, edge.getThickness());
+            line.setFillColor(edge.getColor());
             window->draw(line);
         }
     }
@@ -572,13 +608,13 @@ void GraphViewer::draw() {
     }
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
-        const Node &u = nodes.at(edge.v1);
-        const Node &v = nodes.at(edge.v2);
+        const Node &u = *edge.getFrom();
+        const Node &v = *edge.getTo();
         const sf::Vector2f uPos = u.getPosition();
         const sf::Vector2f vPos = v.getPosition();
-        string label = edge.label;
-        if(edge.weight != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*edge.weight);
-        if(edge.flow   != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*edge.flow  );
+        string label = edge.getLabel();
+        if(edge.getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*edge.getWeight());
+        if(edge.getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*edge.getFlow  ());
         if(label != ""){
             sf::Text text(label, font, FONT_SIZE);
             sf::FloatRect bounds = text.getLocalBounds();
