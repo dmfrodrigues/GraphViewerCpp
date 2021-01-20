@@ -15,6 +15,8 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "fpsmonitor.h"
+
 #include <SFML/Graphics.hpp>
 
 #include "edgetype.h"
@@ -352,11 +354,17 @@ public:
 	void join();
 
 private:
-	static sf::Font font;
+	bool debugMode = false;
+	FPSMonitor fps_monitor = FPSMonitor(1000);
+	static const sf::Font DEBUG_FONT;
+	static const int DEBUG_FONT_SIZE = 14;
+	sf::Text debugText;
+
+	static const sf::Font FONT;
 	static const int FONT_SIZE = 16;
 
 	float scale = 1.0;
-	const float scaleDelta = 1.5;
+	static constexpr float SCALE_DELTA = 1.5;
 	float x0 = 0.0;
 	float y0 = 0.0;
 
@@ -365,6 +373,8 @@ private:
 	sf::Texture backgroundTex;
 	sf::Sprite backgroundSprite;
 	sf::RenderWindow *window = nullptr;
+	sf::View *view = nullptr;
+	sf::View *debugView = nullptr;
 	thread *mainThread = nullptr;
 
 	sf::Color nodeColor = sf::Color::Red;
@@ -461,6 +471,7 @@ private:
 
 	void run();
 	void draw();
+	void drawDebug();
 
 	void onResize();
 	void onScroll(float delta);

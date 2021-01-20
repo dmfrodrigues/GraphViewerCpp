@@ -31,4 +31,5 @@ obj/
 build/
 
 example/example
+settings.json
 

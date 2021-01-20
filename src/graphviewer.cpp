@@ -137,7 +137,7 @@ public:
 };
 
 GraphViewer::Node::Node(){
-    text.setFont(GraphViewer::font);
+    text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
 }
@@ -145,7 +145,7 @@ GraphViewer::Node::Node(int id, const sf::Vector2f &position):
     id(id),
     position(position)
 {
-    text.setFont(GraphViewer::font);
+    text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
 }
@@ -203,7 +203,7 @@ void GraphViewer::Node::update(){
 }
 
 GraphViewer::Edge::Edge(){
-    text.setFont(GraphViewer::font);
+    text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
 }
@@ -213,7 +213,7 @@ GraphViewer::Edge::Edge(int id, const GraphViewer::Node *u, const GraphViewer::N
     v(v),
     edgeType(edgeType)
 {
-    text.setFont(GraphViewer::font);
+    text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
     
@@ -296,28 +296,34 @@ string getPath(const string &filename){
     return directory;
 }
 
-sf::Font getFont(){
+sf::Font getFont(const string &path){
     sf::Font font;
-    string fontPath = getPath(__FILE__)+"/../resources/fonts/arial.ttf";
+    string fontPath = getPath(__FILE__)+path;
     if(!font.loadFromFile(fontPath))
-        throw runtime_error("Failed to load font from file; check if arial.ttf exists under resources/fonts/");
+        throw runtime_error("Failed to load font from file; check if font exists");
     return font;
 }
-sf::Font GraphViewer::font = getFont();
+const sf::Font GraphViewer::DEBUG_FONT = getFont("/../resources/fonts/inconsolata.ttf");
+const sf::Font GraphViewer::FONT       = getFont("/../resources/fonts/arial.ttf");
 
-GraphViewer::GraphViewer(){
-    // string fontPath = getPath(__FILE__)+"/../resources/fonts/arial.ttf";
-    // if(!font.loadFromFile(fontPath))
-    //     throw runtime_error("Failed to load font from file; check if arial.ttf exists under resources/fonts/");
+GraphViewer::GraphViewer():
+    debugText("", DEBUG_FONT, DEBUG_FONT_SIZE)
+{
+    debugText.setFillColor(sf::Color::Black);
+    debugText.setStyle(sf::Text::Bold);
 }
 
 bool GraphViewer::createWindow(int width, int height){
     if(window != nullptr) return false;
     if(width  == 0) width  = DEFAULT_WIDTH ;
     if(height == 0) height = DEFAULT_HEIGHT;
+
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     window = new sf::RenderWindow(sf::VideoMode(width, height), "GraphViewer", sf::Style::Default, settings);
+    view = new sf::View(window->getDefaultView());
+    debugView = new sf::View(window->getDefaultView());
+
     x0 = width/2.0;
     y0 = height/2.0;
     window->setActive(false);
@@ -327,8 +333,9 @@ bool GraphViewer::createWindow(int width, int height){
 
 bool GraphViewer::closeWindow(){
     window->close();
-    delete window;
-    window = nullptr;
+    delete window; window = nullptr;
+    delete view; view = nullptr;
+    delete debugView; debugView = nullptr;
     return true;
 }
 
@@ -606,6 +613,12 @@ void GraphViewer::run(){
                         recalculateView();
                     }
                     break;
+                case sf::Event::TextEntered:
+                    switch(toupper(event.text.unicode)){
+                        case 'D': debugMode = !debugMode; break;
+                        default: break;
+                    }
+                    break;
                 default: break;
             }
         }
@@ -617,6 +630,8 @@ void GraphViewer::run(){
 void GraphViewer::draw() {
     lock_guard<mutex> lock(graphMutex);
     window->clear(sf::Color::White);
+
+    window->setView(*view);
     window->draw(backgroundSprite);
     for(const auto &edgeIt: edges){
         const Edge &edge = edgeIt.second;
@@ -634,6 +649,29 @@ void GraphViewer::draw() {
         const Node &node = nodeIt.second;
         window->draw(node.getText());
     }
+
+    fps_monitor.count();
+
+    if(debugMode){
+        drawDebug();
+    }
+}
+
+void GraphViewer::drawDebug(){
+    window->setView(*debugView);
+    
+    string debugInfo;
+    debugInfo += "FPS: " + to_string(int(fps_monitor.getFPS())) + "\n";
+    
+    if(debugInfo[debugInfo.size()-1] == '\n')
+        debugInfo = debugInfo.substr(0, debugInfo.size()-1);
+    debugText.setString(debugInfo);
+    sf::Vector2f size = sf::Vector2f(window->getSize());
+    sf::FloatRect bounds = debugText.getLocalBounds();
+    debugText.setOrigin(0, bounds.height);
+    debugText.setPosition(sf::Vector2f(0.2*DEBUG_FONT_SIZE, size.y-0.7*DEBUG_FONT_SIZE));
+
+    window->draw(debugText);
 }
 
 void GraphViewer::onResize(){
@@ -642,14 +680,14 @@ void GraphViewer::onResize(){
 }
 
 void GraphViewer::onScroll(float delta){
-    scale *= pow(scaleDelta, -delta);
+    scale *= pow(SCALE_DELTA, -delta);
     recalculateView();
 }
 
 void GraphViewer::recalculateView(){
     sf::Vector2f size = static_cast<sf::Vector2f>(window->getSize());
-    sf::View windowView(sf::Vector2f(x0, y0), sf::Vector2f(size.x*scale, size.y*scale));
-	window->setView(windowView);
+    *view = sf::View(sf::Vector2f(x0, y0), sf::Vector2f(size.x*scale, size.y*scale));
+    *debugView = sf::View(sf::FloatRect(0.0, 0.0, size.x, size.y));
 
     backgroundSprite.setPosition(x0, y0);
     auto bounds = backgroundSprite.getLocalBounds();
