@@ -34,7 +34,7 @@ jobs:
         cmake --build .
     - name: Compile example
       run: |
-        cd examples
+        cd example
         mkdir build
         cd build
         cmake ..
