@@ -575,6 +575,11 @@ void GraphViewer::join(){
     mainThread->join();
 }
 
+void GraphViewer::setEnabledNodes(bool b){ enabledNodes = b; }
+void GraphViewer::setEnabledEdges(bool b){ enabledEdges = b; }
+void GraphViewer::setEnabledNodesText(bool b){ enabledNodesText = b; }
+void GraphViewer::setEnabledEdgesText(bool b){ enabledEdgesText = b; }
+
 void GraphViewer::run(){
     bool isLeftClickPressed = false;
     float x0Initial, y0Initial;
@@ -633,21 +638,31 @@ void GraphViewer::draw() {
 
     window->setView(*view);
     window->draw(backgroundSprite);
-    for(const auto &edgeIt: edges){
-        const Edge &edge = edgeIt.second;
-        window->draw(*edge.getShape());
+    if(enabledEdges){
+        for(const auto &edgeIt: edges){
+            const Edge &edge = edgeIt.second;
+            window->draw(*edge.getShape());
+        }
     }
-    for(const auto &nodeIt: nodes){
-        const Node &node = nodeIt.second;
-        window->draw(*node.getShape());
+    if(enabledNodes){
+        for(const auto &nodeIt: nodes){
+            const Node &node = nodeIt.second;
+            window->draw(*node.getShape());
+        }
     }
-    for(const auto &edgeIt: edges){
-        const Edge &edge = edgeIt.second;
-        window->draw(edge.getText());
+    if(enabledEdges && enabledEdgesText){
+        for(const auto &edgeIt: edges){
+            const Edge &edge = edgeIt.second;
+            if(edge.getText().getString() != "")
+                window->draw(edge.getText());
+        }
     }
-    for(const auto &nodeIt: nodes){
-        const Node &node = nodeIt.second;
-        window->draw(node.getText());
+    if(enabledNodes && enabledNodesText){
+        for(const auto &nodeIt: nodes){
+            const Node &node = nodeIt.second;
+            if(node.getText().getString() != "")
+                window->draw(node.getText());
+        }
     }
 
     fps_monitor.count();

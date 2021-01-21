@@ -1,4 +1,4 @@
-﻿#ifndef _GRAPH_VIEWER_H_
+#ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
 // #ifdef linux
@@ -353,6 +353,11 @@ public:
 
 	void join();
 
+	void setEnabledNodes(bool b);
+	void setEnabledEdges(bool b);
+	void setEnabledNodesText(bool b);
+	void setEnabledEdgesText(bool b);
+
 private:
 	bool debugMode = false;
 	FPSMonitor fps_monitor = FPSMonitor(1000);
@@ -376,6 +381,11 @@ private:
 	sf::View *view = nullptr;
 	sf::View *debugView = nullptr;
 	thread *mainThread = nullptr;
+
+	bool enabledNodes = true;
+	bool enabledNodesText = true;
+	bool enabledEdges = true;
+	bool enabledEdgesText = true;
 
 	sf::Color nodeColor = sf::Color::Red;
 	int nodeSize = 10;
