@@ -70,19 +70,17 @@ void GraphViewer::Node::update(){
     shape = nullptr;
     if(!getIsIcon()){
         sf::CircleShape *newShape = new sf::CircleShape(getSize()/2.0);
-        newShape->setOrigin(getSize()/2.0, getSize()/2.0);
-        newShape->setPosition(getPosition());
         newShape->setFillColor(getColor());
         newShape->setOutlineThickness(getOutlineThickness());
         newShape->setOutlineColor(getOutlineColor());
         shape = newShape;
     } else {
         sf::RectangleShape *newShape = new sf::RectangleShape(sf::Vector2f(getSize(),getSize()));
-        newShape->setOrigin(getSize()/2.0, getSize()/2.0);
-        newShape->setPosition(getPosition());
         newShape->setTexture(&getIcon());
         shape = newShape;
     }
+    shape->setOrigin(getSize()/2.0, getSize()/2.0);
+    shape->setPosition(getPosition());    
 
     sf::FloatRect bounds = text.getLocalBounds();
     text.setPosition(getPosition() - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
@@ -153,14 +151,11 @@ void GraphViewer::Edge::update(){
     delete shape;
     shape = nullptr;
     if(!getDashed()){
-        FullLineShape *line = new FullLineShape(u->getPosition(), v->getPosition(), getThickness());
-        line->setFillColor(getColor());
-        shape = line;
+        shape = new FullLineShape(u->getPosition(), v->getPosition(), getThickness());
     } else {
-        DashedLineShape *line = new DashedLineShape(u->getPosition(), v->getPosition(), getThickness());
-        line->setFillColor(getColor());
-        shape = line;
+        shape = new DashedLineShape(u->getPosition(), v->getPosition(), getThickness());
     }
+    shape->setFillColor(getColor());
 
     string label = getLabel();
     if(getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*getWeight());
