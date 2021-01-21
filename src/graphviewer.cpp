@@ -46,33 +46,47 @@ private :
     float w;
 };
 
-class FullLineShape: public LineShape, public sf::Shape {
+class FullLineShape: public LineShape, public sf::VertexArray {
+private:
+    size_t size = 0;
 public:
-
-    explicit FullLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):LineShape(u,v,w){
-        update();
+    explicit FullLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
+        LineShape(u,v,w),
+        sf::VertexArray(sf::Quads)
+    {
+        process();
     }
 
-    virtual std::size_t getPointCount() const {
-        return 4; // fixed, but could be an attribute of the class if needed
-    }
+    void setFrom (const sf::Vector2f& u){ LineShape::setFrom (u); process(); }
+    void setTo   (const sf::Vector2f& v){ LineShape::setTo   (v); process(); }
+    void setWidth(             float  w){ LineShape::setWidth(w); process(); }
 
-    virtual sf::Vector2f getPoint(std::size_t index) const {
-        sf::Vector2f edgeV = getTo()-getFrom();
+    void process(){
+        const sf::Vector2f &u = getFrom();
+        const sf::Vector2f &v = getTo  ();
+        sf::Vector2f v_u = v-u;
+        float magnitude = sqrt(v_u.x*v_u.x + v_u.y*v_u.y);
+        v_u /= magnitude;
+
+        sf::Vector2f edgeV = v-u;
         sf::Vector2f edgeNorm(-edgeV.y, edgeV.x);
-        float magnitude = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
-        edgeNorm /= magnitude;
+        float magnitudeNorm = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
+        edgeNorm /= magnitudeNorm;
         edgeNorm *= (getWidth()/2);
 
-        switch(index){
-            case 0: return getFrom()-edgeNorm;
-            case 1: return getFrom()+edgeNorm;
-            case 2: return getTo  ()+edgeNorm;
-            case 3: return getTo  ()-edgeNorm;
-            default: throw domain_error("LineShape: invalid index");
-        }
+        resize(0); size = 0;
+
+        append(sf::Vertex(u-edgeNorm)); ++size;
+        append(sf::Vertex(u+edgeNorm)); ++size;
+        append(sf::Vertex(v+edgeNorm)); ++size;
+        append(sf::Vertex(v-edgeNorm)); ++size;
     }
 
+    void setFillColor(sf::Color color){
+        for(size_t i = 0; i < size; ++i){
+            (*this)[i].color = color;
+        }
+    }
 };
 
 class DashedLineShape: public LineShape, public sf::VertexArray {
