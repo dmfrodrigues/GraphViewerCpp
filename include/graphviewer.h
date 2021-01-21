@@ -151,6 +151,8 @@ public:
 	 */
 	bool setEdgeColor(int id, string color);
 
+	bool setEdgeColor(int id, const sf::Color &color);
+
 	/**
 	 * Função que apaga a cor de uma aresta, caso tenha sido definida.
 	 *
@@ -177,6 +179,8 @@ public:
 	 * @param color Nova cor do nó, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
 	bool setVertexColor(int id, string color);
+
+	bool setVertexColor(int id, const sf::Color &color);
 
 	/**
 	 * Função que apaga a cor de um vértice, colocando-a com o valor por omissão.
@@ -249,6 +253,8 @@ public:
 	
 	bool setVertexOutlineColor(int id, string outlineColor);
 
+	bool setVertexOutlineColor(int id, const sf::Color &outlineColor);
+
 	/**
 	 * Função que define se as arestas do grafo serão desenhadas como curvas ou retas.
 	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
@@ -266,6 +272,8 @@ public:
 	 * @param color Nova cor das arestas, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
 	bool defineEdgeColor(string color);
+
+	bool defineEdgeColor(const sf::Color &color);
 
 	/**
 	 * Função que restaura a cor global das arestas.
@@ -288,6 +296,8 @@ public:
 	 *
 	 * @param color Nova cor dos nós, utilizar as constantes definidas no graphviewer.h para conveniência.
 	 */
+	bool defineVertexColor(const sf::Color &color);
+	
 	bool defineVertexColor(string color);
 
 	/**
@@ -324,6 +334,8 @@ public:
 	bool resetVertexOutlineThickness();
 
 	bool defineVertexOutlineColor(string outlineColor);
+
+	bool defineVertexOutlineColor(const sf::Color &outlineColor);
 
 	bool resetVertexOutlineColor();
 
