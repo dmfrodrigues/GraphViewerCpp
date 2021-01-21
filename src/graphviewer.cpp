@@ -22,133 +22,101 @@ sf::Color colorStringToSFColor(string colorStr){
     throw domain_error("No such color '"+colorStr+"'");
 }
 
-class LineShape {
-public:
-    explicit LineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):u(u),v(v),w(w){}
+GraphViewer::LineShape::LineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
+    sf::VertexArray(sf::Quads),
+    u(u),v(v),w(w)
+{}
+void GraphViewer::LineShape::setFrom(const sf::Vector2f& u){ this->u = u; }
+const sf::Vector2f& GraphViewer::LineShape::getFrom() const{ return u; }
+void GraphViewer::LineShape::setTo(const sf::Vector2f& v){ this->v = v; }
+const sf::Vector2f& GraphViewer::LineShape::getTo() const{ return v; }
+void GraphViewer::LineShape::setWidth(const float& w){ this->w = w; }
+const float& GraphViewer::LineShape::getWidth() const{ return w; }
 
-    void setFrom(const sf::Vector2f& u){
-        this->u = u;
+void GraphViewer::LineShape::setFillColor(sf::Color color){
+    for(size_t i = 0; i < getVertexCount(); ++i){
+        (*this)[i].color = color;
     }
-    const sf::Vector2f& getFrom() const{ return u; }
+}
 
-    void setTo(const sf::Vector2f& v){
-        this->v = v;
-    }
-    const sf::Vector2f& getTo() const{ return v; }
+GraphViewer::FullLineShape::FullLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
+    GraphViewer::LineShape(u,v,w)
+{
+    process();
+}
 
-    void setWidth(const float& w){
-        this->w = w;
-    }
-    const float& getWidth() const{ return w; }
+void GraphViewer::FullLineShape::setFrom (const sf::Vector2f& u){ LineShape::setFrom (u); process(); }
+void GraphViewer::FullLineShape::setTo   (const sf::Vector2f& v){ LineShape::setTo   (v); process(); }
+void GraphViewer::FullLineShape::setWidth(             float  w){ LineShape::setWidth(w); process(); }
 
-private :
-    sf::Vector2f u, v;
-    float w;
-};
+void GraphViewer::FullLineShape::process(){
+    const sf::Vector2f &u = getFrom();
+    const sf::Vector2f &v = getTo  ();
+    sf::Vector2f v_u = v-u;
+    float magnitude = sqrt(v_u.x*v_u.x + v_u.y*v_u.y);
+    v_u /= magnitude;
 
-class FullLineShape: public LineShape, public sf::VertexArray {
-private:
-    size_t size = 0;
-public:
-    explicit FullLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
-        LineShape(u,v,w),
-        sf::VertexArray(sf::Quads)
-    {
-        process();
-    }
+    sf::Vector2f edgeV = v-u;
+    sf::Vector2f edgeNorm(-edgeV.y, edgeV.x);
+    float magnitudeNorm = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
+    edgeNorm /= magnitudeNorm;
+    edgeNorm *= (getWidth()/2);
 
-    void setFrom (const sf::Vector2f& u){ LineShape::setFrom (u); process(); }
-    void setTo   (const sf::Vector2f& v){ LineShape::setTo   (v); process(); }
-    void setWidth(             float  w){ LineShape::setWidth(w); process(); }
+    resize(0);
 
-    void process(){
-        const sf::Vector2f &u = getFrom();
-        const sf::Vector2f &v = getTo  ();
-        sf::Vector2f v_u = v-u;
-        float magnitude = sqrt(v_u.x*v_u.x + v_u.y*v_u.y);
-        v_u /= magnitude;
+    append(sf::Vertex(u-edgeNorm));
+    append(sf::Vertex(u+edgeNorm));
+    append(sf::Vertex(v+edgeNorm));
+    append(sf::Vertex(v-edgeNorm));
+}
 
-        sf::Vector2f edgeV = v-u;
-        sf::Vector2f edgeNorm(-edgeV.y, edgeV.x);
-        float magnitudeNorm = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
-        edgeNorm /= magnitudeNorm;
-        edgeNorm *= (getWidth()/2);
+GraphViewer::DashedLineShape::DashedLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
+    GraphViewer::LineShape(u,v,w)
+{
+    process();
+}
 
-        resize(0); size = 0;
+void GraphViewer::DashedLineShape::setFrom (const sf::Vector2f& u){ LineShape::setFrom (u); process(); }
+void GraphViewer::DashedLineShape::setTo   (const sf::Vector2f& v){ LineShape::setTo   (v); process(); }
+void GraphViewer::DashedLineShape::setWidth(             float  w){ LineShape::setWidth(w); process(); }
 
-        append(sf::Vertex(u-edgeNorm)); ++size;
-        append(sf::Vertex(u+edgeNorm)); ++size;
-        append(sf::Vertex(v+edgeNorm)); ++size;
-        append(sf::Vertex(v-edgeNorm)); ++size;
-    }
+void GraphViewer::DashedLineShape::process(){
+    float interDashesSpace = 4.0*getWidth();
+    const sf::Vector2f &u = getFrom();
+    const sf::Vector2f &v = getTo  ();
+    sf::Vector2f v_u = v-u;
+    float magnitude = sqrt(v_u.x*v_u.x + v_u.y*v_u.y);
+    v_u /= magnitude;
 
-    void setFillColor(sf::Color color){
-        for(size_t i = 0; i < size; ++i){
-            (*this)[i].color = color;
-        }
-    }
-};
+    sf::Vector2f edgeV = v-u;
+    sf::Vector2f edgeNorm(-edgeV.y, edgeV.x);
+    float magnitudeNorm = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
+    edgeNorm /= magnitudeNorm;
+    edgeNorm *= (getWidth()/2);
 
-class DashedLineShape: public LineShape, public sf::VertexArray {
-private:
-    float dashFill = 0.5;
-    size_t size = 0;
-public:
-    explicit DashedLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w):
-        LineShape(u,v,w),
-        sf::VertexArray(sf::Quads)    
-    {
-        process();
-    }
+    resize(0);
 
-    void setFrom (const sf::Vector2f& u){ LineShape::setFrom (u); process(); }
-    void setTo   (const sf::Vector2f& v){ LineShape::setTo   (v); process(); }
-    void setWidth(             float  w){ LineShape::setWidth(w); process(); }
-
-    void process(){
-        float interDashesSpace = 4.0*getWidth();
-        const sf::Vector2f &u = getFrom();
-        const sf::Vector2f &v = getTo  ();
-        sf::Vector2f v_u = v-u;
-        float magnitude = sqrt(v_u.x*v_u.x + v_u.y*v_u.y);
-        v_u /= magnitude;
-
-        sf::Vector2f edgeV = v-u;
-        sf::Vector2f edgeNorm(-edgeV.y, edgeV.x);
-        float magnitudeNorm = sqrt(edgeNorm.x*edgeNorm.x + edgeNorm.y*edgeNorm.y);
-        edgeNorm /= magnitudeNorm;
-        edgeNorm *= (getWidth()/2);
-
-        resize(0); size = 0;
-
-        // Most dashes
-        int nDashes = magnitude/interDashesSpace;
-        for(int i = 0; i < nDashes; ++i){
-            sf::Vector2f u1 = u + v_u*interDashesSpace*float(i         );
-            sf::Vector2f v1 = u + v_u*interDashesSpace*float(i+dashFill);
-            
-            append(sf::Vertex(u1-edgeNorm)); ++size;
-            append(sf::Vertex(u1+edgeNorm)); ++size;
-            append(sf::Vertex(v1+edgeNorm)); ++size;
-            append(sf::Vertex(v1-edgeNorm)); ++size;
-        }
-
-        // Last dash
-        sf::Vector2f u1 = u + v_u*    interDashesSpace*float(nDashes         )            ;
-        sf::Vector2f v1 = u + v_u*min(interDashesSpace*float(nDashes+dashFill), magnitude);
-            
-        append(sf::Vertex(u1-edgeNorm)); ++size;
-        append(sf::Vertex(u1+edgeNorm)); ++size;
-        append(sf::Vertex(v1+edgeNorm)); ++size;
-        append(sf::Vertex(v1-edgeNorm)); ++size;
+    // Most dashes
+    int nDashes = magnitude/interDashesSpace;
+    for(int i = 0; i < nDashes; ++i){
+        sf::Vector2f u1 = u + v_u*interDashesSpace*float(i         );
+        sf::Vector2f v1 = u + v_u*interDashesSpace*float(i+dashFill);
+        
+        append(sf::Vertex(u1-edgeNorm));
+        append(sf::Vertex(u1+edgeNorm));
+        append(sf::Vertex(v1+edgeNorm));
+        append(sf::Vertex(v1-edgeNorm));
     }
 
-    void setFillColor(sf::Color color){
-        for(size_t i = 0; i < size; ++i){
-            (*this)[i].color = color;
-        }
-    }
-};
+    // Last dash
+    sf::Vector2f u1 = u + v_u*    interDashesSpace*float(nDashes         )            ;
+    sf::Vector2f v1 = u + v_u*min(interDashesSpace*float(nDashes+dashFill), magnitude);
+        
+    append(sf::Vertex(u1-edgeNorm));
+    append(sf::Vertex(u1+edgeNorm));
+    append(sf::Vertex(v1+edgeNorm));
+    append(sf::Vertex(v1-edgeNorm));
+}
 
 GraphViewer::Node::Node(){
     text.setFont(GraphViewer::FONT);
@@ -275,7 +243,7 @@ void GraphViewer::Edge::setFlow(int flow){
     update();
 }
 const int* GraphViewer::Edge::getFlow() const{ return flow; }
-const sf::Drawable* GraphViewer::Edge::getShape() const { return shape; }
+const sf::VertexArray* GraphViewer::Edge::getShape() const { return shape; }
 sf::Text GraphViewer::Edge::getText() const { return text; }
 void GraphViewer::Edge::update(){
     delete shape;
