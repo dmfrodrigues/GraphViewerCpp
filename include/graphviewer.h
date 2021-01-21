@@ -402,40 +402,11 @@ public:
     void setZipEdges(bool b);
 
 private:
-    bool debugMode = false;
-    FPSMonitor fps_monitor = FPSMonitor(1000);
-    static const sf::Font DEBUG_FONT;
-    static const int DEBUG_FONT_SIZE = 14;
-    sf::Text debugText;
+    class LineShape;
+    class FullLineShape;
+    class DashedLineShape;
 
-    static const sf::Font FONT;
-    static const int FONT_SIZE = 16;
-
-    float scale = 1.0;
-    static constexpr float SCALE_DELTA = 1.5;
-    float x0 = 0.0;
-    float y0 = 0.0;
-
-    string backgroundPath = "";
-    bool isBackgroundUpdated = false;
-    sf::Texture backgroundTex;
-    sf::Sprite backgroundSprite;
-    sf::RenderWindow *window = nullptr;
-    sf::View *view = nullptr;
-    sf::View *debugView = nullptr;
-    thread *mainThread = nullptr;
-
-    bool enabledNodes = true;
-    bool enabledNodesText = true;
-    bool enabledEdges = true;
-    bool enabledEdgesText = true;
-
-    sf::Color nodeColor = sf::Color::Red;
-    int nodeSize = 10;
-    string nodeIcon = "";
-    float nodeOutlineThickness = 1.0;
-    sf::Color nodeOutlineColor = sf::Color::Black;
-
+public:
     class Node {
     private:
         int id;
@@ -472,13 +443,6 @@ private:
         const sf::Shape* getShape() const;
         sf::Text getText() const;
     };
-
-    sf::Color edgeColor = sf::Color::Black;
-    bool edgeDashed = false;
-
-    class LineShape;
-    class FullLineShape;
-    class DashedLineShape;
 
     class Edge {
     private:
@@ -521,6 +485,44 @@ private:
         const sf::VertexArray* getShape() const;
         sf::Text getText() const;
     };
+
+private:
+    bool debugMode = false;
+    FPSMonitor fps_monitor = FPSMonitor(1000);
+    static const sf::Font DEBUG_FONT;
+    static const int DEBUG_FONT_SIZE = 14;
+    sf::Text debugText;
+
+    static const sf::Font FONT;
+    static const int FONT_SIZE = 16;
+
+    float scale = 1.0;
+    static constexpr float SCALE_DELTA = 1.5;
+    float x0 = 0.0;
+    float y0 = 0.0;
+
+    string backgroundPath = "";
+    bool isBackgroundUpdated = false;
+    sf::Texture backgroundTex;
+    sf::Sprite backgroundSprite;
+    sf::RenderWindow *window = nullptr;
+    sf::View *view = nullptr;
+    sf::View *debugView = nullptr;
+    thread *mainThread = nullptr;
+
+    bool enabledNodes = true;
+    bool enabledNodesText = true;
+    bool enabledEdges = true;
+    bool enabledEdgesText = true;
+
+    sf::Color nodeColor = sf::Color::Red;
+    int nodeSize = 10;
+    string nodeIcon = "";
+    float nodeOutlineThickness = 1.0;
+    sf::Color nodeOutlineColor = sf::Color::Black;
+
+    sf::Color edgeColor = sf::Color::Black;
+    bool edgeDashed = false;
 
     class ZipEdges {
     private:
