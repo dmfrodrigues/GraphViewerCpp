@@ -5,13 +5,18 @@
 #include <queue>
 
 /**
- * Class to monitor number of frames per second.
+ * @brief Class to monitor number of frames per second.
  */
 class FPSMonitor {
 private:
+    /**
+     * @brief Queue with all frame timestamps in the past Dt interval
+     */
     std::queue<std::chrono::high_resolution_clock::time_point> q;
+    /**
+     * @brief Time interval to save frame timestamps
+     */
     std::chrono::high_resolution_clock::duration Dt;
-    std::chrono::high_resolution_clock::time_point now;
 public:
     /**
      * @brief Construct a new FPSMonitor object

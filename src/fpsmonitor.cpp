@@ -10,7 +10,7 @@ void FPSMonitor::setInterval(int ms){
 }
 
 void FPSMonitor::count(){
-    now = std::chrono::high_resolution_clock::now();
+    auto now = std::chrono::high_resolution_clock::now();
     q.push(now);
     while(now-q.front() > Dt){
         q.pop();
