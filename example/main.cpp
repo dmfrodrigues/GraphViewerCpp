@@ -13,14 +13,14 @@ int main() {
     XInitThreads();
 
     GraphViewer *gv1 = drawGraphFromFile("random");
-    // GraphViewer *gv2 = drawGraphFromFile("star");
-    // GraphViewer *gv3 = drawGraphFromFile("rainbow");
+    GraphViewer *gv2 = drawGraphFromFile("star");
+    GraphViewer *gv3 = drawGraphFromFile("rainbow");
     gv1->join();
-    // gv2->join();
-    // gv3->join();
+    gv2->join();
+    gv3->join();
     delete gv1;
-    // delete gv2;
-    // delete gv3;
+    delete gv2;
+    delete gv3;
     
     return 0;
 }
