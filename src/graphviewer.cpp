@@ -266,6 +266,13 @@ void GraphViewer::Edge::update(){
     text.setPosition((u->getPosition() + v->getPosition())/2.0f - sf::Vector2f(bounds.width/2.0, 0.8*bounds.height));
 }
 
+void GraphViewer::ZipEdges::append(const sf::VertexArray &a){
+    for(size_t i = 0; i < a.getVertexCount(); ++i){
+        vertices.push_back(a[i]);
+    }
+}
+const vector<sf::Vertex>& GraphViewer::ZipEdges::getVertices() const{ return vertices; }
+
 const int DEFAULT_WIDTH  = 800;
 const int DEFAULT_HEIGHT = 600;
 
@@ -339,6 +346,7 @@ bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType){
     edges[id] = Edge(id, &nodes.at(v1), &nodes.at(v2), edgeType);
     edges[id].setColor(edgeColor);
     edges[id].setDashed(edgeDashed);
+    if(zipEdges) updateZip();
     return true;
 }
 
@@ -349,7 +357,9 @@ bool GraphViewer::removeNode(int id){
 
 bool GraphViewer::removeEdge(int id){
     lock_guard<mutex> lock(graphMutex);
-    return (edges.erase(id) != 0);
+    auto ret = (edges.erase(id) != 0);
+    if(zipEdges) updateZip();
+    return ret;
 }
 
 bool GraphViewer::setVertexLabel(int id, string label){
@@ -383,12 +393,15 @@ bool GraphViewer::setEdgeColor(int id, string color){
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
     edgeIt->second.setColor(colorStringToSFColor(color));
+    if(zipEdges) updateZip();
     return true;
 }
 
 bool GraphViewer::clearEdgeColor(int id){
     lock_guard<mutex> lock(graphMutex);
-    return setEdgeColor(id, BLACK);
+    bool ret = setEdgeColor(id, BLACK);
+    if(zipEdges) updateZip();
+    return ret;
 }
 
 bool GraphViewer::setEdgeDashed(int id, bool dashed){
@@ -396,6 +409,7 @@ bool GraphViewer::setEdgeDashed(int id, bool dashed){
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
     edgeIt->second.setDashed(dashed);
+    if(zipEdges) updateZip();
     return true;
 }
 
@@ -438,6 +452,7 @@ bool GraphViewer::setEdgeThickness(int id, int thickness){
     auto edgeIt = edges.find(id);
     if(edgeIt == edges.end()) return false;
     edgeIt->second.setThickness(thickness);
+    if(zipEdges) updateZip();
     return true;
 }
 
@@ -562,6 +577,18 @@ void GraphViewer::setEnabledEdges(bool b){ enabledEdges = b; }
 void GraphViewer::setEnabledNodesText(bool b){ enabledNodesText = b; }
 void GraphViewer::setEnabledEdgesText(bool b){ enabledEdgesText = b; }
 
+void GraphViewer::setZipEdges(bool b){
+    zipEdges = b;
+    if(zipEdges) updateZip();
+}
+
+void GraphViewer::updateZip(){
+    lock_guard<mutex> lock(graphMutex);
+    zip = ZipEdges();
+    for(const auto &p: edges)
+        zip.append(*p.second.getShape());
+}
+
 void GraphViewer::run(){
     bool isLeftClickPressed = false;
     float x0Initial, y0Initial;
@@ -621,9 +648,14 @@ void GraphViewer::draw() {
     window->setView(*view);
     window->draw(backgroundSprite);
     if(enabledEdges){
-        for(const auto &edgeIt: edges){
-            const Edge &edge = edgeIt.second;
-            window->draw(*edge.getShape());
+        if(zipEdges){
+            const vector<sf::Vertex> &v = zip.getVertices();
+            window->draw(&v[0], v.size(), sf::Quads);
+        } else {
+            for(const auto &edgeIt: edges){
+                const Edge &edge = edgeIt.second;
+                window->draw(*edge.getShape());
+            }
         }
     }
     if(enabledNodes){

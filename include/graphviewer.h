@@ -358,6 +358,8 @@ public:
 	void setEnabledNodesText(bool b);
 	void setEnabledEdgesText(bool b);
 
+	void setZipEdges(bool b);
+
 private:
 	bool debugMode = false;
 	FPSMonitor fps_monitor = FPSMonitor(1000);
@@ -518,6 +520,17 @@ private:
 		const sf::VertexArray* getShape() const;
 		sf::Text getText() const;
 	};
+
+	class ZipEdges {
+	private:
+		vector<sf::Vertex> vertices;
+	public:
+		void append(const sf::VertexArray &a);
+		const vector<sf::Vertex>& getVertices() const;
+	};
+	bool zipEdges = false;
+	ZipEdges zip;
+	void updateZip();
 
 	mutex graphMutex;
 	unordered_map<int, Node> nodes;
