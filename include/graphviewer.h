@@ -1,10 +1,7 @@
 #ifndef _GRAPH_VIEWER_H_
 #define _GRAPH_VIEWER_H_
 
-#include <stdlib.h>
-#include <signal.h>
 #include <string>
-
 #include <thread>
 #include <mutex>
 #include <unordered_map>
