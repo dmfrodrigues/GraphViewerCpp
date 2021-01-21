@@ -396,12 +396,6 @@ bool GraphViewer::setVertexOutlineColor(int id, string color){
     return setVertexOutlineColor(id, colorStringToSFColor(color));
 }
 
-/*
-bool GraphViewer::defineEdgeCurved(bool curved){
-    return true;
-}
-*/
-
 bool GraphViewer::defineEdgeColor(const sf::Color &color){
     edgeColor = color;
     return true;

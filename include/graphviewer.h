@@ -30,482 +30,520 @@
 using namespace std;
 
 /**
- * Classe que guarda o grafo e o representa. Todas as suas funções retornam um booleano a indicar
- * se a sua execução decorreu ou não com sucesso.
+ * @brief Class to save and represent a graph.
+ * 
+ * All functions return a boolean indicating they executed successfully.
  */
 class GraphViewer {
 public:
-	/**
-	 * Construtor que cria um novo grafo e atribui automaticamente a porta.
-	 * Exemplo: GraphViewer *gv = new GraphViewer(600, 600, true); instancia um grafo
-	 * 600x600, onde a posição dos nós é determinada automaticamente.
-	 *
-	 * @param width Inteiro que representa a lagura da área do grafo.
-	 * @param height Inteiro que representa a altura da área do grafo.
-	 * @param dynamic Booleano que determina se a localização dos nós é automaticamente.
-	 * determinado pelo programa (true) ou se deve ser determinado pelo utilizador (false).
-	 */
-	GraphViewer();
+    /**
+     * @brief Construct a new graph.
+     */
+    GraphViewer();
 
-	/**
-	 * Função que cria a janela para visualização.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->createWindow(600, 600); abre uma janela 600x600 onde mostra o grafo.
-	 *
-	 *
-	 * @param width Largura da janela a criar.
-	 * @param height Altura da janela a criar.
-	 */
-	bool createWindow(int width, int height);
+    /**
+     * @brief Create the visualization window.
+     *
+     * @param width Window width (in pixels)
+     * @param height Window height (in pixels)
+     */
+    bool createWindow(int width, int height);
 
-	/**
-	 * Fecha a janela a ser utilizada para visualização.
-	 */
-	bool closeWindow();
+    /**
+     * @brief Close visualization window.
+     */
+    bool closeWindow();
 
-	/**
-	 * Acrescenta um nó à representação do grafo, numa posição específica, irrelevante se o grafo
-	 * for dinâmico.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer com isDynamic = false:
-	 * gv->addNode(0, 1, 2); adiciona um nó com ID 0 na posição (x, y) = (1, 2)
-	 *
-	 * @param id Identificador único do nó.
-	 * @param x Posição horizontal do nó.
-	 * @param y Posição vertical do nó.
-	 */
-	bool addNode(int id, int x, int y);
+    /**
+     * @brief Add node.
+     * 
+     * @param id Unique node ID
+     * @param x Node x-position
+     * @param y Node y-position
+     */
+    bool addNode(int id, int x, int y);
 
-	/**
-	 * Acrescenta uma aresta à representação do grafo.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->addEdge(0, 1, 2, EdgeType::UNDIRECTED); adiciona uma aresta não-dirigida com ID 0
-	 * que liga os nós com os IDs 1 e 2
-	 *
-	 * @param id Identificador único da aresta.
-	 * @param v1 Identificador único do nó de origem da aresta.
-	 * @param v2 Identificador único do nó de destino da aresta.
-	 * @param edgeType EdgeType.DIRECTED caso a aresta seja unidirecional
-	 * ou EdgeType.UNDIRECTED caso a aresta seja bidirecional.
-	 */
-	bool addEdge(int id, int v1, int v2, int edgeType);
+    /**
+     * @brief Add edge.
+     *
+     * @param id Unique edge ID
+     * @param v1 Unique ID of origin node
+     * @param v2 Unique ID of destination node
+     * @param edgeType EdgeType.DIRECTED if the edge is directed,
+     *                 EdgeType.UNDIRECTED if the edge is undirected
+     */
+    bool addEdge(int id, int v1, int v2, int edgeType);
 
-	/**
-	 * Remove um nó da representação do grafo e todas as arestas ligadas a este.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->removeNode(0) remove o nó com ID 0
-	 *
-	 * @param id Identificador único do nó a a remover.
-	 */
-	bool removeNode(int id);
+    /**
+     * @brief Remove node and all edges connected to it.
+     *
+     * @param id Unique ID of node to be removed.
+     */
+    bool removeNode(int id);
 
-	/**
-	 * Remove uma aresta da representação do grafo.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->removeEdge(0) remove a aresta com ID 0
-	 *
-	 * @param id Identificador único da aresta a remover.
-	 */
-	bool removeEdge(int id);
+    /**
+     * @brief Remove edge.
+     *
+     * @param id Unique ID of edge to be removed
+     */
+    bool removeEdge(int id);
 
-	/**
-	 * Função que define o texto de um nó.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setVertexLabel(0, "Isto é um nó"); adiciona o texto "Isto é um nó" ao nó com ID 0
-	 *
-	 * @param id Identificador único do nó com o texto a alterar.
-	 * @param label Novo texto do nó.
-	 */
-	bool setVertexLabel(int id, string label);
+    /**
+     * @brief Set node text label.
+     * 
+     * @param id Node ID
+     * @param label Node label
+     */
+    bool setVertexLabel(int id, string label);
 
-	/**
-	 * Função que apaga o texto de um nó, caso o mesmo tenha sido definido anteriormente.
-	 *
-	 * @param id Identificador único do nó com o texto a apagar.
-	 */
-	bool clearVertexLabel(int id);
+    /**
+     * @brief Clear node text label, if it was defined.
+     *
+     * @param id Node ID
+     */
+    bool clearVertexLabel(int id);
 
-	/**
-	 * Função que define o texto de uma aresta.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeLabel(0, "Isto é uma aresta"); adiciona o texto "Isto é uma aresta" à aresta com ID 0
-	 *
-	 * @param id Identificador único da aresta com o texto a alterar.
-	 * @param label Novo texto da aresta.
-	 */
-	bool setEdgeLabel(int id, string label);
+    /**
+     * @brief Set edge text label.
+     *
+     * @param id Edge ID
+     * @param label Edge label
+     */
+    bool setEdgeLabel(int id, string label);
 
-	/**
-	 * Função que apaga o texto de uma aresta, caso o mesmo tenha sido definido anteriormente.
-	 *
-	 * @param id Identificador único da aresta com o texto a apagar.
-	 */
-	bool clearEdgeLabel(int id);
+    /**
+     * @brief Clear edge text label, if it was defined.
+     *
+     * @param id Edge ID
+     */
+    bool clearEdgeLabel(int id);
 
-	/**
-	 * Função que define a cor de uma aresta.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeColor(0, BLUE); modifica a cor da aresta com ID 0 para azul
-	 *
-	 * @param id Identificador único da aresta com a cor a alterar.
-	 * @param color Nova cor da aresta, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool setEdgeColor(int id, string color);
+    /**
+     * @brief Set edge color.
+     * 
+     * @param id Edge ID
+     * @param color New color
+     */
+    bool setEdgeColor(int id, const sf::Color &color);
 
-	bool setEdgeColor(int id, const sf::Color &color);
+    /**
+     * @overload
+     * 
+     * @param id Edge ID
+     * @param color New color (as a string, please use the defined color macros)
+     */
+    bool setEdgeColor(int id, string color);
 
-	/**
-	 * Função que apaga a cor de uma aresta, caso tenha sido definida.
-	 *
-	 * @param id Identificador único da aresta com a cor a apagar.
-	 */
-	bool clearEdgeColor(int id);
+    /**
+     * @brief Clear edge color.
+     *
+     * @param id Edge ID
+     */
+    bool clearEdgeColor(int id);
 
-	/**
-	 * Função que define se uma aresta é desenhada, ou não, a tracejado.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeDashed(0, false); faz com que a aresta com ID 0 seja desenhada a traço contínuo
-	 *
-	 * @param id Identificador único da aresta com a cor a alterar.
-	 * @param dashed Nova cor da aresta, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool setEdgeDashed(int id, bool dashed);
+    /**
+     * @brief Set if an edge is drawn as a full or dashed line.
+     *
+     * @param id Edge ID
+     * @param dashed True if edge is dashed, false if full
+     */
+    bool setEdgeDashed(int id, bool dashed);
 
-	/**
-	 * Função que define a cor de um nó.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setVertexColor(0, GREEN); modifica a cor do nó com ID 0 para verde
-	 *
-	 * @param id Identificador único do nó com a cor a alterar.
-	 * @param color Nova cor do nó, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool setVertexColor(int id, string color);
+    /**
+     * @brief Set node color.
+     *
+     * @param id Node ID
+     * @param color Node color
+     */
+    bool setVertexColor(int id, const sf::Color &color);
 
-	bool setVertexColor(int id, const sf::Color &color);
+    /**
+     * @overload
+     * 
+     * @param id Node ID
+     * @param color New color (as a string, please use the defined color macros)
+     */
+    bool setVertexColor(int id, string color);
 
-	/**
-	 * Função que apaga a cor de um vértice, colocando-a com o valor por omissão.
-	 *
-	 * @param id Identificador único do nó com a cor a apagar.
-	 */
-	bool clearVertexColor(int id);
+    /**
+     * @brief Clear node color.
+     *
+     * @param id Node ID
+     */
+    bool clearVertexColor(int id);
 
-	/**
-	 * Função que define o tamanho de um nó.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setVertexSize(0, 10); modifica o tamanho do nó com ID 0 para 40
-	 *
-	 * @param id Identificador único do nó com o tamanho a alterar.
-	 * @param size Novo tamanho do nó.
-	 */
-	bool setVertexSize(int id, int size);
+    /**
+     * @brief Set node size.
+     *
+     * @param id Node ID
+     * @param size Node size
+     */
+    bool setVertexSize(int id, int size);
 
-	/**
-	 * Função que define um ícone para um nó.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setVertexIcon(0, "icon.png"); faz com que o nó, quando desenhado, não seja um círculo, mas sim a imagem icon.png
-	 *
-	 * @param id Identificador único do nó com o ícone a alterar.
-	 * @param filepath Caminho do ficheiro a utilizar como novo ícone do nó.
-	 */
-	bool setVertexIcon(int id, string filepath);
+    /**
+     * @brief Set node icon instead of a circle.
+     * 
+     * @param id Node ID
+     * @param filepath Filepath of icon
+     */
+    bool setVertexIcon(int id, string filepath);
 
-	/**
-	 * Função que apaga o ícone de um nó, caso tenha sido definido.
-	 *
-	 * @param id Identificador único do nó com o ícone a apagar.
-	 */
-	bool clearVertexIcon(int id);
+    /**
+     * @brief Clear node icon.
+     *
+     * @param id Node ID
+     */
+    bool clearVertexIcon(int id);
 
-	/**
-	 * Função que define a espessura de uma aresta.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeThickness(0, 20); modifica a espessura da aresta com ID 0 para 20
-	 *
-	 * @param id Identificador único da aresta com a espessura a alterar.
-	 * @param thickness Nova espessura da aresta, sendo que por base, as
-	 * arestas são criadas com a espessura de 1.
-	 */
-	bool setEdgeThickness(int id, int thickness);
+    /**
+     * @brief Set edge thickness.
+     *
+     * @param id Node ID
+     * @param thickness Edge thickness (10 by default)
+     */
+    bool setEdgeThickness(int id, int thickness);
 
-	/**
-	 * Função que define o peso de uma aresta na representação do grafo, a ser visualizado
-	 * como w: valor_do_peso, seguido de qualquer outro texto associado à aresta.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeWeight(0, 20); modifica o peso da aresta com ID 0 para 20
-	 *
-	 * @param id Identificador único da aresta a modificar.
-	 * @param weight Peso associado à aresta.
-	 */
-	bool setEdgeWeight(int id, int weight);
+    /**
+     * @brief Set edge weight.
+     * 
+     * Edge weight is shown in the label.
+     *
+     * @param id Edge ID
+     * @param weight Edge weight
+     */
+    bool setEdgeWeight(int id, int weight);
 
-	/**
-	 * Função que define o fluxo de uma aresta na representação do grafo, a ser visualizado
-	 * como f: valor_do_fluxo, precedido pelo peso e seguido por texto definido pelo utilizador.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setEdgeFlow(0, 20); modifica o fluxo da aresta com ID 0 para 20
-	 *
-	 * @param id Identificador único da aresta a modificar.
-	 * @param flow Fluxo associado à aresta.
-	 */
-	bool setEdgeFlow(int id, int flow);
+    /**
+     * @brief Set edge flow.
+     *
+     * @param id Edge ID
+     * @param flow Edge flow
+     */
+    bool setEdgeFlow(int id, int flow);
 
-	bool setVertexOutlineThickness(int id, float outlineThickness);
-	
-	bool setVertexOutlineColor(int id, string outlineColor);
+    /**
+     * @brief Set node outline thickness.
+     * 
+     * @param id                Node ID
+     * @param outlineThickness  Outline thickness in pixels (1 by default)
+     */
+    bool setVertexOutlineThickness(int id, float outlineThickness);
 
-	bool setVertexOutlineColor(int id, const sf::Color &outlineColor);
+    /**
+     * @brief Set node outline color.
+     * 
+     * @param id            Node ID
+     * @param outlineColor  Node outline color
+     */
+    bool setVertexOutlineColor(int id, const sf::Color &outlineColor);
 
-	/**
-	 * Função que define se as arestas do grafo serão desenhadas como curvas ou retas.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineEdgeCurved(false); faz com que as arestas sejam desenhadas como retas
-	 *
-	 * @param curved Booleano que representa se as arestas serão curvas (true) ou retas (false), sendo o valor por defeito é true.
-	 */
-	bool defineEdgeCurved(bool curved);
+    /**
+     * @overload
+     * 
+     * @param id            Node ID
+     * @param outlineColor  Node outline color (as a string, use the defined macros)
+     */
+    bool setVertexOutlineColor(int id, string outlineColor);
+    
+    /**
+     * @brief Set default edge color.
+     * 
+     * @param color Default edge color
+     */
+    bool defineEdgeColor(const sf::Color &color);
 
-	/**
-	 * Função que define a cor global das arestas.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineEdgeColor(GRAY); modifica a cor por defeito das arestas para cinzento
-	 *
-	 * @param color Nova cor das arestas, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool defineEdgeColor(string color);
+    /**
+     * @overload
+     *
+     * @param color Default edge color (as a string, use the defined macros)
+     */
+    bool defineEdgeColor(string color);
+    
+    /**
+     * @brief Reset default edge color.
+     */
+    bool resetEdgeColor();
 
-	bool defineEdgeColor(const sf::Color &color);
+    /**
+     * @brief Set default edge dashing.
+     *
+     * @param dashed True for dashed, false for full line
+     */
+    bool defineEdgeDashed(bool dashed);
 
-	/**
-	 * Função que restaura a cor global das arestas.
-	 */
-	bool resetEdgeColor();
+    /**
+     * @brief Set default node color.
+     *
+     * @param color Default node color
+     */
+    bool defineVertexColor(const sf::Color &color);
+    
+    /**
+     * @overload
+     * 
+     * @param color Default node color (as a string, use the defined macros)
+     */
+    bool defineVertexColor(string color);
 
-	/**
-	 * Função que define globalmente se as arestas são desenhadas, ou não, a tracejado.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineEdgeDashed(true); faz com que por defeito as arestas sejam desenhadas a tracejado
-	 *
-	 * @param dashed Booleano que representa se as arestas vão estar, ou não, todas a tracejado (o valor por defeito é false).
-	 */
-	bool defineEdgeDashed(bool dashed);
+    /**
+     * @brief Restore default vertex color.
+     */
+    bool resetVertexColor();
 
-	/**
-	 * Função que define a cor global dos nós.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineVertexColor(RED); modifica a cor por defeito dos nós para vermelho
-	 *
-	 * @param color Nova cor dos nós, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool defineVertexColor(const sf::Color &color);
-	
-	bool defineVertexColor(string color);
+    /**
+     * @brief Set default node size.
+     *
+     * @param size Default node size in pixels (10 by default)
+     */
+    bool defineVertexSize(int size);
 
-	/**
-	 * Função que restaura a cor global dos nós.
-	 */
-	bool resetVertexColor();
+    /**
+     * @brief Set default vertex icon.
+     *
+     * @param filepath Filepath of new icon
+     */
+    bool defineVertexIcon(string filepath);
 
-	/**
-	 * Função que define o tamanho global dos nós.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineVertexSize(20); modifica o tamanho por defeito dos nós para 20
-	 *
-	 * @param size Nova cor dos nós, utilizar as constantes definidas no graphviewer.h para conveniência.
-	 */
-	bool defineVertexSize(int size);
+    /**
+     * @brief Delete default vertex icon.
+     */
+    bool resetVertexIcon();
 
-	/**
-	 * Função que define um ícone global para os nós.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->defineVertexIcon("icon.gif"); faz com que por defeito os nós, quando desenhados,
-	 * não sejam um círculo, mas sim a imagem icon.gif
-	 *
-	 * @param filepath Caminho do ficheiro a utilizar como novo ícone do nó.
-	 */
-	bool defineVertexIcon(string filepath);
+    /**
+     * @brief Set default node outline thickness.
+     * 
+     * @param outlineThickness Node outline thickness in pixels (1 by default)
+     */
+    bool defineVertexOutlineThickness(float outlineThickness);
 
-	/**
-	 * Função que apaga o ícone global para os nós.
-	 */
-	bool resetVertexIcon();
+    /**
+     * @brief Reset default node outline thickness.
+     */
+    bool resetVertexOutlineThickness();
 
-	bool defineVertexOutlineThickness(float outlineThickness);
+    /**
+     * @brief Define default node outline color.
+     * 
+     * @param outlineColor Default outline color
+     */
+    bool defineVertexOutlineColor(const sf::Color &outlineColor);
 
-	bool resetVertexOutlineThickness();
+    /**
+     * @overload
+     * 
+     * @param outlineColor Default outline color (as a string, use the defined macros)
+     */
+    bool defineVertexOutlineColor(string outlineColor);
 
-	bool defineVertexOutlineColor(string outlineColor);
+    /**
+     * @brief Reset default node outline color.
+     */
+    bool resetVertexOutlineColor();
 
-	bool defineVertexOutlineColor(const sf::Color &outlineColor);
+    /**
+     * @brief Set background image.
+     *
+     * @param path Filepath of new background
+     */
+    bool setBackground(string path);
 
-	bool resetVertexOutlineColor();
+    /**
+     * @brief Clear background image.
+     */
+    bool clearBackground();
 
-	/**
-	 * Função que altera a imagem de fundo do grafo.
-	 * Exemplo, para um apontador gv onde foi instanciada a classe GraphViewer:
-	 * gv->setBackGround("fundo.png"); faz com que o fundo da janela seja a imagem fundo.png,
-	 * em vez de cinzento
-	 *
-	 * @param path Caminho para o ficheiro com a imagem.
-	 */
-	bool setBackground(string path);
+    /**
+     * @brief Join the window main thread.
+     * 
+     * The window main thread exits when the user presses the close button in
+     * the window.
+     */
+    void join();
 
-	/**
-	 * Apaga a imagem de fundo do grafo, se tiver sido previamente definida.
-	 */
-	bool clearBackground();
+    /**
+     * @brief Enable node drawing.
+     * 
+     * If set to false, does not draw nodes but may improve performance
+     * significantly.
+     * 
+     * @param b True to draw nodes, false to not draw nodes
+     */
+    void setEnabledNodes(bool b);
+    /**
+     * @brief Enable edge drawing.
+     * 
+     * @param b Draw nodes if true, false otherwise
+     */
+    void setEnabledEdges(bool b);
+    /**
+     * @brief Enable node label drawing.
+     * 
+     * @param b Draw node labels if true, false otherwise
+     */
+    void setEnabledNodesText(bool b);
+    /**
+     * @brief Enable edge label drawing.
+     * 
+     * @param b Draw edge labels if true, false otherwise
+     */
+    void setEnabledEdgesText(bool b);
 
-	void join();
-
-	void setEnabledNodes(bool b);
-	void setEnabledEdges(bool b);
-	void setEnabledNodesText(bool b);
-	void setEnabledEdgesText(bool b);
-
-	void setZipEdges(bool b);
+    /**
+     * @brief Allow edges to be zipped.
+     * 
+     * Zipping is the act of collecting all vertices that make up a set of
+     * objects, and group all those vertices into a single, large vertex array.
+     * This has the advantage of being a lot faster to draw than drawing each
+     * object separately; performance improves by about 20 times in large
+     * graphs with many edges.
+     * 
+     * @param b True to zip edges, false if not.
+     */
+    void setZipEdges(bool b);
 
 private:
-	bool debugMode = false;
-	FPSMonitor fps_monitor = FPSMonitor(1000);
-	static const sf::Font DEBUG_FONT;
-	static const int DEBUG_FONT_SIZE = 14;
-	sf::Text debugText;
+    bool debugMode = false;
+    FPSMonitor fps_monitor = FPSMonitor(1000);
+    static const sf::Font DEBUG_FONT;
+    static const int DEBUG_FONT_SIZE = 14;
+    sf::Text debugText;
 
-	static const sf::Font FONT;
-	static const int FONT_SIZE = 16;
+    static const sf::Font FONT;
+    static const int FONT_SIZE = 16;
 
-	float scale = 1.0;
-	static constexpr float SCALE_DELTA = 1.5;
-	float x0 = 0.0;
-	float y0 = 0.0;
+    float scale = 1.0;
+    static constexpr float SCALE_DELTA = 1.5;
+    float x0 = 0.0;
+    float y0 = 0.0;
 
-	string backgroundPath = "";
-	bool isBackgroundUpdated = false;
-	sf::Texture backgroundTex;
-	sf::Sprite backgroundSprite;
-	sf::RenderWindow *window = nullptr;
-	sf::View *view = nullptr;
-	sf::View *debugView = nullptr;
-	thread *mainThread = nullptr;
+    string backgroundPath = "";
+    bool isBackgroundUpdated = false;
+    sf::Texture backgroundTex;
+    sf::Sprite backgroundSprite;
+    sf::RenderWindow *window = nullptr;
+    sf::View *view = nullptr;
+    sf::View *debugView = nullptr;
+    thread *mainThread = nullptr;
 
-	bool enabledNodes = true;
-	bool enabledNodesText = true;
-	bool enabledEdges = true;
-	bool enabledEdgesText = true;
+    bool enabledNodes = true;
+    bool enabledNodesText = true;
+    bool enabledEdges = true;
+    bool enabledEdgesText = true;
 
-	sf::Color nodeColor = sf::Color::Red;
-	int nodeSize = 10;
-	string nodeIcon = "";
-	float nodeOutlineThickness = 1.0;
-	sf::Color nodeOutlineColor = sf::Color::Black;
+    sf::Color nodeColor = sf::Color::Red;
+    int nodeSize = 10;
+    string nodeIcon = "";
+    float nodeOutlineThickness = 1.0;
+    sf::Color nodeOutlineColor = sf::Color::Black;
 
-	class Node {
-	private:
-		int id;
-		sf::Vector2f position;
-		int size = 10;
-		string label = "";
-		sf::Color color = sf::Color::Red;
-		sf::Texture icon; bool isIcon = false;
-		float outlineThickness = 1.0;
-		sf::Color outlineColor = sf::Color::Black;
-		sf::Shape *shape = nullptr;
-		sf::Text text;
-		void update();
-	public:
-		Node();
-		Node(int id, const sf::Vector2f &position);
-		Node& operator=(const Node &u);
-		int getId() const;
-		void setPosition(const sf::Vector2f &position);
-		const sf::Vector2f& getPosition() const;
-		void setSize(int size);
-		int getSize() const;
-		void setLabel(const string &label);
-		string getLabel() const;
-		void setColor(const sf::Color &color);
-		const sf::Color& getColor() const;
-		void setIcon(const string &path);
-		const sf::Texture& getIcon() const;
-		bool getIsIcon() const;
-		void setOutlineThickness(int outlineThickness);
-		int getOutlineThickness() const;
-		void setOutlineColor(const sf::Color &outlineColor);
-		const sf::Color& getOutlineColor() const;
-		const sf::Shape* getShape() const;
-		sf::Text getText() const;
-	};
+    class Node {
+    private:
+        int id;
+        sf::Vector2f position;
+        int size = 10;
+        string label = "";
+        sf::Color color = sf::Color::Red;
+        sf::Texture icon; bool isIcon = false;
+        float outlineThickness = 1.0;
+        sf::Color outlineColor = sf::Color::Black;
+        sf::Shape *shape = nullptr;
+        sf::Text text;
+        void update();
+    public:
+        Node();
+        Node(int id, const sf::Vector2f &position);
+        Node& operator=(const Node &u);
+        int getId() const;
+        void setPosition(const sf::Vector2f &position);
+        const sf::Vector2f& getPosition() const;
+        void setSize(int size);
+        int getSize() const;
+        void setLabel(const string &label);
+        string getLabel() const;
+        void setColor(const sf::Color &color);
+        const sf::Color& getColor() const;
+        void setIcon(const string &path);
+        const sf::Texture& getIcon() const;
+        bool getIsIcon() const;
+        void setOutlineThickness(int outlineThickness);
+        int getOutlineThickness() const;
+        void setOutlineColor(const sf::Color &outlineColor);
+        const sf::Color& getOutlineColor() const;
+        const sf::Shape* getShape() const;
+        sf::Text getText() const;
+    };
 
-	sf::Color edgeColor = sf::Color::Black;
-	bool edgeDashed = false;
+    sf::Color edgeColor = sf::Color::Black;
+    bool edgeDashed = false;
 
-	class LineShape;
-	class FullLineShape;
-	class DashedLineShape;
+    class LineShape;
+    class FullLineShape;
+    class DashedLineShape;
 
-	class Edge {
-	private:
-		int id;
-		const Node *u = nullptr;
-		const Node *v = nullptr;
-		int edgeType;
-		string label = "";
-		sf::Color color = sf::Color::Black;
-		bool dashed = false;
-		int thickness = 5;
-		int *weight = nullptr;
-		int *flow = nullptr;
-		LineShape *shape = nullptr;
-		sf::Text text;
-		void update();
-	public:
-		Edge();
-		Edge(int id, const Node *u, const Node *v, int edgeType);
-		Edge& operator=(const Edge &u);
-		int getId() const;
-		void setFrom(const Node *u);
-		const Node* getFrom() const;
-		void setTo(const Node *v);
-		const Node* getTo() const;
-		void setEdgeType(int edgeType);
-		int getEdgeType() const;
-		void setLabel(const string &label);
-		string getLabel() const;
-		void setColor(const sf::Color &color);
-		const sf::Color& getColor() const;
-		void setDashed(bool dashed);
-		bool getDashed() const;
-		void setThickness(int thickness);
-		int getThickness() const;
-		void setWeight(int weight);
-		const int* getWeight() const;
+    class Edge {
+    private:
+        int id;
+        const Node *u = nullptr;
+        const Node *v = nullptr;
+        int edgeType;
+        string label = "";
+        sf::Color color = sf::Color::Black;
+        bool dashed = false;
+        int thickness = 5;
+        int *weight = nullptr;
+        int *flow = nullptr;
+        LineShape *shape = nullptr;
+        sf::Text text;
+        void update();
+    public:
+        Edge();
+        Edge(int id, const Node *u, const Node *v, int edgeType);
+        Edge& operator=(const Edge &u);
+        int getId() const;
+        void setFrom(const Node *u);
+        const Node* getFrom() const;
+        void setTo(const Node *v);
+        const Node* getTo() const;
+        void setEdgeType(int edgeType);
+        int getEdgeType() const;
+        void setLabel(const string &label);
+        string getLabel() const;
+        void setColor(const sf::Color &color);
+        const sf::Color& getColor() const;
+        void setDashed(bool dashed);
+        bool getDashed() const;
+        void setThickness(int thickness);
+        int getThickness() const;
+        void setWeight(int weight);
+        const int* getWeight() const;
         void setFlow(int flow);
-		const int* getFlow() const;
-		const sf::VertexArray* getShape() const;
-		sf::Text getText() const;
-	};
+        const int* getFlow() const;
+        const sf::VertexArray* getShape() const;
+        sf::Text getText() const;
+    };
 
-	class ZipEdges {
-	private:
-		vector<sf::Vertex> vertices;
-	public:
-		void append(const sf::VertexArray &a);
-		const vector<sf::Vertex>& getVertices() const;
-	};
-	bool zipEdges = false;
-	ZipEdges zip;
-	void updateZip();
+    class ZipEdges {
+    private:
+        vector<sf::Vertex> vertices;
+    public:
+        void append(const sf::VertexArray &a);
+        const vector<sf::Vertex>& getVertices() const;
+    };
+    bool zipEdges = false;
+    ZipEdges zip;
+    void updateZip();
 
-	mutex graphMutex;
-	unordered_map<int, Node> nodes;
-	unordered_map<int, Edge> edges;
+    mutex graphMutex;
+    unordered_map<int, Node> nodes;
+    unordered_map<int, Edge> edges;
 
-	void run();
-	void draw();
-	void drawDebug();
+    void run();
+    void draw();
+    void drawDebug();
 
-	void onResize();
-	void onScroll(float delta);
-	void recalculateView();
+    void onResize();
+    void onScroll(float delta);
+    void recalculateView();
 };
 
 #include "lines.h"
