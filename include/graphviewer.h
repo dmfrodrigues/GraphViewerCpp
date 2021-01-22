@@ -42,36 +42,139 @@ public:
         sf::Text text;
         void update();
     public:
+        /**
+         * @brief Construct a new Node object
+         */
         Node();
+        /**
+         * @brief Construct a new Node object with ID and position
+         * 
+         * @param id        Unique node ID
+         * @param position  Node position in the window, in pixels
+         */
         Node(id_t id, const sf::Vector2f &position);
 
-        int getId() const;
+        /**
+         * @brief Get node ID.
+         * 
+         * @return id_t     Node ID
+         */
+        id_t getId() const;
         
+        /**
+         * @brief Set node position.
+         * 
+         * @param position  Position, in pixels
+         */
         void setPosition(const sf::Vector2f &position);
+        /**
+         * @brief Get node position;
+         * 
+         * @return const sf::Vector2f&  Position, in pixels
+         */
         const sf::Vector2f& getPosition() const;
         
+        /**
+         * @brief Set node size.
+         * 
+         * In the case it is not an icon, it is the diameter of the node;
+         * if it is an icon, it is the width of the node.
+         * 
+         * @param size  Node size, in pixels
+         */
         void setSize(int size);
-        int getSize() const;
+        /**
+         * @brief Get node size.
+         * 
+         * @return int Node size, in pixels
+         */
+        float getSize() const;
         
+        /**
+         * @brief Set node label.
+         * 
+         * @param label     Node label
+         */
         void setLabel(const std::string &label);
+        /**
+         * @brief Get node label.
+         * 
+         * @return std::string  Node label
+         */
         std::string getLabel() const;
         
+        /**
+         * @brief Set node color.
+         * 
+         * @param color Node color
+         */
         void setColor(const sf::Color &color);
+        /**
+         * @brief Get node color.
+         * 
+         * @return const sf::Color&     Node color
+         */
         const sf::Color& getColor() const;
         
+        /**
+         * @brief Set node icon.
+         * 
+         * @param path  Path of file to be used as icon
+         */
         void setIcon(const std::string &path);
+        /**
+         * @brief Get node icon texture.
+         * 
+         * @return const sf::Texture& Icon texture
+         */
         const sf::Texture& getIcon() const;
+        /**
+         * @brief Check if node is an icon.
+         * 
+         * @return true     When it is an icon
+         * @return false    Otherwise
+         */
         bool getIsIcon() const;
 
-        void setOutlineThickness(int outlineThickness);
-        int getOutlineThickness() const;
+        /**
+         * @brief Set node outline thickness.
+         * 
+         * @param outlineThickness  Outline thickness, in pixels
+         */
+        void setOutlineThickness(float outlineThickness);
+        /**
+         * @brief Get node outline thickness.
+         * 
+         * @return float    Outline thickness, in pixels
+         */
+        float getOutlineThickness() const;
         
+        /**
+         * @brief Set node outline color.
+         * 
+         * @param outlineColor  Outline color
+         */
         void setOutlineColor(const sf::Color &outlineColor);
+        /**
+         * @brief Get outline color.
+         * 
+         * @return const sf::Color&     Outline color
+         */
         const sf::Color& getOutlineColor() const;
         
+        /**
+         * @brief Get shape that represents the node.
+         * 
+         * @return const sf::Shape*     Pointer to node shape
+         */
         const sf::Shape* getShape() const;
         
-        sf::Text getText() const;
+        /**
+         * @brief Get node text.
+         * 
+         * @return const sf::Text&  Node text 
+         */
+        const sf::Text& getText() const;
     };
 
     class Edge {
@@ -83,36 +186,47 @@ public:
         std::string label = "";
         sf::Color color = sf::Color::Black;
         bool dashed = false;
-        int thickness = 5;
-        int *weight = nullptr;
-        int *flow = nullptr;
+        float thickness = 5.0;
+        float *weight = nullptr;
+        float *flow = nullptr;
         LineShape *shape = nullptr;
         sf::Text text;
         void update();
     public:
         Edge();
         Edge(id_t id, const Node *u, const Node *v, int edgeType);
-        Edge& operator=(const Edge &u);
-        int getId() const;
+        
+        id_t getId() const;
+
         void setFrom(const Node *u);
         const Node* getFrom() const;
+
         void setTo(const Node *v);
         const Node* getTo() const;
+
         void setEdgeType(int edgeType);
         int getEdgeType() const;
+
         void setLabel(const std::string &label);
-        std::string getLabel() const;
+        const std::string& getLabel() const;
+
         void setColor(const sf::Color &color);
         const sf::Color& getColor() const;
+
         void setDashed(bool dashed);
         bool getDashed() const;
-        void setThickness(int thickness);
-        int getThickness() const;
-        void setWeight(int weight);
-        const int* getWeight() const;
-        void setFlow(int flow);
-        const int* getFlow() const;
+
+        void setThickness(float thickness);
+        float getThickness() const;
+
+        void setWeight(float weight);
+        const float* getWeight() const;
+
+        void setFlow(float flow);
+        const float* getFlow() const;
+
         const sf::VertexArray* getShape() const;
+
         sf::Text getText() const;
     };
     

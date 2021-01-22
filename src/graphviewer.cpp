@@ -22,15 +22,20 @@ GraphViewer::Node::Node(GraphViewer::id_t id, const Vector2f &position):
     update();
 }
 
-int GraphViewer::Node::getId() const{ return id; }
+GraphViewer::id_t GraphViewer::Node::getId() const{ return id; }
+
 void GraphViewer::Node::setPosition(const Vector2f &position){ this->position = position; update(); }
 const Vector2f& GraphViewer::Node::getPosition() const{ return position; }
+
 void GraphViewer::Node::setSize(int size){ this->size = size; update(); }
-int GraphViewer::Node::getSize() const{ return size; }
+float GraphViewer::Node::getSize() const{ return size; }
+
 void GraphViewer::Node::setLabel(const string &label){ text.setString(label); update(); }
 string GraphViewer::Node::getLabel() const{ return text.getString(); }
+
 void GraphViewer::Node::setColor(const Color &color){ this->color = color; update(); }
 const Color& GraphViewer::Node::getColor() const{ return color; }
+
 void GraphViewer::Node::setIcon(const string &path){
     if(path == ""){ icon = Texture()   ; isIcon = false; }
     else          { icon.loadFromFile(path); isIcon = true; }
@@ -38,12 +43,16 @@ void GraphViewer::Node::setIcon(const string &path){
 }
 const Texture& GraphViewer::Node::getIcon() const{ return icon; }
 bool GraphViewer::Node::getIsIcon() const{ return isIcon; }
-void GraphViewer::Node::setOutlineThickness(int outlineThickness){ this->outlineThickness = outlineThickness; update(); }
-int GraphViewer::Node::getOutlineThickness() const{ return outlineThickness; }
+
+void GraphViewer::Node::setOutlineThickness(float outlineThickness){ this->outlineThickness = outlineThickness; update(); }
+float GraphViewer::Node::getOutlineThickness() const{ return outlineThickness; }
+
 void GraphViewer::Node::setOutlineColor(const Color &outlineColor){ this->outlineColor = outlineColor; update(); }
 const Color& GraphViewer::Node::getOutlineColor() const{ return outlineColor; }
+
 const Shape* GraphViewer::Node::getShape() const { return shape; }
-Text GraphViewer::Node::getText() const { return text; }
+
+const Text& GraphViewer::Node::getText() const { return text; }
 
 void GraphViewer::Node::update(){
     delete shape;
@@ -84,21 +93,7 @@ GraphViewer::Edge::Edge(GraphViewer::id_t id, const GraphViewer::Node *u, const 
     update();
 }
 
-GraphViewer::Edge& GraphViewer::Edge::operator=(const GraphViewer::Edge &e){
-    id       = e.id;
-    u        = e.u;
-    v        = e.v;
-    edgeType = e.edgeType;
-    label    = e.label;
-    color    = e.color;
-    dashed   = e.dashed;
-    thickness= e.thickness;
-    if(e.weight != nullptr) weight = new int(*e.weight);
-    if(e.flow   != nullptr) flow   = new int(*e.flow  );
-    return *this;
-}
-
-int GraphViewer::Edge::getId() const{ return id; }
+GraphViewer::id_t GraphViewer::Edge::getId() const{ return id; }
 void GraphViewer::Edge::setFrom(const Node *u){ this->u = u; update(); }
 const GraphViewer::Node* GraphViewer::Edge::getFrom() const{ return u; }
 void GraphViewer::Edge::setTo(const Node *v){ this->v = v; update(); }
@@ -106,25 +101,25 @@ const GraphViewer::Node* GraphViewer::Edge::getTo() const{ return v; }
 void GraphViewer::Edge::setEdgeType(int edgeType){ this->edgeType = edgeType; update(); }
 int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
 void GraphViewer::Edge::setLabel(const string &label){ this->label = label; update(); }
-string GraphViewer::Edge::getLabel() const{ return label; }
+const string& GraphViewer::Edge::getLabel() const{ return label; }
 void GraphViewer::Edge::setColor(const Color &color){ this->color = color; update(); }
 const Color& GraphViewer::Edge::getColor() const{ return color; }
 void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; update(); }
 bool GraphViewer::Edge::getDashed() const{ return dashed; }
-void GraphViewer::Edge::setThickness(int thickness){ this->thickness = thickness; update(); }
-int GraphViewer::Edge::getThickness() const{ return thickness; }
-void GraphViewer::Edge::setWeight(int weight){
+void GraphViewer::Edge::setThickness(float thickness){ this->thickness = thickness; update(); }
+float GraphViewer::Edge::getThickness() const{ return thickness; }
+void GraphViewer::Edge::setWeight(float weight){
     delete this->weight;
-    this->weight = new int(weight);
+    this->weight = new float(weight);
     update();
 }
-const int* GraphViewer::Edge::getWeight() const{ return weight; }
-void GraphViewer::Edge::setFlow(int flow){
+const float* GraphViewer::Edge::getWeight() const{ return weight; }
+void GraphViewer::Edge::setFlow(float flow){
     delete this->flow;
-    this->flow = new int(flow);
+    this->flow = new float(flow);
     update();
 }
-const int* GraphViewer::Edge::getFlow() const{ return flow; }
+const float* GraphViewer::Edge::getFlow() const{ return flow; }
 const VertexArray* GraphViewer::Edge::getShape() const { return shape; }
 Text GraphViewer::Edge::getText() const { return text; }
 void GraphViewer::Edge::update(){
@@ -207,6 +202,8 @@ void GraphViewer::closeWindow(){
 
 GraphViewer::Node& GraphViewer::addNode(const GraphViewer::Node &node){
     lock_guard<mutex> lock(graphMutex);
+    if(nodes.count(node.getId()))
+        throw invalid_argument("A node with that ID already exists");
     return (nodes[node.getId()] = node);
 }
 
@@ -216,6 +213,8 @@ GraphViewer::Node& GraphViewer::getNode(GraphViewer::id_t id){
 
 GraphViewer::Edge& GraphViewer::addEdge(const Edge &edge){
     lock_guard<mutex> lock(graphMutex);
+    if(edges.count(edge.getId()))
+        throw invalid_argument("An edge with that ID already exists");
     Edge &ret = (edges[edge.getId()] = edge);
     if(zipEdges) updateZip();
     return ret;
