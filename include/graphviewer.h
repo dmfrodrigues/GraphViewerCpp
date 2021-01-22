@@ -12,21 +12,6 @@
 
 #include "edgetype.h"
 
-#define BLUE "BLUE"
-#define RED "RED"
-#define PINK "PINK"
-#define PURPLE "PURPLE"
-#define BLACK "BLACK"
-#define WHITE "WHITE"
-#define ORANGE "ORANGE"
-#define YELLOW "YELLOW"
-#define GREEN "GREEN"
-#define CYAN "CYAN"
-#define GRAY "GRAY"
-#define DARK_GRAY "DARK_GRAY"
-#define LIGHT_GRAY "LIGHT_GRAY"
-#define MAGENTA "MAGENTA"
-
 using namespace std;
 
 /**
@@ -66,7 +51,6 @@ public:
         void setLabel(const string &label);
         string getLabel() const;
         void setColor(const sf::Color &color);
-        void setColor(const string &color);
         const sf::Color& getColor() const;
         void setIcon(const string &path);
         const sf::Texture& getIcon() const;
@@ -108,7 +92,6 @@ public:
         void setLabel(const string &label);
         string getLabel() const;
         void setColor(const sf::Color &color);
-        void setColor(const string &color);
         const sf::Color& getColor() const;
         void setDashed(bool dashed);
         bool getDashed() const;
@@ -240,11 +223,11 @@ public:
     void unlock();
 
 private:
-    bool debugMode = false;
+    bool debug_mode = false;
     FPSMonitor fps_monitor = FPSMonitor(1000);
     static const sf::Font DEBUG_FONT;
     static const int DEBUG_FONT_SIZE = 14;
-    sf::Text debugText;
+    sf::Text debug_text;
 
     static const sf::Font FONT;
     static const int FONT_SIZE = 16;
@@ -254,28 +237,17 @@ private:
     float x0 = 0.0;
     float y0 = 0.0;
 
-    string backgroundPath = "";
-    bool isBackgroundUpdated = false;
-    sf::Texture backgroundTex;
-    sf::Sprite backgroundSprite;
+    sf::Texture background_texture;
+    sf::Sprite background_sprite;
     sf::RenderWindow *window = nullptr;
     sf::View *view = nullptr;
-    sf::View *debugView = nullptr;
-    thread *mainThread = nullptr;
+    sf::View *debug_view = nullptr;
+    thread *main_thread = nullptr;
 
     bool enabledNodes = true;
     bool enabledNodesText = true;
     bool enabledEdges = true;
     bool enabledEdgesText = true;
-
-    sf::Color nodeColor = sf::Color::Red;
-    int nodeSize = 10;
-    string nodeIcon = "";
-    float nodeOutlineThickness = 1.0;
-    sf::Color nodeOutlineColor = sf::Color::Black;
-
-    sf::Color edgeColor = sf::Color::Black;
-    bool edgeDashed = false;
 
     class ZipEdges {
     private:
@@ -298,6 +270,7 @@ private:
 
     void onResize();
     void onScroll(float delta);
+
     void recalculateView();
 };
 

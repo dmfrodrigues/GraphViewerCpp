@@ -3,25 +3,6 @@
 #include <cmath>
 #include <iostream>
 
-sf::Color colorStringToSFColor(string colorStr){
-    std::transform(colorStr.begin(), colorStr.end(),colorStr.begin(), ::toupper);
-    if(colorStr == "BLUE"       ) return sf::Color::Blue;
-    if(colorStr == "RED"        ) return sf::Color::Red;
-    if(colorStr == "PINK"       ) return sf::Color(255, 192, 203);
-    if(colorStr == "PURPLE"     ) return sf::Color(128, 0, 128);
-    if(colorStr == "BLACK"      ) return sf::Color::Black;
-    if(colorStr == "WHITE"      ) return sf::Color::White;
-    if(colorStr == "ORANGE"     ) return sf::Color(255, 129,   0);
-    if(colorStr == "YELLOW"     ) return sf::Color::Yellow;
-    if(colorStr == "GREEN"      ) return sf::Color::Green;
-    if(colorStr == "CYAN"       ) return sf::Color::Cyan;
-    if(colorStr == "GRAY"       ) return sf::Color(128, 128, 128);
-    if(colorStr == "DARK_GRAY"  ) return sf::Color(192, 192, 192);
-    if(colorStr == "LIGHT_GRAY" ) return sf::Color( 64,  64,  64);
-    if(colorStr == "MAGENTA"    ) return sf::Color::Magenta;
-    throw domain_error("No such color '"+colorStr+"'");
-}
-
 GraphViewer::Node::Node(){
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
@@ -50,7 +31,6 @@ int GraphViewer::Node::getSize() const{ return size; }
 void GraphViewer::Node::setLabel(const string &label){ text.setString(label); update(); }
 string GraphViewer::Node::getLabel() const{ return text.getString(); }
 void GraphViewer::Node::setColor(const sf::Color &color){ this->color = color; update(); }
-void GraphViewer::Node::setColor(const string &color){ setColor(colorStringToSFColor(color)); }
 const sf::Color& GraphViewer::Node::getColor() const{ return color; }
 void GraphViewer::Node::setIcon(const string &path){
     if(path == ""){ icon = sf::Texture()   ; isIcon = false; }
@@ -129,7 +109,6 @@ int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
 void GraphViewer::Edge::setLabel(const string &label){ this->label = label; update(); }
 string GraphViewer::Edge::getLabel() const{ return label; }
 void GraphViewer::Edge::setColor(const sf::Color &color){ this->color = color; update(); }
-void GraphViewer::Edge::setColor(const string &color){ setColor(colorStringToSFColor(color)); }
 const sf::Color& GraphViewer::Edge::getColor() const{ return color; }
 void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; update(); }
 bool GraphViewer::Edge::getDashed() const{ return dashed; }
@@ -197,10 +176,10 @@ const sf::Font GraphViewer::DEBUG_FONT = getFont("/../resources/fonts/inconsolat
 const sf::Font GraphViewer::FONT       = getFont("/../resources/fonts/arial.ttf");
 
 GraphViewer::GraphViewer():
-    debugText("", DEBUG_FONT, DEBUG_FONT_SIZE)
+    debug_text("", DEBUG_FONT, DEBUG_FONT_SIZE)
 {
-    debugText.setFillColor(sf::Color::Black);
-    debugText.setStyle(sf::Text::Bold);
+    debug_text.setFillColor(sf::Color::Black);
+    debug_text.setStyle(sf::Text::Bold);
 }
 
 bool GraphViewer::createWindow(int width, int height){
@@ -212,12 +191,12 @@ bool GraphViewer::createWindow(int width, int height){
     settings.antialiasingLevel = 8;
     window = new sf::RenderWindow(sf::VideoMode(width, height), "GraphViewer", sf::Style::Default, settings);
     view = new sf::View(window->getDefaultView());
-    debugView = new sf::View(window->getDefaultView());
+    debug_view = new sf::View(window->getDefaultView());
 
     x0 = width/2.0;
     y0 = height/2.0;
     window->setActive(false);
-    mainThread = new thread(&GraphViewer::run, this);
+    main_thread = new thread(&GraphViewer::run, this);
     return true;
 }
 
@@ -225,7 +204,7 @@ bool GraphViewer::closeWindow(){
     window->close();
     delete window; window = nullptr;
     delete view; view = nullptr;
-    delete debugView; debugView = nullptr;
+    delete debug_view; debug_view = nullptr;
     return true;
 }
 
@@ -259,24 +238,22 @@ bool GraphViewer::removeEdge(int id){
 
 bool GraphViewer::setBackground(string path){
     lock_guard<mutex> lock(graphMutex);
-    backgroundPath = path;
-    backgroundTex.loadFromFile(path);
-    backgroundSprite.setTexture(backgroundTex);
-    auto bounds = backgroundSprite.getLocalBounds();
-    backgroundSprite.setOrigin(bounds.width/2.0, bounds.height/2.0);
+    background_texture.loadFromFile(path);
+    background_sprite.setTexture(background_texture);
+    auto bounds = background_sprite.getLocalBounds();
+    background_sprite.setOrigin(bounds.width/2.0, bounds.height/2.0);
     return true;
 }
 
 bool GraphViewer::clearBackground(){
     lock_guard<mutex> lock(graphMutex);
-    backgroundPath = "";
-    backgroundTex = sf::Texture();
-    backgroundSprite.setTexture(backgroundTex);
+    background_texture = sf::Texture();
+    background_sprite.setTexture(background_texture);
     return true;
 }
 
 void GraphViewer::join(){
-    mainThread->join();
+    main_thread->join();
 }
 
 void GraphViewer::setEnabledNodes(bool b){ enabledNodes = b; }
@@ -339,7 +316,7 @@ void GraphViewer::run(){
                     break;
                 case sf::Event::TextEntered:
                     switch(toupper(event.text.unicode)){
-                        case 'D': debugMode = !debugMode; break;
+                        case 'D': debug_mode = !debug_mode; break;
                         default: break;
                     }
                     break;
@@ -356,7 +333,7 @@ void GraphViewer::draw() {
     window->clear(sf::Color::White);
 
     window->setView(*view);
-    window->draw(backgroundSprite);
+    window->draw(background_sprite);
     if(enabledEdges){
         if(zipEdges){
             const vector<sf::Vertex> &v = zip.getVertices();
@@ -391,26 +368,26 @@ void GraphViewer::draw() {
 
     fps_monitor.count();
 
-    if(debugMode){
+    if(debug_mode){
         drawDebug();
     }
 }
 
 void GraphViewer::drawDebug(){
-    window->setView(*debugView);
+    window->setView(*debug_view);
     
     string debugInfo;
     debugInfo += "FPS: " + to_string(int(fps_monitor.getFPS())) + "\n";
     
     if(debugInfo[debugInfo.size()-1] == '\n')
         debugInfo = debugInfo.substr(0, debugInfo.size()-1);
-    debugText.setString(debugInfo);
+    debug_text.setString(debugInfo);
     sf::Vector2f size = sf::Vector2f(window->getSize());
-    sf::FloatRect bounds = debugText.getLocalBounds();
-    debugText.setOrigin(0, bounds.height);
-    debugText.setPosition(sf::Vector2f(0.2*DEBUG_FONT_SIZE, size.y-0.7*DEBUG_FONT_SIZE));
+    sf::FloatRect bounds = debug_text.getLocalBounds();
+    debug_text.setOrigin(0, bounds.height);
+    debug_text.setPosition(sf::Vector2f(0.2*DEBUG_FONT_SIZE, size.y-0.7*DEBUG_FONT_SIZE));
 
-    window->draw(debugText);
+    window->draw(debug_text);
 }
 
 void GraphViewer::onResize(){
@@ -426,10 +403,10 @@ void GraphViewer::onScroll(float delta){
 void GraphViewer::recalculateView(){
     sf::Vector2f size = static_cast<sf::Vector2f>(window->getSize());
     *view = sf::View(sf::Vector2f(x0, y0), sf::Vector2f(size.x*scale, size.y*scale));
-    *debugView = sf::View(sf::FloatRect(0.0, 0.0, size.x, size.y));
+    *debug_view = sf::View(sf::FloatRect(0.0, 0.0, size.x, size.y));
 
-    backgroundSprite.setPosition(x0, y0);
-    auto bounds = backgroundSprite.getLocalBounds();
+    background_sprite.setPosition(x0, y0);
+    auto bounds = background_sprite.getLocalBounds();
     sf::Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
-    backgroundSprite.setScale(scaleVec);
+    background_sprite.setScale(scaleVec);
 }
