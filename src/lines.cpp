@@ -13,8 +13,8 @@ void GraphViewer::LineShape::setFrom(const Vector2f& u){ this->u = u; }
 const Vector2f& GraphViewer::LineShape::getFrom() const{ return u; }
 void GraphViewer::LineShape::setTo(const Vector2f& v){ this->v = v; }
 const Vector2f& GraphViewer::LineShape::getTo() const{ return v; }
-void GraphViewer::LineShape::setWidth(const float& w){ this->w = w; }
-const float& GraphViewer::LineShape::getWidth() const{ return w; }
+void GraphViewer::LineShape::setWidth(float w){ this->w = w; }
+float GraphViewer::LineShape::getWidth() const{ return w; }
 
 void GraphViewer::LineShape::setFillColor(Color color){
     for(size_t i = 0; i < getVertexCount(); ++i){

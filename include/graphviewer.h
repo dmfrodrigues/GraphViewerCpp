@@ -490,6 +490,11 @@ public:
      * object separately; performance improves by about 20 times in large
      * graphs with many edges.
      * 
+     * Please take close attention to the fact that, if edge zipping is enabled,
+     * if you change an edge (or the position of a node that has edges connected
+     * to it) you must afterwards call GraphViewer::setZipEdges(true) again, so
+     * the zipped edges object is properly updated.
+     * 
      * @param b True to zip edges, false if not.
      */
     void setZipEdges(bool b = false);
@@ -530,42 +535,87 @@ private:
      * @endcode
      */
     static constexpr float SCALE_DELTA = 1.5;
-    sf::Vector2f center;
+    sf::Vector2f center;                        ///< @brief Coordinates of center of the window.
 
-    sf::Texture background_texture;
-    sf::Sprite background_sprite;
-    sf::RenderWindow *window = nullptr;
-    sf::View *view       = nullptr;
-    sf::View *debug_view = nullptr;
-    std::thread *main_thread = nullptr;
+    sf::Texture background_texture;             ///< @brief Background texture (must be kept alive).
+    sf::Sprite background_sprite;               ///< @brief Background sprite.
+    sf::RenderWindow *window = nullptr;         ///< @brief Window.
+    sf::View *view       = nullptr;             ///< @brief Default view, to draw the graph.
+    sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.
+    std::thread *main_thread = nullptr;         ///< @brief Main thread.
 
-    bool enabledNodes     = true;
-    bool enabledNodesText = true;
-    bool enabledEdges     = true;
-    bool enabledEdgesText = true;
+    bool enabledNodes     = true;               ///< @brief Node drawing enabled.
+    bool enabledNodesText = true;               ///< @brief Node text drawing enabled.
+    bool enabledEdges     = true;               ///< @brief Edge drawing enabled.
+    bool enabledEdgesText = true;               ///< @brief Edge text drawing enabled.
 
+    /**
+     * @brief Class to save zipped edges.
+     * 
+     * Only works properly with vertex arrays meant to be drawn as sf::Quads.
+     */
     class ZipEdges {
     private:
-        std::vector<sf::Vertex> vertices;
+        std::vector<sf::Vertex> vertices;       ///< @brief Vertices vector, the zipped version of several vertex arrays
     public:
+        /**
+         * @brief Append vertex array.
+         * 
+         * @param a Vertex array to append.
+         */
         void append(const sf::VertexArray &a);
+        /**
+         * @brief Get vertex vector.
+         * 
+         * @return const std::vector<sf::Vertex>& Vertex vector to be drawn.
+         */
         const std::vector<sf::Vertex>& getVertices() const;
     };
-    bool zipEdges = false;
-    ZipEdges zip;
+    bool zipEdges = false;                      ///< @brief Zip edges or not.
+    ZipEdges zip;                               ///< @brief Zipped edges object.
+    /**
+     * @brief Update zip object.
+     */
     void updateZip();
 
+    /**
+     * @brief Mutex protecting structures that are being drawn and that can
+     * be updated by another thread at the same time.
+     */
     std::mutex graphMutex;
-    std::unordered_map<id_t, Node> nodes;
-    std::unordered_map<id_t, Edge> edges;
+    std::unordered_map<id_t, Node> nodes;   ///< @brief Nodes map.
+    std::unordered_map<id_t, Edge> edges;   ///< @brief Edges map.
 
+    /**
+     * @brief Main entry point for event processing.
+     * 
+     * This function is the entry point for the window thread, and manages
+     * events and drawing. 
+     */
     void run();
+    /**
+     * @brief Draw graph and debug information.
+     */
     void draw();
+    /**
+     * @brief Draw debug information; called by GraphViewer::draw().
+     */
     void drawDebug();
 
+    /**
+     * @brief Called on window resize.
+     */
     void onResize();
+    /**
+     * @brief Called on mouse scroll; updates scale/zoom.
+     * 
+     * @param delta Scroll delta (usually +1 or -1)
+     */
     void onScroll(float delta);
 
+    /**
+     * @brief Recalculate views on window resize, or dragging inside window.
+     */
     void recalculateView();
 };
 
