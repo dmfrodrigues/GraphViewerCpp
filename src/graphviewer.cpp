@@ -138,8 +138,8 @@ void GraphViewer::Edge::update(){
     shape->setFillColor(getColor());
 
     string label = getLabel();
-    if(getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(*getWeight());
-    if(getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(*getFlow  ());
+    if(getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(int(*getWeight()));
+    if(getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(int(*getFlow  ()));
     text.setString(label);
     FloatRect bounds = text.getLocalBounds();
     text.setPosition((u->getPosition() + v->getPosition())/2.0f - Vector2f(bounds.width/2.0, 0.8*bounds.height));
