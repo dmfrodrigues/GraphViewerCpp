@@ -223,6 +223,16 @@ GraphViewer::Edge& GraphViewer::addEdge(const Edge &edge){
 
 void GraphViewer::removeNode(GraphViewer::id_t id){
     lock_guard<mutex> lock(graphMutex);
+    for(auto it = edges.cbegin(); it != edges.cend(); ){
+        if(
+            it->second.getFrom()->getId() == id ||
+            it->second.getTo  ()->getId() == id
+        ){
+            edges.erase(it++);
+        } else {
+            ++it;
+        }
+    }
     if(nodes.erase(id) == 0)
         throw out_of_range("No such node ID "+to_string(id));
 }
