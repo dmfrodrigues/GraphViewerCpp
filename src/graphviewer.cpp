@@ -192,8 +192,7 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     view = new View(window->getDefaultView());
     debug_view = new View(window->getDefaultView());
 
-    x0 = width/2.0;
-    y0 = height/2.0;
+    center = Vector2f(width/2.0, height/2.0);
     window->setActive(false);
     main_thread = new thread(&GraphViewer::run, this);
 }
@@ -288,8 +287,8 @@ void GraphViewer::updateZip(){
 
 void GraphViewer::run(){
     bool isLeftClickPressed = false;
-    float x0Initial, y0Initial;
-    int xMouseInitial, yMouseInitial;
+    Vector2f centerInitial;
+    Vector2f posMouseInitial;
     while (window->isOpen()){
         Event event;
         while (window->pollEvent(event)){
@@ -301,10 +300,11 @@ void GraphViewer::run(){
                     switch(event.mouseButton.button){
                         case Mouse::Button::Left:
                             isLeftClickPressed = true;
-                            x0Initial = x0;
-                            y0Initial = y0;
-                            xMouseInitial = event.mouseButton.x;
-                            yMouseInitial = event.mouseButton.y;
+                            centerInitial = center;
+                            posMouseInitial = Vector2f(
+                                event.mouseButton.x,
+                                event.mouseButton.y
+                            );
                             break;
                         default: break;
                     }
@@ -319,8 +319,8 @@ void GraphViewer::run(){
                     break;
                 case Event::MouseMoved:
                     if(isLeftClickPressed){
-                        x0 = x0Initial - scale*(event.mouseMove.x - xMouseInitial);
-                        y0 = y0Initial - scale*(event.mouseMove.y - yMouseInitial);
+                        Vector2f mouse_pos(event.mouseMove.x, event.mouseMove.y);
+                        center = centerInitial - (mouse_pos - posMouseInitial)*scale;
                         recalculateView();
                     }
                     break;
@@ -412,10 +412,10 @@ void GraphViewer::onScroll(float delta){
 
 void GraphViewer::recalculateView(){
     Vector2f size = static_cast<Vector2f>(window->getSize());
-    *view = View(Vector2f(x0, y0), Vector2f(size.x*scale, size.y*scale));
+    *view = View(center, size*scale);
     *debug_view = View(FloatRect(0.0, 0.0, size.x, size.y));
 
-    background_sprite.setPosition(x0, y0);
+    background_sprite.setPosition(center);
     auto bounds = background_sprite.getLocalBounds();
     Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
     background_sprite.setScale(scaleVec);

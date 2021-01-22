@@ -28,16 +28,21 @@ public:
      */
     class Node {
     private:
-        id_t id;
-        sf::Vector2f position;
-        float size = 10.0;
-        std::string label = "";
-        sf::Color color = sf::Color::Red;
-        sf::Texture icon; bool isIcon = false;
-        float outlineThickness = 1.0;
-        sf::Color outlineColor = sf::Color::Black;
-        sf::Shape *shape = nullptr;
-        sf::Text text;
+        id_t id;                                    ///< @brief Node ID.
+        sf::Vector2f position;                      ///< @brief Node position.
+        float size = 10.0;                          ///< @brief Node size.
+        std::string label = "";                     ///< @brief Node label.
+        sf::Color color = sf::Color::Red;           ///< @brief Node color.
+        sf::Texture icon;                           ///< @brief Node icon.
+        bool isIcon = false;                        ///< @brief True if node is icon, false otherwise.
+        float outlineThickness = 1.0;               ///< @brief Node outline thickness.
+        sf::Color outlineColor = sf::Color::Black;  ///< @brief Node outline color.
+        sf::Shape *shape = nullptr;                 ///< @brief Node shape.
+        sf::Text text;                              ///< @brief Node text.
+        
+        /**
+         * @brief Update node shape and text considering changes in properties.
+         */
         void update();
     public:
         /**
@@ -175,25 +180,35 @@ public:
         const sf::Text& getText() const;
     };
 
+    /**
+     * @brief Class to represent an edge.
+     */
     class Edge {
     public:
+        /**
+         * @brief Edge type.
+         */
         enum EdgeType {
-            DIRECTED,
-            UNDIRECTED
+            DIRECTED,       ///< @brief Directed edge
+            UNDIRECTED      ///< @brief Undirected edge
         };
     private:
-        id_t id;
-        const Node *u = nullptr;
-        const Node *v = nullptr;
-        EdgeType edge_type;
-        std::string label = "";
-        sf::Color color = sf::Color::Black;
-        bool dashed = false;
-        float thickness = 5.0;
-        float *weight = nullptr;
-        float *flow = nullptr;
-        LineShape *shape = nullptr;
-        sf::Text text;
+        id_t id;                            ///< @brief Edge ID.
+        const Node *u = nullptr;            ///< @brief Edge origin node.
+        const Node *v = nullptr;            ///< @brief Edge destination node.
+        EdgeType edge_type;                 ///< @brief Edge type.
+        std::string label = "";             ///< @brief Edge label.
+        sf::Color color = sf::Color::Black; ///< @brief Edge color.
+        bool dashed = false;                ///< @brief True if edge is dashed, false if full.
+        float thickness = 5.0;              ///< @brief Edge thickness, in pixels.
+        float *weight = nullptr;            ///< @brief Edge weight.
+        float *flow = nullptr;              ///< @brief Edge flow.
+        LineShape *shape = nullptr;         ///< @brief Edge shape.
+        sf::Text text;                      ///< @brief Edge text.
+
+        /**
+         * @brief Update edge shape and text considering changes in properties.
+         */
         void update();
     public:
         /**
@@ -496,15 +511,15 @@ public:
 
 private:
     static const sf::Font DEBUG_FONT;           ///< @brief Debug font.
-    static const int DEBUG_FONT_SIZE = 14;      ///< @brief Debug font size.
-    bool debug_mode = false;                    ///< @brief Debug mode enabled/disabled.
+    static const int DEBUG_FONT_SIZE = 14;      ///< @brief Debug font size, in pixels.
+    bool debug_mode = false;                    ///< @brief True if debug mode is enabled, false otherwise.
     FPSMonitor fps_monitor = FPSMonitor(1000);  ///< @brief FPS monitor.
-    sf::Text debug_text;                        ///< @brief Debug text.
+    sf::Text debug_text;                        ///< @brief Debug text to be displayed.
 
     static const sf::Font FONT;                 ///< @brief Font.
     static const int FONT_SIZE = 16;            ///< @brief Font size.
 
-    float scale = 1.0;                          ///< @brief Scale factor.
+    float scale = 1.0;                          ///< @brief Scale (changed with scroll).
     /**
      * @brief Scale factor.
      * 
@@ -515,8 +530,7 @@ private:
      * @endcode
      */
     static constexpr float SCALE_DELTA = 1.5;
-    float x0 = 0.0;
-    float y0 = 0.0;
+    sf::Vector2f center;
 
     sf::Texture background_texture;
     sf::Sprite background_sprite;
