@@ -16,8 +16,6 @@ using namespace std;
 
 /**
  * @brief Class to save and represent a graph.
- * 
- * All functions return a boolean indicating they executed successfully.
  */
 class GraphViewer {
 private:
@@ -47,22 +45,31 @@ public:
         Node(int id, const sf::Vector2f &position);
 
         int getId() const;
+        
         void setPosition(const sf::Vector2f &position);
         const sf::Vector2f& getPosition() const;
+        
         void setSize(int size);
         int getSize() const;
+        
         void setLabel(const string &label);
         string getLabel() const;
+        
         void setColor(const sf::Color &color);
         const sf::Color& getColor() const;
+        
         void setIcon(const string &path);
         const sf::Texture& getIcon() const;
         bool getIsIcon() const;
+
         void setOutlineThickness(int outlineThickness);
         int getOutlineThickness() const;
+        
         void setOutlineColor(const sf::Color &outlineColor);
         const sf::Color& getOutlineColor() const;
+        
         const sf::Shape* getShape() const;
+        
         sf::Text getText() const;
     };
 
@@ -120,12 +127,12 @@ public:
      * @param width Window width (in pixels)
      * @param height Window height (in pixels)
      */
-    bool createWindow(int width, int height);
+    void createWindow(int width, int height);
 
     /**
      * @brief Close visualization window.
      */
-    bool closeWindow();
+    void closeWindow();
 
     /**
      * @brief Add node.
@@ -152,26 +159,26 @@ public:
      *
      * @param id Unique ID of node to be removed.
      */
-    bool removeNode(int id);
+    void removeNode(int id);
 
     /**
      * @brief Remove edge.
      *
      * @param id Unique ID of edge to be removed
      */
-    bool removeEdge(int id);
+    void removeEdge(int id);
 
     /**
      * @brief Set background image.
      *
      * @param path Filepath of new background
      */
-    bool setBackground(string path);
+    void setBackground(string path);
 
     /**
      * @brief Clear background image.
      */
-    bool clearBackground();
+    void clearBackground();
 
     /**
      * @brief Join the window main thread.

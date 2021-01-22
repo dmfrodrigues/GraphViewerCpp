@@ -7,6 +7,7 @@ GraphViewer::Node::Node(){
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
+    update();
 }
 GraphViewer::Node::Node(int id, const sf::Vector2f &position):
     id(id),
@@ -15,6 +16,7 @@ GraphViewer::Node::Node(int id, const sf::Vector2f &position):
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(sf::Color::Black);
+    update();
 }
 
 int GraphViewer::Node::getId() const{ return id; }
@@ -176,8 +178,8 @@ GraphViewer::GraphViewer():
     debug_text.setStyle(sf::Text::Bold);
 }
 
-bool GraphViewer::createWindow(int width, int height){
-    if(window != nullptr) return false;
+void GraphViewer::createWindow(int width, int height){
+    if(window != nullptr) throw runtime_error("Window was already created");
     if(width  == 0) width  = DEFAULT_WIDTH ;
     if(height == 0) height = DEFAULT_HEIGHT;
 
@@ -191,15 +193,13 @@ bool GraphViewer::createWindow(int width, int height){
     y0 = height/2.0;
     window->setActive(false);
     main_thread = new thread(&GraphViewer::run, this);
-    return true;
 }
 
-bool GraphViewer::closeWindow(){
+void GraphViewer::closeWindow(){
     window->close();
-    delete window; window = nullptr;
-    delete view; view = nullptr;
+    delete window    ; window     = nullptr;
+    delete view      ; view       = nullptr;
     delete debug_view; debug_view = nullptr;
-    return true;
 }
 
 GraphViewer::Node& GraphViewer::addNode(const GraphViewer::Node &node){
@@ -218,32 +218,31 @@ GraphViewer::Edge& GraphViewer::addEdge(const Edge &edge){
     return ret;
 }
 
-bool GraphViewer::removeNode(int id){
+void GraphViewer::removeNode(int id){
     lock_guard<mutex> lock(graphMutex);
-    return (nodes.erase(id) != 0);
+    if(nodes.erase(id) == 0)
+        throw out_of_range("No such node ID "+to_string(id));
 }
 
-bool GraphViewer::removeEdge(int id){
+void GraphViewer::removeEdge(int id){
     lock_guard<mutex> lock(graphMutex);
-    auto ret = (edges.erase(id) != 0);
+    if(edges.erase(id) == 0)
+        throw out_of_range("No such edge ID "+to_string(id));
     if(zipEdges) updateZip();
-    return ret;
 }
 
-bool GraphViewer::setBackground(string path){
+void GraphViewer::setBackground(string path){
     lock_guard<mutex> lock(graphMutex);
     background_texture.loadFromFile(path);
     background_sprite.setTexture(background_texture);
     auto bounds = background_sprite.getLocalBounds();
     background_sprite.setOrigin(bounds.width/2.0, bounds.height/2.0);
-    return true;
 }
 
-bool GraphViewer::clearBackground(){
+void GraphViewer::clearBackground(){
     lock_guard<mutex> lock(graphMutex);
     background_texture = sf::Texture();
     background_sprite.setTexture(background_texture);
-    return true;
 }
 
 void GraphViewer::join(){
