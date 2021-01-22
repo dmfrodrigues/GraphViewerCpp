@@ -50,6 +50,7 @@ int GraphViewer::Node::getSize() const{ return size; }
 void GraphViewer::Node::setLabel(const string &label){ text.setString(label); update(); }
 string GraphViewer::Node::getLabel() const{ return text.getString(); }
 void GraphViewer::Node::setColor(const sf::Color &color){ this->color = color; update(); }
+void GraphViewer::Node::setColor(const string &color){ setColor(colorStringToSFColor(color)); }
 const sf::Color& GraphViewer::Node::getColor() const{ return color; }
 void GraphViewer::Node::setIcon(const string &path){
     if(path == ""){ icon = sf::Texture()   ; isIcon = false; }
@@ -227,16 +228,8 @@ bool GraphViewer::closeWindow(){
     return true;
 }
 
-bool GraphViewer::addNode(int id, int x, int y){
-    lock_guard<mutex> lock(graphMutex);
-    if(nodes.count(id)) return false;
-    nodes[id] = Node(id, sf::Vector2f(x,y));
-    nodes[id].setColor(nodeColor);
-    nodes[id].setSize(nodeSize);
-    nodes[id].setIcon(nodeIcon);
-    nodes[id].setOutlineThickness(nodeOutlineThickness);
-    nodes[id].setOutlineColor(nodeOutlineColor);
-    return true;
+GraphViewer::Node& GraphViewer::addNode(const GraphViewer::Node &node){
+    return (nodes[node.getId()] = node);
 }
 
 bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType){

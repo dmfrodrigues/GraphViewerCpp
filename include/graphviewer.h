@@ -35,6 +35,92 @@ using namespace std;
  * All functions return a boolean indicating they executed successfully.
  */
 class GraphViewer {
+private:
+    class LineShape;
+    class FullLineShape;
+    class DashedLineShape;
+
+public:
+    class Node {
+    private:
+        int id;
+        sf::Vector2f position;
+        int size = 10;
+        string label = "";
+        sf::Color color = sf::Color::Red;
+        sf::Texture icon; bool isIcon = false;
+        float outlineThickness = 1.0;
+        sf::Color outlineColor = sf::Color::Black;
+        sf::Shape *shape = nullptr;
+        sf::Text text;
+        void update();
+    public:
+        Node();
+        Node(int id, const sf::Vector2f &position);
+        Node& operator=(const Node &u);
+        int getId() const;
+        void setPosition(const sf::Vector2f &position);
+        const sf::Vector2f& getPosition() const;
+        void setSize(int size);
+        int getSize() const;
+        void setLabel(const string &label);
+        string getLabel() const;
+        void setColor(const sf::Color &color);
+        void setColor(const string &color);
+        const sf::Color& getColor() const;
+        void setIcon(const string &path);
+        const sf::Texture& getIcon() const;
+        bool getIsIcon() const;
+        void setOutlineThickness(int outlineThickness);
+        int getOutlineThickness() const;
+        void setOutlineColor(const sf::Color &outlineColor);
+        const sf::Color& getOutlineColor() const;
+        const sf::Shape* getShape() const;
+        sf::Text getText() const;
+    };
+
+    class Edge {
+    private:
+        int id;
+        const Node *u = nullptr;
+        const Node *v = nullptr;
+        int edgeType;
+        string label = "";
+        sf::Color color = sf::Color::Black;
+        bool dashed = false;
+        int thickness = 5;
+        int *weight = nullptr;
+        int *flow = nullptr;
+        LineShape *shape = nullptr;
+        sf::Text text;
+        void update();
+    public:
+        Edge();
+        Edge(int id, const Node *u, const Node *v, int edgeType);
+        Edge& operator=(const Edge &u);
+        int getId() const;
+        void setFrom(const Node *u);
+        const Node* getFrom() const;
+        void setTo(const Node *v);
+        const Node* getTo() const;
+        void setEdgeType(int edgeType);
+        int getEdgeType() const;
+        void setLabel(const string &label);
+        string getLabel() const;
+        void setColor(const sf::Color &color);
+        const sf::Color& getColor() const;
+        void setDashed(bool dashed);
+        bool getDashed() const;
+        void setThickness(int thickness);
+        int getThickness() const;
+        void setWeight(int weight);
+        const int* getWeight() const;
+        void setFlow(int flow);
+        const int* getFlow() const;
+        const sf::VertexArray* getShape() const;
+        sf::Text getText() const;
+    };
+    
 public:
     /**
      * @brief Construct a new graph.
@@ -57,11 +143,9 @@ public:
     /**
      * @brief Add node.
      * 
-     * @param id Unique node ID
-     * @param x Node x-position
-     * @param y Node y-position
+     * @param node Node to be added
      */
-    bool addNode(int id, int x, int y);
+    Node& addNode(const Node &node);
 
     /**
      * @brief Add edge.
@@ -400,91 +484,6 @@ public:
      * @param b True to zip edges, false if not.
      */
     void setZipEdges(bool b);
-
-private:
-    class LineShape;
-    class FullLineShape;
-    class DashedLineShape;
-
-public:
-    class Node {
-    private:
-        int id;
-        sf::Vector2f position;
-        int size = 10;
-        string label = "";
-        sf::Color color = sf::Color::Red;
-        sf::Texture icon; bool isIcon = false;
-        float outlineThickness = 1.0;
-        sf::Color outlineColor = sf::Color::Black;
-        sf::Shape *shape = nullptr;
-        sf::Text text;
-        void update();
-    public:
-        Node();
-        Node(int id, const sf::Vector2f &position);
-        Node& operator=(const Node &u);
-        int getId() const;
-        void setPosition(const sf::Vector2f &position);
-        const sf::Vector2f& getPosition() const;
-        void setSize(int size);
-        int getSize() const;
-        void setLabel(const string &label);
-        string getLabel() const;
-        void setColor(const sf::Color &color);
-        const sf::Color& getColor() const;
-        void setIcon(const string &path);
-        const sf::Texture& getIcon() const;
-        bool getIsIcon() const;
-        void setOutlineThickness(int outlineThickness);
-        int getOutlineThickness() const;
-        void setOutlineColor(const sf::Color &outlineColor);
-        const sf::Color& getOutlineColor() const;
-        const sf::Shape* getShape() const;
-        sf::Text getText() const;
-    };
-
-    class Edge {
-    private:
-        int id;
-        const Node *u = nullptr;
-        const Node *v = nullptr;
-        int edgeType;
-        string label = "";
-        sf::Color color = sf::Color::Black;
-        bool dashed = false;
-        int thickness = 5;
-        int *weight = nullptr;
-        int *flow = nullptr;
-        LineShape *shape = nullptr;
-        sf::Text text;
-        void update();
-    public:
-        Edge();
-        Edge(int id, const Node *u, const Node *v, int edgeType);
-        Edge& operator=(const Edge &u);
-        int getId() const;
-        void setFrom(const Node *u);
-        const Node* getFrom() const;
-        void setTo(const Node *v);
-        const Node* getTo() const;
-        void setEdgeType(int edgeType);
-        int getEdgeType() const;
-        void setLabel(const string &label);
-        string getLabel() const;
-        void setColor(const sf::Color &color);
-        const sf::Color& getColor() const;
-        void setDashed(bool dashed);
-        bool getDashed() const;
-        void setThickness(int thickness);
-        int getThickness() const;
-        void setWeight(int weight);
-        const int* getWeight() const;
-        void setFlow(int flow);
-        const int* getFlow() const;
-        const sf::VertexArray* getShape() const;
-        sf::Text getText() const;
-    };
 
 private:
     bool debugMode = false;

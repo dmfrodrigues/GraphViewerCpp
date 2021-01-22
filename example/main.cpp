@@ -52,13 +52,13 @@ GraphViewer* drawGraphFromFile(std::string name){
     for(int i = 0; i < n_nodes;i++) {
         std::getline(nodes, line);
         sscanf( line.c_str(), "(%f, %f, %s , %s , %u, %s )", &x, &y, color, label, &size, icon_path);
-        gv->addNode(i , x*scale, y*scale);
-        gv->setVertexColor(i, color);
+        GraphViewer::Node &node = gv->addNode(GraphViewer::Node(i, sf::Vector2f(x,y)*float(scale)));
+        node.setColor(color);
         if (label[0] != '-')
-            gv->setVertexLabel(i, label);
+            node.setLabel(label);
         if (icon_path[0] != '-')
-            gv->setVertexIcon(i, std::string(icon_path));
-        gv->setVertexSize(i, size);
+            node.setIcon(icon_path);
+        node.setSize(size);
     }
 
     // read num of edges
