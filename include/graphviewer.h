@@ -485,6 +485,9 @@ public:
      */
     void setZipEdges(bool b);
 
+    void lock();
+    void unlock();
+
 private:
     bool debugMode = false;
     FPSMonitor fps_monitor = FPSMonitor(1000);

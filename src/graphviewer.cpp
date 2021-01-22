@@ -486,6 +486,9 @@ void GraphViewer::setZipEdges(bool b){
     if(zipEdges) updateZip();
 }
 
+void GraphViewer::lock  (){ graphMutex.lock  (); }
+void GraphViewer::unlock(){ graphMutex.unlock(); }
+
 void GraphViewer::updateZip(){
     lock_guard<mutex> lock(graphMutex);
     zip = ZipEdges();
