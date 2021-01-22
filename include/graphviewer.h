@@ -495,16 +495,25 @@ public:
     void unlock();
 
 private:
-    static const sf::Font DEBUG_FONT;
-    static const int DEBUG_FONT_SIZE = 14;
-    bool debug_mode = false;
-    FPSMonitor fps_monitor = FPSMonitor(1000);
-    sf::Text debug_text;
+    static const sf::Font DEBUG_FONT;           ///< @brief Debug font.
+    static const int DEBUG_FONT_SIZE = 14;      ///< @brief Debug font size.
+    bool debug_mode = false;                    ///< @brief Debug mode enabled/disabled.
+    FPSMonitor fps_monitor = FPSMonitor(1000);  ///< @brief FPS monitor.
+    sf::Text debug_text;                        ///< @brief Debug text.
 
-    static const sf::Font FONT;
-    static const int FONT_SIZE = 16;
+    static const sf::Font FONT;                 ///< @brief Font.
+    static const int FONT_SIZE = 16;            ///< @brief Font size.
 
-    float scale = 1.0;
+    float scale = 1.0;                          ///< @brief Scale factor.
+    /**
+     * @brief Scale factor.
+     * 
+     * Scale is updated after a scroll of delta by calculating
+     * 
+     * @code{.cpp}
+     * scale = scale * pow(SCALE_DELTA, -delta);
+     * @endcode
+     */
     static constexpr float SCALE_DELTA = 1.5;
     float x0 = 0.0;
     float y0 = 0.0;
