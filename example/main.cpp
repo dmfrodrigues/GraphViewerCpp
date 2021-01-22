@@ -39,7 +39,6 @@ GraphViewer* drawGraphFromFile(std::string name){
     GraphViewer *gv = new GraphViewer();
     if (background_path[0] != '-')
         gv->setBackground(background_path);
-    gv->createWindow(width, height);
     gv->defineEdgeDashed(dashed);
     // gv->defineEdgeCurved(curved);
 
@@ -53,12 +52,14 @@ GraphViewer* drawGraphFromFile(std::string name){
         std::getline(nodes, line);
         sscanf( line.c_str(), "(%f, %f, %s , %s , %u, %s )", &x, &y, color, label, &size, icon_path);
         GraphViewer::Node &node = gv->addNode(GraphViewer::Node(i, sf::Vector2f(x,y)*float(scale)));
+        gv->lock();
         node.setColor(color);
         if (label[0] != '-')
             node.setLabel(label);
         if (icon_path[0] != '-')
             node.setIcon(icon_path);
         node.setSize(size);
+        gv->unlock();
     }
 
     // read num of edges
@@ -79,6 +80,7 @@ GraphViewer* drawGraphFromFile(std::string name){
         if (weight[0] != '%')
             gv->setEdgeWeight(i, atoi(weight));
     }
+    gv->createWindow(width, height);
 
     return gv;
 }
