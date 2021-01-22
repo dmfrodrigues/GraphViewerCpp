@@ -26,6 +26,9 @@ private:
     class DashedLineShape;
 
 public:
+    /**
+     * @brief Class to represent a node.
+     */
     class Node {
     private:
         int id;
@@ -42,7 +45,7 @@ public:
     public:
         Node();
         Node(int id, const sf::Vector2f &position);
-        Node& operator=(const Node &u);
+
         int getId() const;
         void setPosition(const sf::Vector2f &position);
         const sf::Vector2f& getPosition() const;

@@ -17,12 +17,6 @@ GraphViewer::Node::Node(int id, const sf::Vector2f &position):
     text.setFillColor(sf::Color::Black);
 }
 
-GraphViewer::Node& GraphViewer::Node::operator=(const GraphViewer::Node &u){
-    id       = u.id;
-    position = u.position;
-    return *this;
-}
-
 int GraphViewer::Node::getId() const{ return id; }
 void GraphViewer::Node::setPosition(const sf::Vector2f &position){ this->position = position; update(); }
 const sf::Vector2f& GraphViewer::Node::getPosition() const{ return position; }
