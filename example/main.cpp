@@ -25,7 +25,7 @@ int main() {
     return 0;
 }
 
-sf::Color colorStringToSFColor(string colorStr){
+sf::Color colorStringToSFColor(std::string colorStr){
     std::transform(colorStr.begin(), colorStr.end(),colorStr.begin(), ::toupper);
     if(colorStr == "BLUE"       ) return sf::Color::Blue;
     if(colorStr == "RED"        ) return sf::Color::Red;
@@ -41,7 +41,7 @@ sf::Color colorStringToSFColor(string colorStr){
     if(colorStr == "DARK_GRAY"  ) return sf::Color(192, 192, 192);
     if(colorStr == "LIGHT_GRAY" ) return sf::Color( 64,  64,  64);
     if(colorStr == "MAGENTA"    ) return sf::Color::Magenta;
-    throw domain_error("No such color '"+colorStr+"'");
+    throw std::domain_error("No such color '"+colorStr+"'");
 }
 
 GraphViewer* drawGraphFromFile(std::string name){

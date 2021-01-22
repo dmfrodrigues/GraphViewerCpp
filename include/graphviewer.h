@@ -12,12 +12,13 @@
 
 #include "edgetype.h"
 
-using namespace std;
-
 /**
  * @brief Class to save and represent a graph.
  */
 class GraphViewer {
+public:
+    typedef long id_t;
+
 private:
     class LineShape;
     class FullLineShape;
@@ -29,10 +30,10 @@ public:
      */
     class Node {
     private:
-        int id;
+        id_t id;
         sf::Vector2f position;
-        int size = 10;
-        string label = "";
+        float size = 10.0;
+        std::string label = "";
         sf::Color color = sf::Color::Red;
         sf::Texture icon; bool isIcon = false;
         float outlineThickness = 1.0;
@@ -42,7 +43,7 @@ public:
         void update();
     public:
         Node();
-        Node(int id, const sf::Vector2f &position);
+        Node(id_t id, const sf::Vector2f &position);
 
         int getId() const;
         
@@ -52,13 +53,13 @@ public:
         void setSize(int size);
         int getSize() const;
         
-        void setLabel(const string &label);
-        string getLabel() const;
+        void setLabel(const std::string &label);
+        std::string getLabel() const;
         
         void setColor(const sf::Color &color);
         const sf::Color& getColor() const;
         
-        void setIcon(const string &path);
+        void setIcon(const std::string &path);
         const sf::Texture& getIcon() const;
         bool getIsIcon() const;
 
@@ -75,11 +76,11 @@ public:
 
     class Edge {
     private:
-        int id;
+        id_t id;
         const Node *u = nullptr;
         const Node *v = nullptr;
         int edgeType;
-        string label = "";
+        std::string label = "";
         sf::Color color = sf::Color::Black;
         bool dashed = false;
         int thickness = 5;
@@ -90,7 +91,7 @@ public:
         void update();
     public:
         Edge();
-        Edge(int id, const Node *u, const Node *v, int edgeType);
+        Edge(id_t id, const Node *u, const Node *v, int edgeType);
         Edge& operator=(const Edge &u);
         int getId() const;
         void setFrom(const Node *u);
@@ -99,8 +100,8 @@ public:
         const Node* getTo() const;
         void setEdgeType(int edgeType);
         int getEdgeType() const;
-        void setLabel(const string &label);
-        string getLabel() const;
+        void setLabel(const std::string &label);
+        std::string getLabel() const;
         void setColor(const sf::Color &color);
         const sf::Color& getColor() const;
         void setDashed(bool dashed);
@@ -127,7 +128,7 @@ public:
      * @param width Window width (in pixels)
      * @param height Window height (in pixels)
      */
-    void createWindow(int width, int height);
+    void createWindow(unsigned int width, unsigned int height);
 
     /**
      * @brief Close visualization window.
@@ -141,7 +142,7 @@ public:
      */
     Node& addNode(const Node &node);
 
-    Node& getNode(int id);
+    Node& getNode(id_t id);
 
     /**
      * @brief Add edge.
@@ -159,21 +160,21 @@ public:
      *
      * @param id Unique ID of node to be removed.
      */
-    void removeNode(int id);
+    void removeNode(id_t id);
 
     /**
      * @brief Remove edge.
      *
      * @param id Unique ID of edge to be removed
      */
-    void removeEdge(int id);
+    void removeEdge(id_t id);
 
     /**
      * @brief Set background image.
      *
      * @param path Filepath of new background
      */
-    void setBackground(string path);
+    void setBackground(std::string path);
 
     /**
      * @brief Clear background image.
@@ -252,7 +253,7 @@ private:
     sf::RenderWindow *window = nullptr;
     sf::View *view = nullptr;
     sf::View *debug_view = nullptr;
-    thread *main_thread = nullptr;
+    std::thread *main_thread = nullptr;
 
     bool enabledNodes = true;
     bool enabledNodesText = true;
@@ -261,18 +262,18 @@ private:
 
     class ZipEdges {
     private:
-        vector<sf::Vertex> vertices;
+        std::vector<sf::Vertex> vertices;
     public:
         void append(const sf::VertexArray &a);
-        const vector<sf::Vertex>& getVertices() const;
+        const std::vector<sf::Vertex>& getVertices() const;
     };
     bool zipEdges = false;
     ZipEdges zip;
     void updateZip();
 
-    mutex graphMutex;
-    unordered_map<int, Node> nodes;
-    unordered_map<int, Edge> edges;
+    std::mutex graphMutex;
+    std::unordered_map<id_t, Node> nodes;
+    std::unordered_map<id_t, Edge> edges;
 
     void run();
     void draw();
