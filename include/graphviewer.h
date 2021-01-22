@@ -108,6 +108,7 @@ public:
         void setLabel(const string &label);
         string getLabel() const;
         void setColor(const sf::Color &color);
+        void setColor(const string &color);
         const sf::Color& getColor() const;
         void setDashed(bool dashed);
         bool getDashed() const;
@@ -147,6 +148,8 @@ public:
      */
     Node& addNode(const Node &node);
 
+    Node& getNode(int id);
+
     /**
      * @brief Add edge.
      *
@@ -156,7 +159,7 @@ public:
      * @param edgeType EdgeType.DIRECTED if the edge is directed,
      *                 EdgeType.UNDIRECTED if the edge is undirected
      */
-    bool addEdge(int id, int v1, int v2, int edgeType);
+    Edge& addEdge(const Edge &edge);
 
     /**
      * @brief Remove node and all edges connected to it.
@@ -171,258 +174,6 @@ public:
      * @param id Unique ID of edge to be removed
      */
     bool removeEdge(int id);
-
-    /**
-     * @brief Set node text label.
-     * 
-     * @param id Node ID
-     * @param label Node label
-     */
-    bool setVertexLabel(int id, string label);
-
-    /**
-     * @brief Clear node text label, if it was defined.
-     *
-     * @param id Node ID
-     */
-    bool clearVertexLabel(int id);
-
-    /**
-     * @brief Set edge text label.
-     *
-     * @param id Edge ID
-     * @param label Edge label
-     */
-    bool setEdgeLabel(int id, string label);
-
-    /**
-     * @brief Clear edge text label, if it was defined.
-     *
-     * @param id Edge ID
-     */
-    bool clearEdgeLabel(int id);
-
-    /**
-     * @brief Set edge color.
-     * 
-     * @param id Edge ID
-     * @param color New color
-     */
-    bool setEdgeColor(int id, const sf::Color &color);
-
-    /**
-     * @overload
-     * 
-     * @param id Edge ID
-     * @param color New color (as a string, please use the defined color macros)
-     */
-    bool setEdgeColor(int id, string color);
-
-    /**
-     * @brief Clear edge color.
-     *
-     * @param id Edge ID
-     */
-    bool clearEdgeColor(int id);
-
-    /**
-     * @brief Set if an edge is drawn as a full or dashed line.
-     *
-     * @param id Edge ID
-     * @param dashed True if edge is dashed, false if full
-     */
-    bool setEdgeDashed(int id, bool dashed);
-
-    /**
-     * @brief Set node color.
-     *
-     * @param id Node ID
-     * @param color Node color
-     */
-    bool setVertexColor(int id, const sf::Color &color);
-
-    /**
-     * @overload
-     * 
-     * @param id Node ID
-     * @param color New color (as a string, please use the defined color macros)
-     */
-    bool setVertexColor(int id, string color);
-
-    /**
-     * @brief Clear node color.
-     *
-     * @param id Node ID
-     */
-    bool clearVertexColor(int id);
-
-    /**
-     * @brief Set node size.
-     *
-     * @param id Node ID
-     * @param size Node size
-     */
-    bool setVertexSize(int id, int size);
-
-    /**
-     * @brief Set node icon instead of a circle.
-     * 
-     * @param id Node ID
-     * @param filepath Filepath of icon
-     */
-    bool setVertexIcon(int id, string filepath);
-
-    /**
-     * @brief Clear node icon.
-     *
-     * @param id Node ID
-     */
-    bool clearVertexIcon(int id);
-
-    /**
-     * @brief Set edge thickness.
-     *
-     * @param id Node ID
-     * @param thickness Edge thickness (10 by default)
-     */
-    bool setEdgeThickness(int id, int thickness);
-
-    /**
-     * @brief Set edge weight.
-     * 
-     * Edge weight is shown in the label.
-     *
-     * @param id Edge ID
-     * @param weight Edge weight
-     */
-    bool setEdgeWeight(int id, int weight);
-
-    /**
-     * @brief Set edge flow.
-     *
-     * @param id Edge ID
-     * @param flow Edge flow
-     */
-    bool setEdgeFlow(int id, int flow);
-
-    /**
-     * @brief Set node outline thickness.
-     * 
-     * @param id                Node ID
-     * @param outlineThickness  Outline thickness in pixels (1 by default)
-     */
-    bool setVertexOutlineThickness(int id, float outlineThickness);
-
-    /**
-     * @brief Set node outline color.
-     * 
-     * @param id            Node ID
-     * @param outlineColor  Node outline color
-     */
-    bool setVertexOutlineColor(int id, const sf::Color &outlineColor);
-
-    /**
-     * @overload
-     * 
-     * @param id            Node ID
-     * @param outlineColor  Node outline color (as a string, use the defined macros)
-     */
-    bool setVertexOutlineColor(int id, string outlineColor);
-    
-    /**
-     * @brief Set default edge color.
-     * 
-     * @param color Default edge color
-     */
-    bool defineEdgeColor(const sf::Color &color);
-
-    /**
-     * @overload
-     *
-     * @param color Default edge color (as a string, use the defined macros)
-     */
-    bool defineEdgeColor(string color);
-    
-    /**
-     * @brief Reset default edge color.
-     */
-    bool resetEdgeColor();
-
-    /**
-     * @brief Set default edge dashing.
-     *
-     * @param dashed True for dashed, false for full line
-     */
-    bool defineEdgeDashed(bool dashed);
-
-    /**
-     * @brief Set default node color.
-     *
-     * @param color Default node color
-     */
-    bool defineVertexColor(const sf::Color &color);
-    
-    /**
-     * @overload
-     * 
-     * @param color Default node color (as a string, use the defined macros)
-     */
-    bool defineVertexColor(string color);
-
-    /**
-     * @brief Restore default vertex color.
-     */
-    bool resetVertexColor();
-
-    /**
-     * @brief Set default node size.
-     *
-     * @param size Default node size in pixels (10 by default)
-     */
-    bool defineVertexSize(int size);
-
-    /**
-     * @brief Set default vertex icon.
-     *
-     * @param filepath Filepath of new icon
-     */
-    bool defineVertexIcon(string filepath);
-
-    /**
-     * @brief Delete default vertex icon.
-     */
-    bool resetVertexIcon();
-
-    /**
-     * @brief Set default node outline thickness.
-     * 
-     * @param outlineThickness Node outline thickness in pixels (1 by default)
-     */
-    bool defineVertexOutlineThickness(float outlineThickness);
-
-    /**
-     * @brief Reset default node outline thickness.
-     */
-    bool resetVertexOutlineThickness();
-
-    /**
-     * @brief Define default node outline color.
-     * 
-     * @param outlineColor Default outline color
-     */
-    bool defineVertexOutlineColor(const sf::Color &outlineColor);
-
-    /**
-     * @overload
-     * 
-     * @param outlineColor Default outline color (as a string, use the defined macros)
-     */
-    bool defineVertexOutlineColor(string outlineColor);
-
-    /**
-     * @brief Reset default node outline color.
-     */
-    bool resetVertexOutlineColor();
 
     /**
      * @brief Set background image.

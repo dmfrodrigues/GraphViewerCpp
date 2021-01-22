@@ -39,7 +39,6 @@ GraphViewer* drawGraphFromFile(std::string name){
     GraphViewer *gv = new GraphViewer();
     if (background_path[0] != '-')
         gv->setBackground(background_path);
-    gv->defineEdgeDashed(dashed);
     // gv->defineEdgeCurved(curved);
 
     // read num of nodes
@@ -70,16 +69,28 @@ GraphViewer* drawGraphFromFile(std::string name){
     for(int i = 0; i < n_edges ; i++) {
         std::getline(edges, line);
         sscanf( line.c_str(), "(%u, %u, %u, %s ,%u, %s , %s , %s )", &v1, &v2, &type, color, &thickness, label, flow, weight);
-        (type)? gv->addEdge(i, v1, v2, EdgeType::DIRECTED): gv->addEdge(i, v1, v2, EdgeType::UNDIRECTED);
-        gv->setEdgeColor(i, color);
-        gv->setEdgeThickness(i, thickness);
+        GraphViewer::Edge &edge = gv->addEdge(
+            GraphViewer::Edge(
+                i,
+                &gv->getNode(v1),
+                &gv->getNode(v2),
+                (type ? EdgeType::DIRECTED : EdgeType::UNDIRECTED)
+            )
+        );
+        gv->lock();
+        edge.setColor(color);
+        edge.setThickness(thickness);
         if (label[0] != '-')
-            gv->setEdgeLabel(i, label);
+            edge.setLabel(label);
         if (flow[0] != '%')
-            gv->setEdgeFlow(i, atoi(flow));
+            edge.setFlow(atof(flow));
         if (weight[0] != '%')
-            gv->setEdgeWeight(i, atoi(weight));
+            edge.setWeight(atof(weight));
+        edge.setDashed(dashed);
+        gv->unlock();
     }
+    gv->setZipEdges(true);
+
     gv->createWindow(width, height);
 
     return gv;

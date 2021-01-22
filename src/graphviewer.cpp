@@ -129,6 +129,7 @@ int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
 void GraphViewer::Edge::setLabel(const string &label){ this->label = label; update(); }
 string GraphViewer::Edge::getLabel() const{ return label; }
 void GraphViewer::Edge::setColor(const sf::Color &color){ this->color = color; update(); }
+void GraphViewer::Edge::setColor(const string &color){ setColor(colorStringToSFColor(color)); }
 const sf::Color& GraphViewer::Edge::getColor() const{ return color; }
 void GraphViewer::Edge::setDashed(bool dashed){ this->dashed = dashed; update(); }
 bool GraphViewer::Edge::getDashed() const{ return dashed; }
@@ -229,17 +230,19 @@ bool GraphViewer::closeWindow(){
 }
 
 GraphViewer::Node& GraphViewer::addNode(const GraphViewer::Node &node){
+    lock_guard<mutex> lock(graphMutex);
     return (nodes[node.getId()] = node);
 }
 
-bool GraphViewer::addEdge(int id, int v1, int v2, int edgeType){
+GraphViewer::Node& GraphViewer::getNode(int id){
+    return nodes.at(id);
+}
+
+GraphViewer::Edge& GraphViewer::addEdge(const Edge &edge){
     lock_guard<mutex> lock(graphMutex);
-    if(edges.count(id)) return false;
-    edges[id] = Edge(id, &nodes.at(v1), &nodes.at(v2), edgeType);
-    edges[id].setColor(edgeColor);
-    edges[id].setDashed(edgeDashed);
+    Edge &ret = (edges[edge.getId()] = edge);
     if(zipEdges) updateZip();
-    return true;
+    return ret;
 }
 
 bool GraphViewer::removeNode(int id){
@@ -252,206 +255,6 @@ bool GraphViewer::removeEdge(int id){
     auto ret = (edges.erase(id) != 0);
     if(zipEdges) updateZip();
     return ret;
-}
-
-bool GraphViewer::setVertexLabel(int id, string label){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setLabel(label);
-    return true;
-}
-
-bool GraphViewer::clearVertexLabel(int id){
-    lock_guard<mutex> lock(graphMutex);
-    return setVertexLabel(id, "");
-}
-
-bool GraphViewer::setEdgeLabel(int id, string label){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setLabel(label);
-    return true;
-}
-
-bool GraphViewer::clearEdgeLabel(int id){
-    lock_guard<mutex> lock(graphMutex);
-    return setEdgeLabel(id, "");
-}
-
-bool GraphViewer::setEdgeColor(int id, const sf::Color &color){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setColor(color);
-    if(zipEdges) updateZip();
-    return true;
-}
-bool GraphViewer::setEdgeColor(int id, string color){
-    return setEdgeColor(id, colorStringToSFColor(color));
-}
-
-bool GraphViewer::clearEdgeColor(int id){
-    lock_guard<mutex> lock(graphMutex);
-    bool ret = setEdgeColor(id, BLACK);
-    if(zipEdges) updateZip();
-    return ret;
-}
-
-bool GraphViewer::setEdgeDashed(int id, bool dashed){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setDashed(dashed);
-    if(zipEdges) updateZip();
-    return true;
-}
-
-bool GraphViewer::setVertexColor(int id, const sf::Color &color){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setColor(color);
-    return true;
-}
-bool GraphViewer::setVertexColor(int id, string color){
-    return setVertexColor(id, colorStringToSFColor(color));
-}
-
-bool GraphViewer::clearVertexColor(int id){
-    lock_guard<mutex> lock(graphMutex);
-    return setVertexColor(id, BLACK);
-}
-
-bool GraphViewer::setVertexSize(int id, int size){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setSize(size);
-    return true;
-}
-
-bool GraphViewer::setVertexIcon(int id, string filepath){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setIcon(filepath);
-    return true;
-}
-
-bool GraphViewer::clearVertexIcon(int id){
-    lock_guard<mutex> lock(graphMutex);
-    return setVertexIcon(id, "");
-}
-
-bool GraphViewer::setEdgeThickness(int id, int thickness){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setThickness(thickness);
-    if(zipEdges) updateZip();
-    return true;
-}
-
-bool GraphViewer::setEdgeWeight(int id, int weight){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setWeight(weight);
-    return true;
-}
-
-bool GraphViewer::setEdgeFlow(int id, int flow){
-    lock_guard<mutex> lock(graphMutex);
-    auto edgeIt = edges.find(id);
-    if(edgeIt == edges.end()) return false;
-    edgeIt->second.setFlow(flow);
-    return true;
-}
-
-bool GraphViewer::setVertexOutlineThickness(int id, float outlineThickness){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setOutlineThickness(outlineThickness);
-    return true;
-}
-
-bool GraphViewer::setVertexOutlineColor(int id, const sf::Color &outlineColor){
-    lock_guard<mutex> lock(graphMutex);
-    auto nodeIt = nodes.find(id);
-    if(nodeIt == nodes.end()) return false;
-    nodeIt->second.setOutlineColor(outlineColor);
-    return true;
-}
-bool GraphViewer::setVertexOutlineColor(int id, string color){
-    return setVertexOutlineColor(id, colorStringToSFColor(color));
-}
-
-bool GraphViewer::defineEdgeColor(const sf::Color &color){
-    edgeColor = color;
-    return true;
-}
-bool GraphViewer::defineEdgeColor(string color){
-    return defineEdgeColor(colorStringToSFColor(color));
-}
-
-bool GraphViewer::resetEdgeColor(){
-    return defineEdgeColor(BLACK);
-}
-
-bool GraphViewer::defineEdgeDashed(bool dashed){
-    edgeDashed = dashed;
-    return true;
-}
-
-bool GraphViewer::defineVertexColor(const sf::Color &color){
-    nodeColor = color;
-    return true;
-}
-bool GraphViewer::defineVertexColor(string color){
-    return defineVertexColor(colorStringToSFColor(color));
-}
-
-bool GraphViewer::resetVertexColor(){
-    return defineVertexColor(BLACK);
-}
-
-bool GraphViewer::defineVertexSize(int size){
-    nodeSize = size;
-    return true;
-}
-
-bool GraphViewer::defineVertexIcon(string filepath){
-    nodeIcon = filepath;
-    return true;
-}
-
-bool GraphViewer::defineVertexOutlineThickness(float outlineThickness){
-    nodeOutlineThickness = outlineThickness;
-    return true;
-}
-
-bool GraphViewer::resetVertexOutlineThickness(){
-    return defineVertexOutlineThickness(1.0);
-}
-
-bool GraphViewer::defineVertexOutlineColor(const sf::Color &outlineColor){
-    nodeOutlineColor = outlineColor;
-    return true;
-}
-bool GraphViewer::defineVertexOutlineColor(string outlineColor){
-    return defineVertexOutlineColor(colorStringToSFColor(outlineColor));
-}
-
-bool GraphViewer::resetVertexOutlineColor(){
-    return defineVertexOutlineColor(BLACK);
-}
-
-bool GraphViewer::resetVertexIcon(){
-    nodeIcon = "";
-    return true;
 }
 
 bool GraphViewer::setBackground(string path){
