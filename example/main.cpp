@@ -25,6 +25,25 @@ int main() {
     return 0;
 }
 
+sf::Color colorStringToSFColor(string colorStr){
+    std::transform(colorStr.begin(), colorStr.end(),colorStr.begin(), ::toupper);
+    if(colorStr == "BLUE"       ) return sf::Color::Blue;
+    if(colorStr == "RED"        ) return sf::Color::Red;
+    if(colorStr == "PINK"       ) return sf::Color(255, 192, 203);
+    if(colorStr == "PURPLE"     ) return sf::Color(128, 0, 128);
+    if(colorStr == "BLACK"      ) return sf::Color::Black;
+    if(colorStr == "WHITE"      ) return sf::Color::White;
+    if(colorStr == "ORANGE"     ) return sf::Color(255, 129,   0);
+    if(colorStr == "YELLOW"     ) return sf::Color::Yellow;
+    if(colorStr == "GREEN"      ) return sf::Color::Green;
+    if(colorStr == "CYAN"       ) return sf::Color::Cyan;
+    if(colorStr == "GRAY"       ) return sf::Color(128, 128, 128);
+    if(colorStr == "DARK_GRAY"  ) return sf::Color(192, 192, 192);
+    if(colorStr == "LIGHT_GRAY" ) return sf::Color( 64,  64,  64);
+    if(colorStr == "MAGENTA"    ) return sf::Color::Magenta;
+    throw domain_error("No such color '"+colorStr+"'");
+}
+
 GraphViewer* drawGraphFromFile(std::string name){
     std::ifstream nodes("resources/graphs/"+name+"/nodes.txt");
     std::ifstream edges("resources/graphs/"+name+"/edges.txt");
@@ -52,7 +71,7 @@ GraphViewer* drawGraphFromFile(std::string name){
         sscanf( line.c_str(), "(%f, %f, %s , %s , %u, %s )", &x, &y, color, label, &size, icon_path);
         GraphViewer::Node &node = gv->addNode(GraphViewer::Node(i, sf::Vector2f(x,y)*float(scale)));
         gv->lock();
-        node.setColor(color);
+        node.setColor(colorStringToSFColor(color));
         if (label[0] != '-')
             node.setLabel(label);
         if (icon_path[0] != '-')
@@ -78,7 +97,7 @@ GraphViewer* drawGraphFromFile(std::string name){
             )
         );
         gv->lock();
-        edge.setColor(color);
+        edge.setColor(colorStringToSFColor(color));
         edge.setThickness(thickness);
         if (label[0] != '-')
             edge.setLabel(label);
