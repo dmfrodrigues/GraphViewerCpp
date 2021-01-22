@@ -27,7 +27,7 @@ GraphViewer::id_t GraphViewer::Node::getId() const{ return id; }
 void GraphViewer::Node::setPosition(const Vector2f &position){ this->position = position; update(); }
 const Vector2f& GraphViewer::Node::getPosition() const{ return position; }
 
-void GraphViewer::Node::setSize(int size){ this->size = size; update(); }
+void GraphViewer::Node::setSize(float size){ this->size = size; update(); }
 float GraphViewer::Node::getSize() const{ return size; }
 
 void GraphViewer::Node::setLabel(const string &label){ text.setString(label); update(); }
@@ -126,7 +126,7 @@ void GraphViewer::Edge::setFlow(float flow){
 }
 const float* GraphViewer::Edge::getFlow() const{ return flow; }
 const VertexArray* GraphViewer::Edge::getShape() const { return shape; }
-Text GraphViewer::Edge::getText() const { return text; }
+const Text& GraphViewer::Edge::getText() const { return text; }
 void GraphViewer::Edge::update(){
     delete shape;
     shape = nullptr;
@@ -248,7 +248,7 @@ void GraphViewer::removeEdge(GraphViewer::id_t id){
     if(zipEdges) updateZip();
 }
 
-void GraphViewer::setBackground(string path){
+void GraphViewer::setBackground(const string &path){
     lock_guard<mutex> lock(graphMutex);
     background_texture.loadFromFile(path);
     background_sprite.setTexture(background_texture);

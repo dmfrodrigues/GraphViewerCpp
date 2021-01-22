@@ -80,7 +80,7 @@ public:
          * 
          * @param size  Node size, in pixels
          */
-        void setSize(int size);
+        void setSize(float size = 10.0);
         /**
          * @brief Get node size.
          * 
@@ -93,7 +93,7 @@ public:
          * 
          * @param label     Node label
          */
-        void setLabel(const std::string &label);
+        void setLabel(const std::string &label = "");
         /**
          * @brief Get node label.
          * 
@@ -106,7 +106,7 @@ public:
          * 
          * @param color Node color
          */
-        void setColor(const sf::Color &color);
+        void setColor(const sf::Color &color = sf::Color::Red);
         /**
          * @brief Get node color.
          * 
@@ -139,7 +139,7 @@ public:
          * 
          * @param outlineThickness  Outline thickness, in pixels
          */
-        void setOutlineThickness(float outlineThickness);
+        void setOutlineThickness(float outlineThickness = 1.0);
         /**
          * @brief Get node outline thickness.
          * 
@@ -152,7 +152,7 @@ public:
          * 
          * @param outlineColor  Outline color
          */
-        void setOutlineColor(const sf::Color &outlineColor);
+        void setOutlineColor(const sf::Color &outlineColor = sf::Color::Black);
         /**
          * @brief Get outline color.
          * 
@@ -196,41 +196,165 @@ public:
         sf::Text text;
         void update();
     public:
+        /**
+         * @brief Construct a new Edge object
+         */
         Edge();
-        Edge(id_t id, const Node *u, const Node *v, EdgeType edge_type);
+        /**
+         * @brief Construct a new Edge object with ID, origin/destination nodes
+         *        and direction.
+         * 
+         * @param id            Unique edge ID
+         * @param u             Pointer to origin node
+         * @param v             Pointer to destination node
+         * @param edge_type     Edge type (directed or undirected)
+         */
+        Edge(id_t id, const Node *u, const Node *v, EdgeType edge_type = UNDIRECTED);
         
+        /**
+         * @brief Get edge ID
+         * 
+         * @return id_t     Edge ID
+         */
         id_t getId() const;
 
+        /**
+         * @brief Set origin node.
+         * 
+         * @param u     Pointer to origin node.
+         */
         void setFrom(const Node *u);
+        /**
+         * @brief Get origin node.
+         * 
+         * @return const Node*  Pointer to origin node.
+         */
         const Node* getFrom() const;
 
+        /**
+         * @brief Set destination node.
+         * 
+         * @param v     Pointer to destination node.
+         */
         void setTo(const Node *v);
+        /**
+         * @brief Get destination node.
+         * 
+         * @return const Node*  Pointer to destination node.
+         */
         const Node* getTo() const;
 
-        void setEdgeType(EdgeType edge_type);
+        /**
+         * @brief Set edge type.
+         * 
+         * @param edge_type     Edge type
+         */
+        void setEdgeType(EdgeType edge_type = UNDIRECTED);
+        /**
+         * @brief Get edge type.
+         * 
+         * @return EdgeType     Edge type
+         */
         EdgeType getEdgeType() const;
 
-        void setLabel(const std::string &label);
+        /**
+         * @brief Set edge label.
+         * 
+         * @param label     Edge label.
+         */
+        void setLabel(const std::string &label = "");
+        /**
+         * @brief Get edge label.
+         * 
+         * @return const std::string&   Edge label.
+         */
         const std::string& getLabel() const;
 
-        void setColor(const sf::Color &color);
+        /**
+         * @brief Set edge color.
+         * 
+         * @param color     Edge color.
+         */
+        void setColor(const sf::Color &color = sf::Color::Black);
+        /**
+         * @brief Get edge color.
+         * 
+         * @return const sf::Color&     Edge color.
+         */
         const sf::Color& getColor() const;
 
-        void setDashed(bool dashed);
+        /**
+         * @brief Set if the edge is dashed or not.
+         * 
+         * @param dashed    True if edge is to be drawn dashed, false if full
+         */
+        void setDashed(bool dashed = false);
+        /**
+         * @brief Get if edge is dashed.
+         * 
+         * @return true     If edge is dashed
+         * @return false    If edge is full
+         */
         bool getDashed() const;
 
-        void setThickness(float thickness);
+        /**
+         * @brief Set edge thickness.
+         * 
+         * @param thickness     Edge thickness, in pixels
+         */
+        void setThickness(float thickness = 5.0);
+        /**
+         * @brief Get edge thickness.
+         * 
+         * @return float        Edge thickness, in pixels
+         */
         float getThickness() const;
 
+        /**
+         * @brief Set edge weight.
+         * 
+         * Edge weight is shown in the edge label.
+         * 
+         * @param weight    Edge weight
+         */
         void setWeight(float weight);
+        /**
+         * @brief Get pointer to edge weight.
+         * 
+         * @return const float*     Pointer to edge weight, or nullptr if none
+         *                          was set
+         */
         const float* getWeight() const;
 
+        /**
+         * @brief Set edge flow.
+         * 
+         * Edge flow is shown in the edge label.
+         * 
+         * @param flow  Edge flow
+         */
         void setFlow(float flow);
+        /**
+         * @brief Get pointer to edge flow.
+         * 
+         * @return const float*     Pointer to edge flow, or nullptr if none
+         *                          was set
+         */
         const float* getFlow() const;
 
+        /**
+         * @brief Get shape that represents the edge.
+         * 
+         * @return const sf::VertexArray*   Pointer to edge shape
+         */
         const sf::VertexArray* getShape() const;
 
-        sf::Text getText() const;
+        /**
+         * @brief Get edge text (includes label).
+         * 
+         * @return const sf::Text&  Edge text
+         */
+        const sf::Text& getText() const;
     };
     
 public:
@@ -245,7 +369,7 @@ public:
      * @param width Window width (in pixels)
      * @param height Window height (in pixels)
      */
-    void createWindow(unsigned int width, unsigned int height);
+    void createWindow(unsigned int width = 800, unsigned int height = 600);
 
     /**
      * @brief Close visualization window.
@@ -259,6 +383,14 @@ public:
      */
     Node& addNode(const Node &node);
 
+    /**
+     * @brief Get node from ID.
+     * 
+     * @param id        ID of node
+     * @return Node&    Node with that ID.
+     * 
+     * @throws std::out_of_range    If node with that ID does not exist.
+     */
     Node& getNode(id_t id);
 
     /**
@@ -291,7 +423,7 @@ public:
      *
      * @param path Filepath of new background
      */
-    void setBackground(std::string path);
+    void setBackground(const std::string &path);
 
     /**
      * @brief Clear background image.
@@ -314,25 +446,25 @@ public:
      * 
      * @param b True to draw nodes, false to not draw nodes
      */
-    void setEnabledNodes(bool b);
+    void setEnabledNodes(bool b = true);
     /**
      * @brief Enable edge drawing.
      * 
      * @param b Draw nodes if true, false otherwise
      */
-    void setEnabledEdges(bool b);
+    void setEnabledEdges(bool b = true);
     /**
      * @brief Enable node label drawing.
      * 
      * @param b Draw node labels if true, false otherwise
      */
-    void setEnabledNodesText(bool b);
+    void setEnabledNodesText(bool b = true);
     /**
      * @brief Enable edge label drawing.
      * 
      * @param b Draw edge labels if true, false otherwise
      */
-    void setEnabledEdgesText(bool b);
+    void setEnabledEdgesText(bool b = true);
 
     /**
      * @brief Allow edges to be zipped.
@@ -345,16 +477,28 @@ public:
      * 
      * @param b True to zip edges, false if not.
      */
-    void setZipEdges(bool b);
+    void setZipEdges(bool b = false);
 
+    /**
+     * @brief Lock access to object.
+     * 
+     * This is important especially if you are editing parameters of nodes/edges
+     * that are inside a GraphViewer instance for which createWindow(int, int)
+     * was already called. This is because, once you run createWindow(int, int),
+     * a thread is created to manage that window's events.
+     * 
+     */
     void lock();
+    /**
+     * @brief Unlock access to object.
+     */
     void unlock();
 
 private:
-    bool debug_mode = false;
-    FPSMonitor fps_monitor = FPSMonitor(1000);
     static const sf::Font DEBUG_FONT;
     static const int DEBUG_FONT_SIZE = 14;
+    bool debug_mode = false;
+    FPSMonitor fps_monitor = FPSMonitor(1000);
     sf::Text debug_text;
 
     static const sf::Font FONT;
@@ -368,13 +512,13 @@ private:
     sf::Texture background_texture;
     sf::Sprite background_sprite;
     sf::RenderWindow *window = nullptr;
-    sf::View *view = nullptr;
+    sf::View *view       = nullptr;
     sf::View *debug_view = nullptr;
     std::thread *main_thread = nullptr;
 
-    bool enabledNodes = true;
+    bool enabledNodes     = true;
     bool enabledNodesText = true;
-    bool enabledEdges = true;
+    bool enabledEdges     = true;
     bool enabledEdgesText = true;
 
     class ZipEdges {
