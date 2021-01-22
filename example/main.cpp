@@ -50,7 +50,10 @@ GraphViewer* drawGraphFromFile(std::string name){
     std::ifstream window("resources/graphs/"+name+"/window.txt");
     std::string line, background_path;
     std::istringstream iss;
-    unsigned int n_nodes, n_edges, height, width, v1, v2, type, scale, dynamic, thickness, size, dashed, curved;
+    unsigned int n_nodes, n_edges;
+    unsigned int height, width;
+    unsigned int v1, v2;
+    unsigned int type, scale, dynamic, thickness, size, dashed, curved;
     float x, y;
     char color[20], label[256], icon_path[256], flow[256], weight[256];
 
@@ -68,8 +71,17 @@ GraphViewer* drawGraphFromFile(std::string name){
     // draw nodes
     for(int i = 0; i < n_nodes;i++) {
         std::getline(nodes, line);
-        sscanf( line.c_str(), "(%f, %f, %s , %s , %u, %s )", &x, &y, color, label, &size, icon_path);
-        GraphViewer::Node &node = gv->addNode(GraphViewer::Node(i, sf::Vector2f(x,y)*float(scale)));
+        sscanf(
+            line.c_str(),
+            "(%f, %f, %s , %s , %u, %s )",
+            &x, &y, color, label, &size, icon_path
+        );
+        GraphViewer::Node &node = gv->addNode(
+            GraphViewer::Node(
+                i,
+                sf::Vector2f(x,y)*float(scale)
+            )
+        );
         gv->lock();
         node.setColor(colorStringToSFColor(color));
         if (label[0] != '-')
@@ -82,18 +94,25 @@ GraphViewer* drawGraphFromFile(std::string name){
 
     // read num of edges
     std::getline(edges, line);
-    sscanf( line.c_str(), "%d", &n_edges);
+    sscanf(line.c_str(), "%d", &n_edges);
 
     //draw edges
     for(int i = 0; i < n_edges ; i++) {
         std::getline(edges, line);
-        sscanf( line.c_str(), "(%u, %u, %u, %s ,%u, %s , %s , %s )", &v1, &v2, &type, color, &thickness, label, flow, weight);
+        sscanf(
+            line.c_str(),
+            "(%u, %u, %u, %s ,%u, %s , %s , %s )", 
+            &v1, &v2, &type, color, &thickness, label, flow, weight
+        );
         GraphViewer::Edge &edge = gv->addEdge(
             GraphViewer::Edge(
                 i,
                 &gv->getNode(v1),
                 &gv->getNode(v2),
-                (type ? EdgeType::DIRECTED : EdgeType::UNDIRECTED)
+                (type ?
+                    GraphViewer::Edge::EdgeType::DIRECTED :
+                    GraphViewer::Edge::EdgeType::UNDIRECTED
+                )
             )
         );
         gv->lock();

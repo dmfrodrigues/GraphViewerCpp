@@ -10,8 +10,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "edgetype.h"
-
 /**
  * @brief Class to save and represent a graph.
  */
@@ -178,11 +176,16 @@ public:
     };
 
     class Edge {
+    public:
+        enum EdgeType {
+            DIRECTED,
+            UNDIRECTED
+        };
     private:
         id_t id;
         const Node *u = nullptr;
         const Node *v = nullptr;
-        int edgeType;
+        EdgeType edge_type;
         std::string label = "";
         sf::Color color = sf::Color::Black;
         bool dashed = false;
@@ -194,7 +197,7 @@ public:
         void update();
     public:
         Edge();
-        Edge(id_t id, const Node *u, const Node *v, int edgeType);
+        Edge(id_t id, const Node *u, const Node *v, EdgeType edge_type);
         
         id_t getId() const;
 
@@ -204,8 +207,8 @@ public:
         void setTo(const Node *v);
         const Node* getTo() const;
 
-        void setEdgeType(int edgeType);
-        int getEdgeType() const;
+        void setEdgeType(EdgeType edge_type);
+        EdgeType getEdgeType() const;
 
         void setLabel(const std::string &label);
         const std::string& getLabel() const;
@@ -264,7 +267,7 @@ public:
      * @param id Unique edge ID
      * @param v1 Unique ID of origin node
      * @param v2 Unique ID of destination node
-     * @param edgeType EdgeType.DIRECTED if the edge is directed,
+     * @param edge_type EdgeType.DIRECTED if the edge is directed,
      *                 EdgeType.UNDIRECTED if the edge is undirected
      */
     Edge& addEdge(const Edge &edge);

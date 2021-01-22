@@ -80,11 +80,16 @@ GraphViewer::Edge::Edge(){
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(Color::Black);
 }
-GraphViewer::Edge::Edge(GraphViewer::id_t id, const GraphViewer::Node *u, const GraphViewer::Node *v, int edgeType):
+GraphViewer::Edge::Edge(
+    GraphViewer::id_t id,
+    const GraphViewer::Node *u,
+    const GraphViewer::Node *v,
+    GraphViewer::Edge::EdgeType edge_type
+):
     id(id),
     u(u),
     v(v),
-    edgeType(edgeType)
+    edge_type(edge_type)
 {
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
@@ -98,8 +103,8 @@ void GraphViewer::Edge::setFrom(const Node *u){ this->u = u; update(); }
 const GraphViewer::Node* GraphViewer::Edge::getFrom() const{ return u; }
 void GraphViewer::Edge::setTo(const Node *v){ this->v = v; update(); }
 const GraphViewer::Node* GraphViewer::Edge::getTo() const{ return v; }
-void GraphViewer::Edge::setEdgeType(int edgeType){ this->edgeType = edgeType; update(); }
-int GraphViewer::Edge::getEdgeType() const{ return edgeType; }
+void GraphViewer::Edge::setEdgeType(GraphViewer::Edge::EdgeType edge_type){ this->edge_type = edge_type; update(); }
+GraphViewer::Edge::EdgeType GraphViewer::Edge::getEdgeType() const{ return edge_type; }
 void GraphViewer::Edge::setLabel(const string &label){ this->label = label; update(); }
 const string& GraphViewer::Edge::getLabel() const{ return label; }
 void GraphViewer::Edge::setColor(const Color &color){ this->color = color; update(); }
