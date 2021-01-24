@@ -15,7 +15,22 @@
  */
 class GraphViewer {
 public:
-    typedef long id_t;
+    typedef int64_t id_t;
+
+    typedef sf::Color Color;
+    static const Color BLACK     ;
+    static const Color WHITE     ;
+    static const Color RED       ;
+    static const Color GREEN     ;
+    static const Color BLUE      ;
+    static const Color YELLOW    ;
+    static const Color MAGENTA   ;
+    static const Color CYAN      ;
+    static const Color PINK      ;
+    static const Color ORANGE    ;
+    static const Color GRAY      ;
+    static const Color LIGHT_GRAY;
+    static const Color DARK_GRAY ;
 
 private:
     class LineShape;

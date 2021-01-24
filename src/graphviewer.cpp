@@ -6,6 +6,20 @@
 using namespace std;
 using namespace sf;
 
+const GraphViewer::Color GraphViewer::BLACK   = sf::Color::Black;
+const GraphViewer::Color GraphViewer::WHITE   = sf::Color::White;
+const GraphViewer::Color GraphViewer::RED     = sf::Color::Red;
+const GraphViewer::Color GraphViewer::GREEN   = sf::Color::Green;
+const GraphViewer::Color GraphViewer::BLUE    = sf::Color::Blue;
+const GraphViewer::Color GraphViewer::YELLOW  = sf::Color::Yellow;
+const GraphViewer::Color GraphViewer::MAGENTA = sf::Color::Magenta;
+const GraphViewer::Color GraphViewer::CYAN    = sf::Color::Cyan;
+const GraphViewer::Color GraphViewer::PINK  (255, 192, 203);
+const GraphViewer::Color GraphViewer::ORANGE(255, 128,   0);
+const GraphViewer::Color GraphViewer::GRAY  (128, 128, 128);
+const GraphViewer::Color GraphViewer::LIGHT_GRAY(192, 192, 192);
+const GraphViewer::Color GraphViewer::DARK_GRAY(64, 64, 64);
+
 GraphViewer::Node::Node(){
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
