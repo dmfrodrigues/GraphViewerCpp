@@ -1,4 +1,4 @@
-name: lib:build:ubuntu
+name: lib-ubuntu
 
 on:
   push:
@@ -39,3 +39,5 @@ jobs:
         cd build
         cmake ..
         cmake --build .
+
+
