@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      SFML_PATH: C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit\SFML-2.5.1
     steps:
     - uses: actions/checkout@v2
 
@@ -32,7 +34,6 @@ jobs:
         cd sfml
         curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip
         7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit
-        echo "SFML_PATH=C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit\SFML-2.5.1" >> $GITHUB_ENV
         echo "C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit\SFML-2.5.1\bin" >> $GITHUB_PATH
 
     - name: Checkout submodules
