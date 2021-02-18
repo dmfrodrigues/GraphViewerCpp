@@ -21,9 +21,8 @@ jobs:
         cd C:\
         mkdir mingw-w64
         cd mingw-w64
-        curl -L https://www.dropbox.com/s/byrekjkj79jsjir/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z?dl=1 --output x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z
-        7z x x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z -y -ox86_64-7.3.0-release-posix-seh-rt_v5-rev0
-        echo "C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin" >> $GITHUB_PATH
+        curl -L https://www.dropbox.com/s/byrekjkj79jsjir/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z?dl=1 --output i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z
+        7z x i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z -y -oi686-7.3.0-release-posix-dwarf-rt_v5-rev0
 
     - name: Install SFML
       shell: cmd
@@ -32,9 +31,9 @@ jobs:
         cd C:\
         mkdir sfml
         cd sfml
-        curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip
-        7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit
-        echo "C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit\SFML-2.5.1\bin" >> $GITHUB_PATH
+        curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip
+        7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit
+        echo "C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit\SFML-2.5.1\bin" >> $GITHUB_PATH
 
     - name: Checkout submodules
       shell: cmd
@@ -47,7 +46,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles"
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin
         cmake --build .
 
     - name: Compile example
@@ -55,5 +54,5 @@ jobs:
         cd example
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles"
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin
         cmake --build .
