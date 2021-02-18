@@ -12,6 +12,12 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 
 include_directories(../include)
 
+if (WIN32)
+    message("Detected WIN32")
+    include_directories("$ENV{SFML_PATH}/include")
+    link_directories("$ENV{SFML_PATH}/lib")
+endif()
+
 add_library(graphviewer STATIC graphviewer.cpp lines.cpp fpsmonitor.cpp)
 
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
