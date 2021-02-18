@@ -19,7 +19,7 @@ jobs:
         cd C:\
         mkdir mingw-w64
         cd mingw-w64
-        wget -O x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.3.0/threads-posix/seh/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z/download
+        curl -L https://www.dropbox.com/s/u51ejh08x3velu4/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z?dl=1 --output x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z
         7z x x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z -y -ox86_64-7.3.0-release-posix-seh-rt_v5-rev0
         echo "C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin" >> $GITHUB_PATH
 
