@@ -1,4 +1,4 @@
-name: build-ubuntu-gnu
+name: lib:build:ubuntu
 
 on:
   push:
