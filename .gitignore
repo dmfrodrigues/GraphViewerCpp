@@ -35,3 +35,5 @@ settings.json
 
 doc/html
 doc/latex
+
+*.exe
