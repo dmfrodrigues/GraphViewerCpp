@@ -19,8 +19,8 @@ jobs:
       run: |
         C:
         cd C:\
-        mkdir mingw-w64
-        cd mingw-w64
+        mkdir mingw
+        cd mingw
         curl -L https://www.dropbox.com/s/byrekjkj79jsjir/i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z?dl=1 --output i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z
         7z x i686-7.3.0-release-posix-dwarf-rt_v5-rev0.7z -y -oi686-7.3.0-release-posix-dwarf-rt_v5-rev0
 
@@ -45,7 +45,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:/mingw-w64/i686-7.3.0-release-posix-dwarf-rt_v5-rev0/mingw64/bin/g++.exe
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:/mingw/i686-7.3.0-release-posix-dwarf-rt_v5-rev0/mingw32/bin/g++.exe
         cmake --build .
 
     - name: Compile example
@@ -53,5 +53,5 @@ jobs:
         cd example
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:/mingw-w64/i686-7.3.0-release-posix-dwarf-rt_v5-rev0/mingw64/bin/g++.exe
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:/mingw/i686-7.3.0-release-posix-dwarf-rt_v5-rev0/mingw32/bin/g++.exe
         cmake --build .
