@@ -46,7 +46,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ..
+        cmake .. -G "MinGW Makefiles"
         cmake --build .
 
     - name: Compile example
@@ -54,5 +54,5 @@ jobs:
         cd example
         mkdir build
         cd build
-        cmake ..
+        cmake .. -G "MinGW Makefiles"
         cmake --build .
