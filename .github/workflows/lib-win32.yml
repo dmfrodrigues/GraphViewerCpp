@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      SFML_PATH: C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit\SFML-2.5.1
+      SFML_PATH: C:/sfml/SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit/SFML-2.5.1
     steps:
     - uses: actions/checkout@v2
 
