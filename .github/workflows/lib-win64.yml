@@ -21,7 +21,6 @@ jobs:
         cd mingw-w64
         curl -L https://www.dropbox.com/s/u51ejh08x3velu4/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z?dl=1 --output x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z
         7z x x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z -y -ox86_64-7.3.0-release-posix-seh-rt_v5-rev0
-        echo "C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin" >> $GITHUB_PATH
 
     - name: Install SFML
       shell: cmd
@@ -32,7 +31,6 @@ jobs:
         cd sfml
         curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip
         7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit
-        echo "C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit\SFML-2.5.1\bin" >> $GITHUB_PATH
 
     - name: Checkout submodules
       shell: cmd
@@ -45,7 +43,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin\g++.exe
         cmake --build .
 
     - name: Compile example
@@ -53,5 +51,5 @@ jobs:
         cd example
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\x86_64-7.3.0-release-posix-seh-rt_v5-rev0\mingw64\bin\g++.exe
         cmake --build .

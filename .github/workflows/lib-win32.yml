@@ -33,7 +33,6 @@ jobs:
         cd sfml
         curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip
         7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit
-        echo "C:\sfml\SFML-2.5.1-windows-gcc-7.3.0-mingw-32-bit\SFML-2.5.1\bin" >> $GITHUB_PATH
 
     - name: Checkout submodules
       shell: cmd
@@ -46,7 +45,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin\g++.exe
         cmake --build .
 
     - name: Compile example
@@ -54,5 +53,5 @@ jobs:
         cd example
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin
+        cmake .. -G "MinGW Makefiles" -D CMAKE_CXX_COMPILER=C:\mingw-w64\i686-7.3.0-release-posix-dwarf-rt_v5-rev0\mingw64\bin\g++.exe
         cmake --build .
