@@ -14,9 +14,7 @@ include_directories(../include)
 
 if (WIN32)
     message("Detected WIN32")
-    message("Include dir $ENV{SFML_PATH}/include")
     include_directories("$ENV{SFML_PATH}/include")
-    message("Link dir $ENV{SFML_PATH}/lib")
     link_directories("$ENV{SFML_PATH}/lib")
 endif()
 
