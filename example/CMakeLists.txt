@@ -5,9 +5,12 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR} )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 set(CMAKE_CXX_STANDARD 14)
-# The line below is necessary if you are under Windows only
-# Comment the line below if you are under Linux or Mac OS
-# link_libraries(ws2_32 wsock32)
+
+if (WIN32)
+    message("Detected WIN32")
+    include_directories("$ENV{SFML_PATH}/include")
+    link_directories("$ENV{SFML_PATH}/lib")
+endif()
 
 add_subdirectory(.. build)
 

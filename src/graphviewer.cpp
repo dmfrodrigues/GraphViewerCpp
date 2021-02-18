@@ -199,15 +199,9 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     if(window != nullptr) throw runtime_error("Window was already created");
     if(width  == 0) width  = DEFAULT_WIDTH ;
     if(height == 0) height = DEFAULT_HEIGHT;
+    this->width  = width;
+    this->height = height;
 
-    ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    window = new RenderWindow(VideoMode(width, height), "GraphViewer", Style::Default, settings);
-    view = new View(window->getDefaultView());
-    debug_view = new View(window->getDefaultView());
-
-    center = Vector2f(width/2.0, height/2.0);
-    window->setActive(false);
     main_thread = new thread(&GraphViewer::run, this);
 }
 
@@ -300,9 +294,20 @@ void GraphViewer::updateZip(){
 }
 
 void GraphViewer::run(){
+    ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
+    view = new View(window->getDefaultView());
+    debug_view = new View(window->getDefaultView());
+
+    center = Vector2f(this->width/2.0, this->height/2.0);
+
     bool isLeftClickPressed = false;
     Vector2f centerInitial;
     Vector2f posMouseInitial;
+
+    recalculateView();
+
     while (window->isOpen()){
         Event event;
         while (window->pollEvent(event)){
@@ -415,7 +420,6 @@ void GraphViewer::drawDebug(){
 }
 
 void GraphViewer::onResize(){
-    Vector2f size = static_cast<Vector2f>(window->getSize());
     recalculateView();
 }
 

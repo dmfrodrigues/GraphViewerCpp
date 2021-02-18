@@ -632,6 +632,16 @@ private:
      * @brief Recalculate views on window resize, or dragging inside window.
      */
     void recalculateView();
+
+    /**
+     * @brief Window width.
+     */
+    unsigned int width;
+
+    /**
+     * @brief Window height.
+     */
+    unsigned int height;
 };
 
 #include "lines.h"
