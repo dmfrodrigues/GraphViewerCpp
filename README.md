@@ -1,9 +1,15 @@
 # GraphViewerCpp
 
-![lib-ubuntu](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-ubuntu/badge.svg)
-![lib-win64](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-win64/badge.svg)
+[![lib-ubuntu](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-ubuntu/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
+[![lib-win64](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-win64/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
 
-**GraphViewerCpp** is a tool for **graph visualization** using the SFML library, in the context of the **Algorithm Design and Analysis** course, at **FEUP**. It has been primarily developed by [Diogo Rodrigues](https://github.com/dmfrodrigues), and is to be mantained by the course's Teaching Assistant students.
+[![Documentation Status](https://readthedocs.org/projects/graphviewercpp/badge/?version=latest)](https://graphviewercpp.readthedocs.io/en/latest/?badge=latest)
+
+**GraphViewerCpp** is a tool for **graph visualization** using the SFML library, in the context of the **Algorithm Design and Analysis** course, at **FEUP**. It has been primarily developed by [Diogo Rodrigues](https://github.com/dmfrodrigues), and is to be maintained by the course's Teaching Assistant students.
+
+## Documentation
+
+Using [Read the Docs](https://readthedocs.org/), this project's documentation is deployed [here](https://graphviewercpp.readthedocs.io/en/latest).
 
 ## Setting up the environment (CLion IDE)
 
@@ -68,5 +74,6 @@ cmake --build .
 2. Open CLion > Open > Choose the example dir in the repository
 3. Run the project. You will the following three different graphs being loaded, in different windows
 
-![Random graph](./example/resources/graphs/random/preview.png)
-![Random graph](./example/resources/graphs/star/preview.png)
+![random graph](https://raw.githubusercontent.com/dmfrodrigues/GraphViewerCpp/master/example/resources/graphs/random/preview.png)
+![star graph](https://raw.githubusercontent.com/dmfrodrigues/GraphViewerCpp/master/example/resources/graphs/star/preview.png)
+![rainbow graph](https://raw.githubusercontent.com/dmfrodrigues/GraphViewerCpp/master/example/resources/graphs/rainbow/preview.png)
