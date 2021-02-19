@@ -1,16 +1,14 @@
 # GraphViewerCpp
 
 ![lib-ubuntu](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-ubuntu/badge.svg)
-![lib-win32](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-win32/badge.svg)
 ![lib-win64](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/lib-win64/badge.svg)
 
 **GraphViewerCpp** is a tool for **graph visualization** using the SFML library, in the context of the **Algorithm Design and Analysis** course, at **FEUP**. It has been primarily developed by [Diogo Rodrigues](https://github.com/dmfrodrigues), and is to be mantained by the course's Teaching Assistant students.
 
 ## Setting up the environment (CLion IDE)
 
-1. Apply for a JetBrains Educational Pack using the link: https://www.jetbrains.com/shop/eform/students and using you upXXXXXXXXX@fe.up.pt, so that JetBrains identifies you as a real student.
-2. Install CLion. Somewhere during the installation, you should be prompted to active you JetBrains account. Please insert the credentials you obtained in the previous step ("Get Licence From:" => "JB account")
-3. Install a JDK (it is likely that you already have one)
+1. Apply for a [JetBrains Educational Pack](https://www.jetbrains.com/shop/eform/students) using your upXXXXXXXXX@fe.up.pt email address, so that JetBrains identifies you as a real student.
+2. Install CLion, and activate it using your JetBrains account. Please insert the credentials you obtained in the previous step ("Get Licence From:" => "JB account")
 4. If you are using Windows, you might need to setup an environment. You can find documentation on how to do it here: https://www.jetbrains.com/help/clion/quick-tutorial-on-configuring-clion-on-windows.html
 5. For more details or other issues, please use https://www.jetbrains.com/help/clion/clion-quick-start-guide.html
 
