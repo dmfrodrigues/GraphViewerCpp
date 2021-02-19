@@ -33,7 +33,7 @@ build/
 example/example
 settings.json
 
-doc/html
-doc/latex
+docs/html
+docs/latex
 
 *.exe
