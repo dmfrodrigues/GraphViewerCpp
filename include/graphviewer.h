@@ -530,6 +530,8 @@ public:
     void unlock();
 
 private:
+    static std::mutex createWindowMutex;
+
     static const sf::Font DEBUG_FONT;           ///< @brief Debug font.
     static const int DEBUG_FONT_SIZE = 14;      ///< @brief Debug font size, in pixels.
     bool debug_mode = false;                    ///< @brief True if debug mode is enabled, false otherwise.

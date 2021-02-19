@@ -6,6 +6,8 @@
 using namespace std;
 using namespace sf;
 
+std::mutex GraphViewer::createWindowMutex;
+
 const GraphViewer::Color GraphViewer::BLACK   = sf::Color::Black;
 const GraphViewer::Color GraphViewer::WHITE   = sf::Color::White;
 const GraphViewer::Color GraphViewer::RED     = sf::Color::Red;
@@ -296,7 +298,10 @@ void GraphViewer::updateZip(){
 void GraphViewer::run(){
     ContextSettings settings;
     settings.antialiasingLevel = 8;
+    GraphViewer::createWindowMutex.lock();
     window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
+    GraphViewer::createWindowMutex.unlock();
+
     view = new View(window->getDefaultView());
     debug_view = new View(window->getDefaultView());
 
