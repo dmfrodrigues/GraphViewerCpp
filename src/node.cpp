@@ -60,4 +60,8 @@ void GraphViewer::Node::update(){
 
     FloatRect bounds = text.getLocalBounds();
     text.setPosition(getPosition() - Vector2f(bounds.width/2.0, 0.8*bounds.height));
+
+    for(Edge *e: edges){
+        e->update();
+    }
 }

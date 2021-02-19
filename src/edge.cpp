@@ -14,8 +14,8 @@ GraphViewer::Edge::Edge(){
 
 GraphViewer::Edge::Edge(
     GraphViewer::id_t id,
-    const GraphViewer::Node *u,
-    const GraphViewer::Node *v,
+    GraphViewer::Node *u,
+    GraphViewer::Node *v,
     GraphViewer::Edge::EdgeType edge_type
 ):
     id(id),
@@ -23,6 +23,9 @@ GraphViewer::Edge::Edge(
     v(v),
     edge_type(edge_type)
 {
+    u->edges.insert(this);
+    v->edges.insert(this);
+
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
     text.setFillColor(Color::Black);
@@ -31,9 +34,9 @@ GraphViewer::Edge::Edge(
 }
 
         GraphViewer::id_t           GraphViewer::Edge::getId        (                                       ) const { return id; }
-        void                        GraphViewer::Edge::setFrom      (const Node *u                          )       { this->u = u; update(); }
+        void                        GraphViewer::Edge::setFrom      (Node *u                                )       { this->u->edges.erase(this); this->u = u; this->u->edges.insert(this); update(); }
 const   GraphViewer::Node*          GraphViewer::Edge::getFrom      (                                       ) const { return u; }
-        void                        GraphViewer::Edge::setTo        (const Node *v                          )       { this->v = v; update(); }
+        void                        GraphViewer::Edge::setTo        (Node *v                                )       { this->v->edges.erase(this); this->v = v; this->v->edges.insert(this); update(); }
 const   GraphViewer::Node*          GraphViewer::Edge::getTo        (                                       ) const { return v; }
         void                        GraphViewer::Edge::setEdgeType  (GraphViewer::Edge::EdgeType edge_type  )       { this->edge_type = edge_type; update(); }
         GraphViewer::Edge::EdgeType GraphViewer::Edge::getEdgeType  (                                       ) const { return edge_type; }
@@ -55,10 +58,24 @@ const   Text&                       GraphViewer::Edge::getText      (           
 void GraphViewer::Edge::update(){
     delete shape;
     shape = nullptr;
+
+    sf::Vector2f uPos = u->getPosition();
+    sf::Vector2f vPos = v->getPosition();
+    sf::Vector2f uvVec  = vPos - uPos;
+    sf::Vector2f uvUVec = uvVec/(sqrt(uvVec.x*uvVec.x + uvVec.y*uvVec.y));
+    uPos = uPos + uvUVec*(u->getSize()/2.0f);
+    vPos = vPos - uvUVec*(v->getSize()/2.0f);
+
+    shape = new LineShape(uPos, vPos, 0);
+    if(edge_type == EdgeType::DIRECTED){
+        ArrowHead arrow(uPos, vPos, getThickness());
+        shape->append(arrow);
+        uPos = arrow.getLineConnection();
+    }
     if(!getDashed()){
-        shape = new FullLineShape(u->getPosition(), v->getPosition(), getThickness());
+        shape->append(FullLineShape(uPos, vPos, getThickness()));
     } else {
-        shape = new DashedLineShape(u->getPosition(), v->getPosition(), getThickness());
+        shape->append(DashedLineShape(uPos, vPos, getThickness()));
     }
     shape->setFillColor(getColor());
 

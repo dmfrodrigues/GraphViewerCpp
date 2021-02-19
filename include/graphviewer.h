@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <unordered_map>
+#include <set>
 
 #include "fpsmonitor.h"
 
@@ -36,12 +37,16 @@ private:
     class LineShape;
     class FullLineShape;
     class DashedLineShape;
+    class ArrowHead;
 
 public:
+    class Edge;
+
     /**
      * @brief Class to represent a node.
      */
     class Node {
+        friend Edge;
     private:
         id_t id;                                    ///< @brief Node ID.
         sf::Vector2f position;                      ///< @brief Node position.
@@ -55,6 +60,8 @@ public:
         sf::Shape *shape = nullptr;                 ///< @brief Node shape.
         sf::Text text;                              ///< @brief Node text.
         
+        std::set<Edge*> edges;
+
         /**
          * @brief Update node shape and text considering changes in properties.
          */
@@ -199,6 +206,7 @@ public:
      * @brief Class to represent an edge.
      */
     class Edge {
+        friend Node;
     public:
         /**
          * @brief Edge type.
@@ -209,8 +217,8 @@ public:
         };
     private:
         id_t id;                            ///< @brief Edge ID.
-        const Node *u = nullptr;            ///< @brief Edge origin node.
-        const Node *v = nullptr;            ///< @brief Edge destination node.
+        Node *u = nullptr;                  ///< @brief Edge origin node.
+        Node *v = nullptr;                  ///< @brief Edge destination node.
         EdgeType edge_type;                 ///< @brief Edge type.
         std::string label = "";             ///< @brief Edge label.
         sf::Color color = sf::Color::Black; ///< @brief Edge color.
@@ -239,7 +247,7 @@ public:
          * @param v             Pointer to destination node
          * @param edge_type     Edge type (directed or undirected)
          */
-        Edge(id_t id, const Node *u, const Node *v, EdgeType edge_type = UNDIRECTED);
+        Edge(id_t id, Node *u, Node *v, EdgeType edge_type = UNDIRECTED);
         
         /**
          * @brief Get edge ID
@@ -253,7 +261,7 @@ public:
          * 
          * @param u     Pointer to origin node.
          */
-        void setFrom(const Node *u);
+        void setFrom(Node *u);
         /**
          * @brief Get origin node.
          * 
@@ -266,7 +274,7 @@ public:
          * 
          * @param v     Pointer to destination node.
          */
-        void setTo(const Node *v);
+        void setTo(Node *v);
         /**
          * @brief Get destination node.
          * 
