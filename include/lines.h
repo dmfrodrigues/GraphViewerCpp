@@ -61,6 +61,9 @@ public:
      */
     void setFillColor(sf::Color color);
 
+    void append(const sf::Vertex &v);
+    void append(const sf::VertexArray &v);
+
 private :
     sf::Vector2f u;     ///< @brief Origin position.
     sf::Vector2f v;     ///< @brief Destination position.
@@ -115,6 +118,26 @@ public:
      * @brief Process property changes.
      */
     void process();
+};
+
+class GraphViewer::ArrowHead: public GraphViewer::LineShape {
+private:
+    static constexpr float widthFactor   = 4.0;
+    static constexpr float lengthFactor  = 4.0;
+    static constexpr float advanceFactor = 1.0;
+public:
+    explicit ArrowHead(const sf::Vector2f& u, const sf::Vector2f& v, float w);
+
+    void setFrom (const sf::Vector2f& u);
+    void setTo   (const sf::Vector2f& v);
+    void setWidth(             float  w);
+
+    /**
+     * @brief Process property changes.
+     */
+    void process();
+
+    sf::Vector2f getLineConnection() const;
 };
 
 #endif // GV_LINES_H_INCLUDED

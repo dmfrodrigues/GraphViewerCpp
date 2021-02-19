@@ -22,6 +22,13 @@ void GraphViewer::LineShape::setFillColor(Color color){
     }
 }
 
+void GraphViewer::LineShape::append(const sf::Vertex &v){ VertexArray::append(v); }
+void GraphViewer::LineShape::append(const sf::VertexArray &v){
+    for(size_t i = 0; i < v.getVertexCount(); ++i){
+        append(v[i]);
+    }
+}
+
 GraphViewer::FullLineShape::FullLineShape(const Vector2f& u, const Vector2f& v, float w):
     GraphViewer::LineShape(u,v,w)
 {
@@ -99,4 +106,45 @@ void GraphViewer::DashedLineShape::process(){
     append(Vertex(u1+edgeNorm));
     append(Vertex(v1+edgeNorm));
     append(Vertex(v1-edgeNorm));
+}
+
+
+GraphViewer::ArrowHead::ArrowHead(const Vector2f& u, const Vector2f& v, float w):
+    GraphViewer::LineShape(u,v,w)
+{
+    process();
+}
+
+void GraphViewer::ArrowHead::setFrom (const Vector2f& u){ LineShape::setFrom (u); process(); }
+void GraphViewer::ArrowHead::setTo   (const Vector2f& v){ LineShape::setTo   (v); process(); }
+void GraphViewer::ArrowHead::setWidth(         float  w){ LineShape::setWidth(w); process(); }
+
+void GraphViewer::ArrowHead::process(){
+    const Vector2f &u = getFrom();
+    const Vector2f &v = getTo  ();
+    Vector2f uvVec = v-u;
+    Vector2f uvUnitVec = uvVec/sqrt(uvVec.x*uvVec.x + uvVec.y*uvVec.y); // unit vector from u to v
+    Vector2f uvNormUnitVec(-uvUnitVec.y, uvUnitVec.x); // unit vector perpendicular to uvUnitVec
+
+    resize(0);
+
+    append(Vertex(u));
+    append(Vertex(u));
+    append(Vertex(u+(uvUnitVec*lengthFactor + uvNormUnitVec*widthFactor/2.0f)*getWidth()));
+    append(Vertex(u+(uvUnitVec*(lengthFactor - advanceFactor))*getWidth()));
+    
+    append(Vertex(u));
+    append(Vertex(u));
+    append(Vertex(u+(uvUnitVec*lengthFactor - uvNormUnitVec*widthFactor/2.0f)*getWidth()));
+    append(Vertex(u+(uvUnitVec*(lengthFactor - advanceFactor))*getWidth()));
+}
+
+sf::Vector2f GraphViewer::ArrowHead::getLineConnection() const {
+    const Vector2f &u = getFrom();
+    const Vector2f &v = getTo  ();
+    Vector2f uvVec = v-u;
+    Vector2f uvUnitVec = uvVec/sqrt(uvVec.x*uvVec.x + uvVec.y*uvVec.y); // unit vector from u to v
+    
+    float lineLengthFactor = min(lengthFactor-advanceFactor, lengthFactor);
+    return u + uvUnitVec*lineLengthFactor*getWidth();
 }
