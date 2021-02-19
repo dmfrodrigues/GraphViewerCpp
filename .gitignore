@@ -36,4 +36,8 @@ settings.json
 docs/html
 docs/latex
 
+docs/sphinx/_build
+docs/sphinx/_static
+docs/sphinx/_templates
+
 *.exe
