@@ -80,10 +80,8 @@ GraphViewer* drawGraphFromFile(std::string name){
             &x, &y, color, label, &size, icon_path
         );
         GraphViewer::Node &node = gv->addNode(
-            GraphViewer::Node(
                 i,
                 sf::Vector2f(x,y)*float(scale)
-            )
         );
         gv->lock();
         node.setColor(colorStringToSFColor(color));
@@ -108,15 +106,13 @@ GraphViewer* drawGraphFromFile(std::string name){
             &v1, &v2, &type, color, &thickness, label, flow, weight
         );
         GraphViewer::Edge &edge = gv->addEdge(
-            GraphViewer::Edge(
                 i,
-                &gv->getNode(v1),
-                &gv->getNode(v2),
+                gv->getNode(v1),
+                gv->getNode(v2),
                 (type ?
                     GraphViewer::Edge::EdgeType::DIRECTED :
                     GraphViewer::Edge::EdgeType::UNDIRECTED
                 )
-            )
         );
         gv->lock();
         edge.setColor(colorStringToSFColor(color));
