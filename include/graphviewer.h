@@ -47,6 +47,7 @@ public:
      */
     class Node {
         friend Edge;
+        friend GraphViewer;
     private:
         id_t id;                                    ///< @brief Node ID.
         sf::Vector2f position;                      ///< @brief Node position.
@@ -66,7 +67,8 @@ public:
          * @brief Update node shape and text considering changes in properties.
          */
         void update();
-    public:
+
+    private:
         /**
          * @brief Construct a new Node object
          */
@@ -78,7 +80,8 @@ public:
          * @param position  Node position in the window, in pixels
          */
         Node(id_t id, const sf::Vector2f &position);
-
+    
+    public:
         /**
          * @brief Get node ID.
          * 
@@ -207,6 +210,7 @@ public:
      */
     class Edge {
         friend Node;
+        friend GraphViewer;
     public:
         /**
          * @brief Edge type.
@@ -233,7 +237,8 @@ public:
          * @brief Update edge shape and text considering changes in properties.
          */
         void update();
-    public:
+
+    private:
         /**
          * @brief Construct a new Edge object
          */
@@ -247,8 +252,9 @@ public:
          * @param v             Pointer to destination node
          * @param edge_type     Edge type (directed or undirected)
          */
-        Edge(id_t id, Node *u, Node *v, EdgeType edge_type = UNDIRECTED);
+        Edge(id_t id, Node &u, Node &v, EdgeType edge_type = UNDIRECTED);
         
+    public:
         /**
          * @brief Get edge ID
          * 
@@ -409,6 +415,8 @@ public:
      */
     void createWindow(unsigned int width = 800, unsigned int height = 600);
 
+    bool isWindowOpen();
+
     /**
      * @brief Close visualization window.
      */
@@ -419,7 +427,7 @@ public:
      * 
      * @param node Node to be added
      */
-    Node& addNode(const Node &node);
+    Node& addNode(id_t id, const sf::Vector2f &position);
 
     /**
      * @brief Get node from ID.
@@ -432,15 +440,11 @@ public:
     Node& getNode(id_t id);
 
     /**
-     * @brief Add edge.
+     * @brief Get all nodes.
      *
-     * @param id Unique edge ID
-     * @param v1 Unique ID of origin node
-     * @param v2 Unique ID of destination node
-     * @param edge_type EdgeType.DIRECTED if the edge is directed,
-     *                 EdgeType.UNDIRECTED if the edge is undirected
+     * @return          Vector with pointers to all nodes
      */
-    Edge& addEdge(const Edge &edge);
+    std::vector<GraphViewer::Node *> getNodes();
 
     /**
      * @brief Remove node and all edges connected to it.
@@ -448,6 +452,34 @@ public:
      * @param id Unique ID of node to be removed.
      */
     void removeNode(id_t id);
+
+    /**
+     * @brief Add edge.
+     *
+     * @param id Unique edge ID
+     * @param v1 Unique ID of origin node
+     * @param v2 Unique ID of destination node
+     * @param edge_type EdgeType.DIRECTED if the edge is directed,
+     *                  EdgeType.UNDIRECTED if the edge is undirected
+     */
+    Edge& addEdge(id_t id, Node &u, Node &v, Edge::EdgeType edge_type = Edge::EdgeType::UNDIRECTED);
+
+    /**
+     * @brief Get edge from ID.
+     *
+     * @param id        ID of edge
+     * @return Edge&    Edge with that ID.
+     *
+     * @throws std::out_of_range    If edge with that ID does not exist.
+     */
+    Edge& getEdge(id_t id);
+
+    /**
+     * @brief Get all edges.
+     *
+     * @return          Vector with pointers to all edges
+     */
+    std::vector<GraphViewer::Edge *> getEdges();
 
     /**
      * @brief Remove edge.
@@ -568,6 +600,7 @@ private:
     sf::View *view       = nullptr;             ///< @brief Default view, to draw the graph.
     sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.
     std::thread *main_thread = nullptr;         ///< @brief Main thread.
+    bool windowOpen = false;
 
     bool enabledNodes     = true;               ///< @brief Node drawing enabled.
     bool enabledNodesText = true;               ///< @brief Node text drawing enabled.
@@ -608,8 +641,8 @@ private:
      * be updated by another thread at the same time.
      */
     std::mutex graphMutex;
-    std::unordered_map<id_t, Node> nodes;   ///< @brief Nodes map.
-    std::unordered_map<id_t, Edge> edges;   ///< @brief Edges map.
+    std::unordered_map<id_t, Node*> nodes;   ///< @brief Nodes map.
+    std::unordered_map<id_t, Edge*> edges;   ///< @brief Edges map.
 
     /**
      * @brief Main entry point for event processing.

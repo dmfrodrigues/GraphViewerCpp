@@ -65,6 +65,7 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
+    windowOpen = true;
     main_thread = new thread(&GraphViewer::run, this);
 }
 
@@ -75,46 +76,65 @@ void GraphViewer::closeWindow(){
     delete debug_view; debug_view = nullptr;
 }
 
-GraphViewer::Node& GraphViewer::addNode(const GraphViewer::Node &node){
+GraphViewer::Node& GraphViewer::addNode(id_t id, const sf::Vector2f &position){
     lock_guard<mutex> lock(graphMutex);
-    if(nodes.count(node.getId()))
+    if(nodes.count(id))
         throw invalid_argument("A node with that ID already exists");
-    return (nodes[node.getId()] = node);
+    return *(nodes[id] = new Node(id, position));
 }
 
 GraphViewer::Node& GraphViewer::getNode(GraphViewer::id_t id){
-    return nodes.at(id);
+    return *nodes.at(id);
 }
 
-GraphViewer::Edge& GraphViewer::addEdge(const Edge &edge){
-    lock_guard<mutex> lock(graphMutex);
-    if(edges.count(edge.getId()))
-        throw invalid_argument("An edge with that ID already exists");
-    Edge &ret = (edges[edge.getId()] = edge);
-    if(zipEdges) updateZip();
+vector<GraphViewer::Node *> GraphViewer::getNodes() {
+    vector<Node*> ret;
+    ret.reserve(nodes.size());
+    for(auto &p: nodes){
+        ret.push_back(p.second);
+    }
     return ret;
 }
 
 void GraphViewer::removeNode(GraphViewer::id_t id){
     lock_guard<mutex> lock(graphMutex);
-    for(auto it = edges.cbegin(); it != edges.cend(); ){
-        if(
-            it->second.getFrom()->getId() == id ||
-            it->second.getTo  ()->getId() == id
-        ){
-            edges.erase(it++);
-        } else {
-            ++it;
-        }
+    Node *node = nodes.at(id);
+    for(Edge *edge: node->edges){
+        removeEdge(edge->getId());
     }
-    if(nodes.erase(id) == 0)
-        throw out_of_range("No such node ID "+to_string(id));
+    delete node;
+    nodes.erase(id);
+}
+
+GraphViewer::Edge& GraphViewer::addEdge(id_t id, Node &u, Node &v, Edge::EdgeType edge_type){
+    lock_guard<mutex> lock(graphMutex);
+    if(edges.count(id))
+        throw invalid_argument("An edge with that ID already exists");
+    Edge &ret = *(edges[id] = new Edge(id, u, v, edge_type));
+    if(zipEdges) updateZip();
+    return ret;
+}
+
+GraphViewer::Edge &GraphViewer::getEdge(GraphViewer::id_t id) {
+    return *edges.at(id);
+}
+
+vector<GraphViewer::Edge *> GraphViewer::getEdges() {
+    vector<Edge*> ret;
+    ret.reserve(edges.size());
+    for(auto &p: edges){
+        ret.push_back(p.second);
+    }
+    return ret;
 }
 
 void GraphViewer::removeEdge(GraphViewer::id_t id){
     lock_guard<mutex> lock(graphMutex);
-    if(edges.erase(id) == 0)
-        throw out_of_range("No such edge ID "+to_string(id));
+    Edge *edge = edges.at(id);
+    edge->u->edges.erase(edge->u->edges.find(edge));
+    edge->v->edges.erase(edge->v->edges.find(edge));
+    delete edge;
+    edges.erase(id);
     if(zipEdges) updateZip();
 }
 
@@ -153,7 +173,7 @@ void GraphViewer::updateZip(){
     lock_guard<mutex> lock(graphMutex);
     zip = ZipEdges();
     for(const auto &p: edges)
-        zip.append(*p.second.getShape());
+        zip.append(*p.second->getShape());
 }
 
 void GraphViewer::run(){
@@ -221,6 +241,11 @@ void GraphViewer::run(){
         draw();
         window->display();
     }
+
+    {
+        lock_guard<mutex> lock(graphMutex);
+        windowOpen = false;
+    }
 }
 
 void GraphViewer::draw() {
@@ -235,27 +260,27 @@ void GraphViewer::draw() {
             window->draw(&v[0], v.size(), Quads);
         } else {
             for(const auto &edgeIt: edges){
-                const Edge &edge = edgeIt.second;
+                const Edge &edge = *edgeIt.second;
                 window->draw(*edge.getShape());
             }
         }
     }
     if(enabledNodes){
         for(const auto &nodeIt: nodes){
-            const Node &node = nodeIt.second;
+            const Node &node = *nodeIt.second;
             window->draw(*node.getShape());
         }
     }
     if(enabledEdges && enabledEdgesText){
         for(const auto &edgeIt: edges){
-            const Edge &edge = edgeIt.second;
+            const Edge &edge = *edgeIt.second;
             if(edge.getText().getString() != "")
                 window->draw(edge.getText());
         }
     }
     if(enabledNodes && enabledNodesText){
         for(const auto &nodeIt: nodes){
-            const Node &node = nodeIt.second;
+            const Node &node = *nodeIt.second;
             if(node.getText().getString() != "")
                 window->draw(node.getText());
         }
@@ -303,4 +328,9 @@ void GraphViewer::recalculateView(){
     auto bounds = background_sprite.getLocalBounds();
     Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
     background_sprite.setScale(scaleVec);
+}
+
+bool GraphViewer::isWindowOpen() {
+    lock_guard<mutex> lock(graphMutex);
+    return windowOpen;
 }

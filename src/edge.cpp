@@ -14,17 +14,17 @@ GraphViewer::Edge::Edge(){
 
 GraphViewer::Edge::Edge(
     GraphViewer::id_t id,
-    GraphViewer::Node *u,
-    GraphViewer::Node *v,
+    GraphViewer::Node &u,
+    GraphViewer::Node &v,
     GraphViewer::Edge::EdgeType edge_type
 ):
     id(id),
-    u(u),
-    v(v),
+    u(&u),
+    v(&v),
     edge_type(edge_type)
 {
-    u->edges.insert(this);
-    v->edges.insert(this);
+    u.edges.insert(this);
+    v.edges.insert(this);
 
     text.setFont(GraphViewer::FONT);
     text.setCharacterSize(GraphViewer::FONT_SIZE);
