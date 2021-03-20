@@ -18,7 +18,7 @@ if (WIN32)
     link_directories("$ENV{SFML_PATH}/lib")
 endif()
 
-add_library(graphviewer STATIC graphviewer.cpp lines.cpp fpsmonitor.cpp)
+add_library(graphviewer STATIC graphviewer.cpp node.cpp edge.cpp lines.cpp fpsmonitor.cpp)
 
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
