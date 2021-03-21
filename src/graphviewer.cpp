@@ -138,12 +138,12 @@ void GraphViewer::removeEdge(GraphViewer::id_t id){
     if(zipEdges) updateZip();
 }
 
-void GraphViewer::setBackground(const string &path){
+void GraphViewer::setBackground(const string &path, const sf::Vector2f &position, const sf::Vector2f &scale){
     lock_guard<mutex> lock(graphMutex);
     background_texture.loadFromFile(path);
     background_sprite.setTexture(background_texture);
-    auto bounds = background_sprite.getLocalBounds();
-    background_sprite.setOrigin(bounds.width/2.0, bounds.height/2.0);
+    background_sprite.setPosition(position);
+    background_sprite.setScale(scale);
 }
 
 void GraphViewer::clearBackground(){
@@ -324,10 +324,8 @@ void GraphViewer::recalculateView(){
     *view = View(center, size*scale);
     *debug_view = View(FloatRect(0.0, 0.0, size.x, size.y));
 
-    background_sprite.setPosition(center);
     auto bounds = background_sprite.getLocalBounds();
     Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
-    background_sprite.setScale(scaleVec);
 }
 
 bool GraphViewer::isWindowOpen() {

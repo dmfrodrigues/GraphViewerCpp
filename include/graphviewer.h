@@ -493,7 +493,7 @@ public:
      *
      * @param path Filepath of new background
      */
-    void setBackground(const std::string &path);
+    void setBackground(const std::string &path, const sf::Vector2f &position = sf::Vector2f(0, 0), const sf::Vector2f &scale = sf::Vector2f(1.0, 1.0));
 
     /**
      * @brief Clear background image.
