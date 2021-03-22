@@ -422,6 +422,10 @@ public:
      */
     void closeWindow();
 
+    void setCenter(const sf::Vector2f &center);
+
+    void setScale(double scale);
+
     /**
      * @brief Add node.
      * 
@@ -488,12 +492,16 @@ public:
      */
     void removeEdge(id_t id);
 
+private:
+    void removeEdge_noLock(id_t id);
+
+public:
     /**
      * @brief Set background image.
      *
      * @param path Filepath of new background
      */
-    void setBackground(const std::string &path, const sf::Vector2f &position = sf::Vector2f(0, 0), const sf::Vector2f &scale = sf::Vector2f(1.0, 1.0));
+    void setBackground(const std::string &path, const sf::Vector2f &position = sf::Vector2f(0, 0), const sf::Vector2f &scale = sf::Vector2f(1.0, 1.0), double alpha = 1.0);
 
     /**
      * @brief Clear background image.

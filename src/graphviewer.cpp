@@ -76,6 +76,22 @@ void GraphViewer::closeWindow(){
     delete debug_view; debug_view = nullptr;
 }
 
+void GraphViewer::setCenter(const sf::Vector2f &center){
+    this->center = center;
+    if(isWindowOpen()){
+        lock_guard<mutex> lock(graphMutex);
+        recalculateView();
+    }
+}
+
+void GraphViewer::setScale(double scale){
+    this->scale = scale;
+    if(isWindowOpen()){
+        lock_guard<mutex> lock(graphMutex);
+        recalculateView();
+    }
+}
+
 GraphViewer::Node& GraphViewer::addNode(id_t id, const sf::Vector2f &position){
     lock_guard<mutex> lock(graphMutex);
     if(nodes.count(id))
@@ -99,8 +115,9 @@ vector<GraphViewer::Node *> GraphViewer::getNodes() {
 void GraphViewer::removeNode(GraphViewer::id_t id){
     lock_guard<mutex> lock(graphMutex);
     Node *node = nodes.at(id);
-    for(Edge *edge: node->edges){
-        removeEdge(edge->getId());
+    while(!node->edges.empty()){
+        Edge *edge = *node->edges.begin();
+        removeEdge_noLock(edge->getId());
     }
     delete node;
     nodes.erase(id);
@@ -130,6 +147,10 @@ vector<GraphViewer::Edge *> GraphViewer::getEdges() {
 
 void GraphViewer::removeEdge(GraphViewer::id_t id){
     lock_guard<mutex> lock(graphMutex);
+    removeEdge_noLock(id);
+}
+
+void GraphViewer::removeEdge_noLock(GraphViewer::id_t id){
     Edge *edge = edges.at(id);
     edge->u->edges.erase(edge->u->edges.find(edge));
     edge->v->edges.erase(edge->v->edges.find(edge));
@@ -138,12 +159,13 @@ void GraphViewer::removeEdge(GraphViewer::id_t id){
     if(zipEdges) updateZip();
 }
 
-void GraphViewer::setBackground(const string &path, const sf::Vector2f &position, const sf::Vector2f &scale){
+void GraphViewer::setBackground(const string &path, const sf::Vector2f &position, const sf::Vector2f &scale, double alpha){
     lock_guard<mutex> lock(graphMutex);
     background_texture.loadFromFile(path);
     background_sprite.setTexture(background_texture);
     background_sprite.setPosition(position);
     background_sprite.setScale(scale);
+    background_sprite.setColor(sf::Color(255, 255, 255, alpha*255.0));
 }
 
 void GraphViewer::clearBackground(){
@@ -185,8 +207,6 @@ void GraphViewer::run(){
 
     view = new View(window->getDefaultView());
     debug_view = new View(window->getDefaultView());
-
-    center = Vector2f(this->width/2.0, this->height/2.0);
 
     bool isLeftClickPressed = false;
     Vector2f centerInitial;
