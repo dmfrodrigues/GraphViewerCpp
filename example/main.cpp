@@ -28,6 +28,15 @@ int main() {
     return 0;
 }
 
+std::string getPathFromFilename(const std::string &filename){
+    const size_t last_slash_idx = std::min(filename.rfind('\\'), filename.rfind('/'));
+    if(last_slash_idx == std::string::npos){
+        throw std::invalid_argument("filename is not valid");
+    }
+    std::string directory = filename.substr(0, last_slash_idx);
+    return directory;
+}
+
 sf::Color colorStringToSFColor(std::string colorStr){
     std::transform(colorStr.begin(), colorStr.end(),colorStr.begin(), ::toupper);
     if(colorStr == "BLUE"       ) return sf::Color::Blue;
@@ -48,9 +57,9 @@ sf::Color colorStringToSFColor(std::string colorStr){
 }
 
 GraphViewer* drawGraphFromFile(std::string name){
-    std::ifstream nodes("resources/graphs/"+name+"/nodes.txt");
-    std::ifstream edges("resources/graphs/"+name+"/edges.txt");
-    std::ifstream window("resources/graphs/"+name+"/window.txt");
+    std::ifstream nodes(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/nodes.txt");
+    std::ifstream edges(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/edges.txt");
+    std::ifstream window(getPathFromFilename(__FILE__)+"/resources/graphs/"+name+"/window.txt");
     std::string line, background_path;
     std::istringstream iss;
     unsigned int n_nodes, n_edges;
@@ -63,8 +72,7 @@ GraphViewer* drawGraphFromFile(std::string name){
     window >> width >> height >> dynamic >> scale >> dashed >> curved >> background_path;
     GraphViewer *gv = new GraphViewer();
     if (background_path[0] != '-')
-        gv->setBackground(background_path);
-    // gv->defineEdgeCurved(curved);
+        gv->setBackground(getPathFromFilename(__FILE__)+"/"+background_path);
 
     // read num of nodes
     std::getline(nodes, line);
@@ -88,7 +96,7 @@ GraphViewer* drawGraphFromFile(std::string name){
         if (label[0] != '-')
             node.setLabel(label);
         if (icon_path[0] != '-')
-            node.setIcon(icon_path);
+            node.setIcon(getPathFromFilename(__FILE__)+"/"+icon_path);
         node.setSize(size);
         gv->unlock();
     }
