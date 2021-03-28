@@ -6,7 +6,9 @@ if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
     set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "No dev warnings")
 endif()
 
-add_subdirectory(SFML)
+if(DEFINED WIN32)
+    add_subdirectory(SFML)
+endif()
 
 include_directories(SFML/include)
 link_directories(SFML/lib)
