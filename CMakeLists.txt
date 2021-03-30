@@ -28,7 +28,7 @@ add_library(graphviewer STATIC
 
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
-target_link_libraries(${PROJECT_NAME} pthread)
 if (NOT DEFINED WIN32)
+    target_link_libraries(${PROJECT_NAME} pthread)
     target_link_libraries(${PROJECT_NAME} X11)
 endif()
