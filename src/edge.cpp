@@ -70,7 +70,7 @@ void GraphViewer::Edge::update(){
     if(edge_type == EdgeType::DIRECTED){
         ArrowHead arrow(uPos, vPos, getThickness());
         shape->append(arrow);
-        uPos = arrow.getLineConnection();
+        vPos = arrow.getLineConnection();
     }
     if(!getDashed()){
         shape->append(FullLineShape(uPos, vPos, getThickness()));
