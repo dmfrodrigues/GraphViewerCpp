@@ -460,7 +460,11 @@ public:
 
     void setCenter(const sf::Vector2f &center);
 
+    const sf::Vector2f& getCenter() const;
+
     void setScale(double scale);
+
+    double getScale() const;
 
     /**
      * @brief Add node.

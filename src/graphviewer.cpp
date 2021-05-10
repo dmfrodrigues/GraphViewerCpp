@@ -84,12 +84,20 @@ void GraphViewer::setCenter(const sf::Vector2f &center){
     }
 }
 
+const sf::Vector2f &GraphViewer::getCenter() const{
+    return center;
+}
+
 void GraphViewer::setScale(double scale){
     this->scale = scale;
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
     }
+}
+
+double GraphViewer::getScale() const {
+    return scale;
 }
 
 GraphViewer::Node& GraphViewer::addNode(id_t id, const sf::Vector2f &position){
@@ -351,9 +359,6 @@ void GraphViewer::recalculateView(){
     Vector2f size = static_cast<Vector2f>(window->getSize());
     *view = View(center, size*scale);
     *debug_view = View(FloatRect(0.0, 0.0, size.x, size.y));
-
-    auto bounds = background_sprite.getLocalBounds();
-    Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
 }
 
 bool GraphViewer::isWindowOpen() {
