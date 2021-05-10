@@ -84,12 +84,20 @@ void GraphViewer::setCenter(const sf::Vector2f &center){
     }
 }
 
+const sf::Vector2f &GraphViewer::getCenter() const{
+    return center;
+}
+
 void GraphViewer::setScale(double scale){
     this->scale = scale;
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
     }
+}
+
+double GraphViewer::getScale() const {
+    return scale;
 }
 
 GraphViewer::Node& GraphViewer::addNode(id_t id, const sf::Vector2f &position){
@@ -194,8 +202,12 @@ void GraphViewer::unlock(){ graphMutex.unlock(); }
 void GraphViewer::updateZip(){
     lock_guard<mutex> lock(graphMutex);
     zip = ZipEdges();
-    for(const auto &p: edges)
-        zip.append(*p.second->getShape());
+    for(const auto &p: edges) {
+        const Edge *e = p.second;
+        if(!e->isEnabled()) continue;
+        const VertexArray *shape = e->getShape();
+        if(shape != nullptr) zip.append(*shape);
+    }
 }
 
 void GraphViewer::run(){
@@ -281,19 +293,24 @@ void GraphViewer::draw() {
         } else {
             for(const auto &edgeIt: edges){
                 const Edge &edge = *edgeIt.second;
-                window->draw(*edge.getShape());
+                if(!edge.isEnabled()) continue;
+                const VertexArray *shape = edge.getShape();
+                if(shape != nullptr) window->draw(*shape);
             }
         }
     }
     if(enabledNodes){
         for(const auto &nodeIt: nodes){
             const Node &node = *nodeIt.second;
-            window->draw(*node.getShape());
+            if(!node.isEnabled()) continue;
+            const Shape *shape = node.getShape();
+            if(shape != nullptr) window->draw(*shape);
         }
     }
     if(enabledEdges && enabledEdgesText){
         for(const auto &edgeIt: edges){
             const Edge &edge = *edgeIt.second;
+            if(!edge.isEnabled()) continue;
             if(edge.getText().getString() != "")
                 window->draw(edge.getText());
         }
@@ -301,6 +318,7 @@ void GraphViewer::draw() {
     if(enabledNodes && enabledNodesText){
         for(const auto &nodeIt: nodes){
             const Node &node = *nodeIt.second;
+            if(!node.isEnabled()) continue;
             if(node.getText().getString() != "")
                 window->draw(node.getText());
         }
@@ -343,9 +361,6 @@ void GraphViewer::recalculateView(){
     Vector2f size = static_cast<Vector2f>(window->getSize());
     *view = View(center, size*scale);
     *debug_view = View(FloatRect(0.0, 0.0, size.x, size.y));
-
-    auto bounds = background_sprite.getLocalBounds();
-    Vector2f scaleVec(scale*size.x/bounds.width, scale*size.y/bounds.height);
 }
 
 bool GraphViewer::isWindowOpen() {

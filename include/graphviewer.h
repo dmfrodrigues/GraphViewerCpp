@@ -60,7 +60,8 @@ public:
         sf::Color outlineColor = sf::Color::Black;  ///< @brief Node outline color.
         sf::Shape *shape = nullptr;                 ///< @brief Node shape.
         sf::Text text;                              ///< @brief Node text.
-        
+        bool enabled = true;                        ///< @brief Enabled state of node.
+
         std::set<Edge*> edges;
 
         /**
@@ -203,6 +204,23 @@ public:
          * @return const sf::Text&  Node text 
          */
         const sf::Text& getText() const;
+
+        /**
+         * @brief Enable node.
+         */
+        void enable();
+
+        /**
+         * @brief Disable node.
+         */
+        void disable();
+
+        /**
+         * @brief Check if node is enabled.
+         *
+         * @return true if enabled, false if disabled
+         */
+        bool isEnabled() const;
     };
 
     /**
@@ -232,6 +250,7 @@ public:
         float *flow = nullptr;              ///< @brief Edge flow.
         LineShape *shape = nullptr;         ///< @brief Edge shape.
         sf::Text text;                      ///< @brief Edge text.
+        bool enabled = true;                ///< @brief Enabled state of edge.
 
         /**
          * @brief Update edge shape and text considering changes in properties.
@@ -399,6 +418,23 @@ public:
          * @return const sf::Text&  Edge text
          */
         const sf::Text& getText() const;
+
+        /**
+         * @brief Enable edge.
+         */
+        void enable();
+
+        /**
+         * @brief Disable edge.
+         */
+        void disable();
+
+        /**
+         * @brief Check if edge is enabled.
+         *
+         * @return true if enabled, false if disabled
+         */
+        bool isEnabled() const;
     };
     
 public:
@@ -424,7 +460,11 @@ public:
 
     void setCenter(const sf::Vector2f &center);
 
+    const sf::Vector2f& getCenter() const;
+
     void setScale(double scale);
+
+    double getScale() const;
 
     /**
      * @brief Add node.
