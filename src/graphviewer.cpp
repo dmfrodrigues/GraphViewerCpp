@@ -310,6 +310,7 @@ void GraphViewer::draw() {
     if(enabledEdges && enabledEdgesText){
         for(const auto &edgeIt: edges){
             const Edge &edge = *edgeIt.second;
+            if(!edge.isEnabled()) continue;
             if(edge.getText().getString() != "")
                 window->draw(edge.getText());
         }
@@ -317,6 +318,7 @@ void GraphViewer::draw() {
     if(enabledNodes && enabledNodesText){
         for(const auto &nodeIt: nodes){
             const Node &node = *nodeIt.second;
+            if(!node.isEnabled()) continue;
             if(node.getText().getString() != "")
                 window->draw(node.getText());
         }
