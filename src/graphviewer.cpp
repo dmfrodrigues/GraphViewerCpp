@@ -194,8 +194,12 @@ void GraphViewer::unlock(){ graphMutex.unlock(); }
 void GraphViewer::updateZip(){
     lock_guard<mutex> lock(graphMutex);
     zip = ZipEdges();
-    for(const auto &p: edges)
-        zip.append(*p.second->getShape());
+    for(const auto &p: edges) {
+        const Edge *e = p.second;
+        if(!e->isEnabled()) continue;
+        const VertexArray *shape = e->getShape();
+        if(shape != nullptr) zip.append(*shape);
+    }
 }
 
 void GraphViewer::run(){
@@ -281,14 +285,18 @@ void GraphViewer::draw() {
         } else {
             for(const auto &edgeIt: edges){
                 const Edge &edge = *edgeIt.second;
-                window->draw(*edge.getShape());
+                if(!edge.isEnabled()) continue;
+                const VertexArray *shape = edge.getShape();
+                if(shape != nullptr) window->draw(*shape);
             }
         }
     }
     if(enabledNodes){
         for(const auto &nodeIt: nodes){
             const Node &node = *nodeIt.second;
-            window->draw(*node.getShape());
+            if(!node.isEnabled()) continue;
+            const Shape *shape = node.getShape();
+            if(shape != nullptr) window->draw(*shape);
         }
     }
     if(enabledEdges && enabledEdgesText){

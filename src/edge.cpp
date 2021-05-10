@@ -59,6 +59,8 @@ void GraphViewer::Edge::update(){
     delete shape;
     shape = nullptr;
 
+    if(getThickness() <= 0.0) return;
+
     sf::Vector2f uPos = u->getPosition();
     sf::Vector2f vPos = v->getPosition();
     sf::Vector2f uvVec  = vPos - uPos;
@@ -86,3 +88,16 @@ void GraphViewer::Edge::update(){
     FloatRect bounds = text.getLocalBounds();
     text.setPosition((u->getPosition() + v->getPosition())/2.0f - Vector2f(bounds.width/2.0, 0.8*bounds.height));
 }
+
+void GraphViewer::Edge::enable() {
+    enabled = true;
+}
+
+void GraphViewer::Edge::disable() {
+    enabled = false;
+}
+
+bool GraphViewer::Edge::isEnabled() const {
+    return enabled;
+}
+

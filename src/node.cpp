@@ -1,6 +1,5 @@
 #include "graphviewer.h"
 
-#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -45,6 +44,7 @@ void GraphViewer::Node::update(){
     delete shape;
     shape = nullptr;
     if(!getIsIcon()){
+        if(getSize() <= 0.0) return;
         CircleShape *newShape = new CircleShape(getSize()/2.0);
         newShape->setFillColor(getColor());
         newShape->setOutlineThickness(getOutlineThickness());
@@ -64,4 +64,16 @@ void GraphViewer::Node::update(){
     for(Edge *e: edges){
         e->update();
     }
+}
+
+void GraphViewer::Node::enable() {
+    enabled = true;
+}
+
+void GraphViewer::Node::disable() {
+    enabled = false;
+}
+
+bool GraphViewer::Node::isEnabled() const {
+    return enabled;
 }
