@@ -552,6 +552,20 @@ private:
 
 public:
     /**
+     * @brief Set background color.
+     *
+     * @param color Color of background
+     */
+    void setBackgroundColor(const sf::Color &color = sf::Color::White);
+
+    /**
+     * @brief Get background color.
+     *
+     * @return Color of background
+     */
+    const sf::Color &getBackgroundColor() const;
+
+    /**
      * @brief Set background image.
      *
      * @param path Filepath of new background
@@ -659,6 +673,7 @@ private:
 
     sf::Texture background_texture;             ///< @brief Background texture (must be kept alive).
     sf::Sprite background_sprite;               ///< @brief Background sprite.
+    sf::Color background_color = sf::Color::White; ///< @brief Background color.
     sf::RenderWindow *window = nullptr;         ///< @brief Window.
     sf::View *view       = nullptr;             ///< @brief Default view, to draw the graph.
     sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.
