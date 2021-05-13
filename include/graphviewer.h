@@ -125,6 +125,21 @@ public:
          * @param label     Node label
          */
         void setLabel(const std::string &label = "");
+
+        /**
+         * @brief Set node label color.
+         *
+         * @param color     Node label color
+         */
+        void setLabelColor(const sf::Color &color);
+
+        /**
+         * @brief Get node label color.
+         *
+         * @return Node label color
+         */
+        const sf::Color &getLabelColor() const;
+
         /**
          * @brief Get node label.
          * 
