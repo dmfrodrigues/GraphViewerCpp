@@ -127,6 +127,13 @@ public:
         void setLabel(const std::string &label = "");
 
         /**
+         * @brief Get node label.
+         *
+         * @return std::string  Node label
+         */
+        std::string getLabel() const;
+
+        /**
          * @brief Set node label color.
          *
          * @param color     Node label color
@@ -139,13 +146,6 @@ public:
          * @return Node label color
          */
         const sf::Color &getLabelColor() const;
-
-        /**
-         * @brief Get node label.
-         * 
-         * @return std::string  Node label
-         */
-        std::string getLabel() const;
         
         /**
          * @brief Set node color.
@@ -346,7 +346,21 @@ public:
          * 
          * @return const std::string&   Edge label.
          */
-        const std::string& getLabel() const;
+        std::string getLabel() const;
+
+        /**
+         * @brief Set edge label color.
+         *
+         * @param color     Edge label color
+         */
+        void setLabelColor(const sf::Color &color);
+
+        /**
+         * @brief Get edge label color.
+         *
+         * @return Edge label color
+         */
+        const sf::Color &getLabelColor() const;
 
         /**
          * @brief Set edge color.
