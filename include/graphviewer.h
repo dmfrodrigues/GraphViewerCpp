@@ -148,6 +148,22 @@ public:
         const sf::Color &getLabelColor() const;
         
         /**
+         * @brief Set label character size, in pixels.
+         *
+         * Default size is 30.
+         *
+         * @param size Character size, in pixels
+         */
+        void setLabelSize(unsigned size);
+
+        /**
+         * @brief Get label character size, in pixels.
+         *
+         * @return Character size, in pixels
+         */
+        unsigned getLabelSize() const;
+        
+        /**
          * @brief Set node color.
          * 
          * @param color Node color
@@ -361,6 +377,22 @@ public:
          * @return Edge label color
          */
         const sf::Color &getLabelColor() const;
+
+        /**
+         * @brief Set label character size, in pixels.
+         *
+         * Default size is 30.
+         *
+         * @param size Character size, in pixels
+         */
+        void setLabelSize(unsigned size);
+
+        /**
+         * @brief Get label character size, in pixels.
+         *
+         * @return Character size, in pixels
+         */
+        unsigned getLabelSize() const;
 
         /**
          * @brief Set edge color.

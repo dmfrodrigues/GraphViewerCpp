@@ -42,8 +42,10 @@ const   GraphViewer::Node*          GraphViewer::Edge::getTo        (           
         GraphViewer::Edge::EdgeType GraphViewer::Edge::getEdgeType  (                                       ) const { return edge_type; }
         void                        GraphViewer::Edge::setLabel     (const string &label                    )       { this->label = label; update(); }
         string                      GraphViewer::Edge::getLabel     (                                       ) const { return label; }
-void                                GraphViewer::Edge::setLabelColor(const Color &color                     )       { text.setFillColor(color); }
+void                                GraphViewer::Edge::setLabelColor(const Color &color                     )       { text.setFillColor(color); update(); }
 const   sf::Color&                  GraphViewer::Edge::getLabelColor(                                       ) const { return text.getFillColor(); }
+        void                        GraphViewer::Edge::setLabelSize (unsigned int size                      )       { text.setCharacterSize(size); update(); }
+        unsigned                    GraphViewer::Edge::getLabelSize (                                       ) const { return text.getCharacterSize(); }
         void                        GraphViewer::Edge::setColor     (const Color &color                     )       { this->color = color; update(); }
 const   Color&                      GraphViewer::Edge::getColor     (                                       ) const { return color; }
         void                        GraphViewer::Edge::setDashed    (bool dashed                            )       { this->dashed = dashed; update(); }
