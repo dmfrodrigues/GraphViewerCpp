@@ -28,6 +28,8 @@ const   Vector2f&           GraphViewer::Node::getPosition          (           
         float               GraphViewer::Node::getSize              (                           ) const { return size; }
         void                GraphViewer::Node::setLabel             (const string &label        )       { text.setString(label); update(); }
         string              GraphViewer::Node::getLabel             (                           ) const { return text.getString(); }
+        void                GraphViewer::Node::setLabelColor        (const Color &color         )       { text.setFillColor(color); }
+const   sf::Color&          GraphViewer::Node::getLabelColor        (                           ) const { return text.getFillColor(); }
         void                GraphViewer::Node::setColor             (const Color &color         )       { this->color = color; update(); }
 const   Color&              GraphViewer::Node::getColor             (                           ) const { return color; }
         void                GraphViewer::Node::setIcon              (const string &path         )       { if(path == "") icon = Texture(); else icon.loadFromFile(path); isIcon = (path != ""); update(); }

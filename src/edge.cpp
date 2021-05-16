@@ -41,7 +41,9 @@ const   GraphViewer::Node*          GraphViewer::Edge::getTo        (           
         void                        GraphViewer::Edge::setEdgeType  (GraphViewer::Edge::EdgeType edge_type  )       { this->edge_type = edge_type; update(); }
         GraphViewer::Edge::EdgeType GraphViewer::Edge::getEdgeType  (                                       ) const { return edge_type; }
         void                        GraphViewer::Edge::setLabel     (const string &label                    )       { this->label = label; update(); }
-const   string&                     GraphViewer::Edge::getLabel     (                                       ) const { return label; }
+        string                      GraphViewer::Edge::getLabel     (                                       ) const { return label; }
+void                                GraphViewer::Edge::setLabelColor(const Color &color                     )       { text.setFillColor(color); }
+const   sf::Color&                  GraphViewer::Edge::getLabelColor(                                       ) const { return text.getFillColor(); }
         void                        GraphViewer::Edge::setColor     (const Color &color                     )       { this->color = color; update(); }
 const   Color&                      GraphViewer::Edge::getColor     (                                       ) const { return color; }
         void                        GraphViewer::Edge::setDashed    (bool dashed                            )       { this->dashed = dashed; update(); }
@@ -81,10 +83,10 @@ void GraphViewer::Edge::update(){
     }
     shape->setFillColor(getColor());
 
-    string label = getLabel();
-    if(getWeight() != nullptr) label += (label == "" ? "" : " ")+string("w: ")+to_string(int(*getWeight()));
-    if(getFlow  () != nullptr) label += (label == "" ? "" : " ")+string("f: ")+to_string(int(*getFlow  ()));
-    text.setString(label);
+    string tmpLabel = getLabel();
+    if(getWeight() != nullptr) tmpLabel += (tmpLabel == "" ? "" : " ") + string("w: ") + to_string(int(*getWeight()));
+    if(getFlow  () != nullptr) tmpLabel += (tmpLabel == "" ? "" : " ") + string("f: ") + to_string(int(*getFlow  ()));
+    text.setString(tmpLabel);
     FloatRect bounds = text.getLocalBounds();
     text.setPosition((u->getPosition() + v->getPosition())/2.0f - Vector2f(bounds.width/2.0, 0.8*bounds.height));
 }

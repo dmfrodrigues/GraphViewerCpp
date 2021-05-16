@@ -125,12 +125,27 @@ public:
          * @param label     Node label
          */
         void setLabel(const std::string &label = "");
+
         /**
          * @brief Get node label.
-         * 
+         *
          * @return std::string  Node label
          */
         std::string getLabel() const;
+
+        /**
+         * @brief Set node label color.
+         *
+         * @param color     Node label color
+         */
+        void setLabelColor(const sf::Color &color);
+
+        /**
+         * @brief Get node label color.
+         *
+         * @return Node label color
+         */
+        const sf::Color &getLabelColor() const;
         
         /**
          * @brief Set node color.
@@ -331,7 +346,21 @@ public:
          * 
          * @return const std::string&   Edge label.
          */
-        const std::string& getLabel() const;
+        std::string getLabel() const;
+
+        /**
+         * @brief Set edge label color.
+         *
+         * @param color     Edge label color
+         */
+        void setLabelColor(const sf::Color &color);
+
+        /**
+         * @brief Get edge label color.
+         *
+         * @return Edge label color
+         */
+        const sf::Color &getLabelColor() const;
 
         /**
          * @brief Set edge color.
@@ -537,6 +566,20 @@ private:
 
 public:
     /**
+     * @brief Set background color.
+     *
+     * @param color Color of background
+     */
+    void setBackgroundColor(const sf::Color &color = sf::Color::White);
+
+    /**
+     * @brief Get background color.
+     *
+     * @return Color of background
+     */
+    const sf::Color &getBackgroundColor() const;
+
+    /**
      * @brief Set background image.
      *
      * @param path Filepath of new background
@@ -644,6 +687,7 @@ private:
 
     sf::Texture background_texture;             ///< @brief Background texture (must be kept alive).
     sf::Sprite background_sprite;               ///< @brief Background sprite.
+    sf::Color background_color = sf::Color::White; ///< @brief Background color.
     sf::RenderWindow *window = nullptr;         ///< @brief Window.
     sf::View *view       = nullptr;             ///< @brief Default view, to draw the graph.
     sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.

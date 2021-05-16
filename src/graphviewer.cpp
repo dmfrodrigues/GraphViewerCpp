@@ -167,6 +167,15 @@ void GraphViewer::removeEdge_noLock(GraphViewer::id_t id){
     if(zipEdges) updateZip();
 }
 
+void GraphViewer::setBackgroundColor(const sf::Color &color){
+    lock_guard<mutex> lock(graphMutex);
+    background_color = color;
+}
+
+const sf::Color &GraphViewer::getBackgroundColor() const {
+    return background_color;
+}
+
 void GraphViewer::setBackground(const string &path, const sf::Vector2f &position, const sf::Vector2f &scale, double alpha){
     lock_guard<mutex> lock(graphMutex);
     background_texture.loadFromFile(path);
@@ -282,7 +291,7 @@ void GraphViewer::run(){
 
 void GraphViewer::draw() {
     lock_guard<mutex> lock(graphMutex);
-    window->clear(Color::White);
+    window->clear(background_color);
 
     window->setView(*view);
     window->draw(background_sprite);
