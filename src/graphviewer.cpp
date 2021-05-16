@@ -65,7 +65,22 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
+    // Create window
+    ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    GraphViewer::createWindowMutex.lock();
+    window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
+    GraphViewer::createWindowMutex.unlock();
+
+    // Create views
+    view = new View(window->getDefaultView());
+    debug_view = new View(window->getDefaultView());
+
+    // Recalculate view
+    recalculateView();
+
     windowOpen = true;
+    window->setActive(false);
     main_thread = new thread(&GraphViewer::run, this);
 }
 
@@ -77,7 +92,10 @@ void GraphViewer::closeWindow(){
 }
 
 void GraphViewer::setCenter(const sf::Vector2f &center){
-    this->center = center;
+    {
+        lock_guard<mutex> lock(graphMutex);
+        this->center = center;
+    }
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
@@ -89,7 +107,10 @@ const sf::Vector2f &GraphViewer::getCenter() const{
 }
 
 void GraphViewer::setScale(double scale){
-    this->scale = scale;
+    {
+        lock_guard<mutex> lock(graphMutex);
+        this->scale = scale;
+    }
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
@@ -220,20 +241,11 @@ void GraphViewer::updateZip(){
 }
 
 void GraphViewer::run(){
-    ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    GraphViewer::createWindowMutex.lock();
-    window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
-    GraphViewer::createWindowMutex.unlock();
-
-    view = new View(window->getDefaultView());
-    debug_view = new View(window->getDefaultView());
+    window->setActive(true);
 
     bool isLeftClickPressed = false;
     Vector2f centerInitial;
     Vector2f posMouseInitial;
-
-    recalculateView();
 
     while (window->isOpen()){
         Event event;
