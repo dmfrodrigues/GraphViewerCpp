@@ -661,7 +661,7 @@ public:
     void unlock();
 
 private:
-    static std::mutex createWindowMutex;
+    static std::mutex createWindowMutex;        ///< @brief Create window mutex; this is used to avoid overloading window engines.
 
     static const sf::Font DEBUG_FONT;           ///< @brief Debug font.
     static const int DEBUG_FONT_SIZE = 14;      ///< @brief Debug font size, in pixels.
