@@ -77,7 +77,10 @@ void GraphViewer::closeWindow(){
 }
 
 void GraphViewer::setCenter(const sf::Vector2f &center){
-    this->center = center;
+    {
+        lock_guard<mutex> lock(graphMutex);
+        this->center = center;
+    }
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
@@ -89,7 +92,10 @@ const sf::Vector2f &GraphViewer::getCenter() const{
 }
 
 void GraphViewer::setScale(double scale){
-    this->scale = scale;
+    {
+        lock_guard<mutex> lock(graphMutex);
+        this->scale = scale;
+    }
     if(isWindowOpen()){
         lock_guard<mutex> lock(graphMutex);
         recalculateView();
