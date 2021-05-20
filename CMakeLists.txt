@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (APPLE)
+    message("DETECTED MACOS")
     set (CMAKE_CXX_STANDARD 11)
 endif()
 
@@ -34,7 +35,8 @@ add_library(graphviewer STATIC
 
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (LINUX)
+    message("DETECTED LINUX")
     target_link_libraries(${PROJECT_NAME} pthread)
     target_link_libraries(${PROJECT_NAME} X11)
 endif()
