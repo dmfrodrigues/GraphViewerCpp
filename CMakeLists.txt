@@ -8,10 +8,6 @@ endif()
 
 find_library(SFML_LIB NAMES sfml-graphics sfml-window sfml-system)
 if(NOT SFML_LIB)
-    message("NOT FOUND")
-endif()
-
-if(DEFINED WIN32)
     add_subdirectory(SFML)
 endif()
 
