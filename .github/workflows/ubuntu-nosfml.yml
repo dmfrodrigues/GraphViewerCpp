@@ -12,6 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y libfreetype-dev libx11-dev libxrandr-dev libudev-dev libflac-dev libopenal-dev libvorbis-dev
+
     - name: Checkout submodules
       shell: bash
       run: |
