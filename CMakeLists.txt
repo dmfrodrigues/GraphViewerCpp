@@ -6,6 +6,9 @@ if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
     set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS 1 CACHE INTERNAL "No dev warnings")
 endif()
 
+find_library(SFML_FOUND NAMES sfml-graphics sfml-window sfml-system)
+message(SFML_FOUND)
+
 if(DEFINED WIN32)
     add_subdirectory(SFML)
 endif()

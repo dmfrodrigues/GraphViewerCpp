@@ -1,4 +1,4 @@
-name: lib-win64
+name: win64
 
 on:
   push:
