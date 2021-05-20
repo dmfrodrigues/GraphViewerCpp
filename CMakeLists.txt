@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-set (CMAKE_CXX_STANDARD 11)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    add_definitions(-std=c++11)
+endif()
 
 project(graphviewer)
 
@@ -31,7 +35,7 @@ add_library(graphviewer STATIC
 
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
-if (NOT DEFINED WIN32)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries(${PROJECT_NAME} pthread)
     target_link_libraries(${PROJECT_NAME} X11)
 endif()
