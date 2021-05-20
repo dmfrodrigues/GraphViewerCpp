@@ -7,7 +7,9 @@ if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
 endif()
 
 find_library(SFML_FOUND NAMES sfml-graphics sfml-window sfml-system)
-message(${SFML_FOUND})
+if("${SFML_FOUND}" == "SFML_FOUND-NOTFOUND")
+    message("NOT FOUND")
+endif()
 
 if(DEFINED WIN32)
     add_subdirectory(SFML)
