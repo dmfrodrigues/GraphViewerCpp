@@ -7,7 +7,7 @@ if(NOT DEFINED CMAKE_SUPPRESS_DEVELOPER_WARNINGS)
 endif()
 
 find_library(SFML_FOUND NAMES sfml-graphics sfml-window sfml-system)
-if("${SFML_FOUND}" == "SFML_FOUND-NOTFOUND")
+if("${SFML_FOUND}" EQUAL "SFML_FOUND-NOTFOUND")
     message("NOT FOUND")
 endif()
 
