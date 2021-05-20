@@ -6,17 +6,17 @@
 #include "graphviewer.h"
 
 #ifdef __linux__
-    #define X11
+    #define X11_DEFINED
 #endif
 
-#ifdef X11
+#ifdef X11_DEFINED
     #include <X11/Xlib.h>
 #endif
 
 GraphViewer* drawGraphFromFile(std::string name);
 
 int main() {
-    #ifdef X11
+    #ifdef X11_DEFINED
         XInitThreads();
     #endif
     GraphViewer *gv1 = drawGraphFromFile("random");
