@@ -65,10 +65,9 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
-    windowInitialization.lock();
     main_thread = new thread(&GraphViewer::run, this);
-    windowInitialization.lock();
-    windowInitialization.unlock();
+    unique_lock<mutex> lock(isWindowOpenCVMutex);
+    isWindowOpenCV.wait(lock);
 }
 
 void GraphViewer::closeWindow(){
@@ -242,10 +241,11 @@ void GraphViewer::run(){
     Vector2f posMouseInitial;
 
     recalculateView();
-    windowOpen = true;
-
-    windowInitialization.unlock();
-
+    {
+        lock_guard<mutex> lock(isWindowOpenCVMutex);
+        windowOpen = true;
+        isWindowOpenCV.notify_all();
+    }
     while (window->isOpen()){
         Event event;
         while (window->pollEvent(event)){
