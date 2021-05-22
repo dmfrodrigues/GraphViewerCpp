@@ -4,7 +4,7 @@
 [![ubuntu-nosfml](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/ubuntu-nosfml/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
 [![win64](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/win64/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
 [![win64-nosfml](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/win64-nosfml/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
-[![macos](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/macos/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
+[![macos-nosfml](https://github.com/dmfrodrigues/GraphViewerCpp/workflows/macos-nosfml/badge.svg)](https://github.com/dmfrodrigues/GraphViewerCpp/actions)
 
 [![Documentation Status](https://readthedocs.org/projects/graphviewercpp/badge/?version=latest)](https://graphviewercpp.readthedocs.io/en/latest/?badge=latest)
 

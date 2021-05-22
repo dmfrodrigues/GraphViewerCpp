@@ -20,7 +20,7 @@ public:
      * 
      * @param u     Origin position.
      */
-    void setFrom(const sf::Vector2f& u);
+    virtual void setFrom(const sf::Vector2f& u);
     /**
      * @brief Get origin position.
      * 
@@ -33,7 +33,7 @@ public:
      * 
      * @param v     Destination position.
      */
-    void setTo(const sf::Vector2f& v);
+    virtual void setTo(const sf::Vector2f& v);
     /**
      * @brief Get destination position.
      * 
@@ -46,7 +46,7 @@ public:
      * 
      * @param w     Line width, in pixels
      */
-    void setWidth(float w);
+    virtual void setWidth(float w);
     /**
      * @brief Get line width.
      * 
@@ -84,9 +84,9 @@ public:
      */
     explicit FullLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w);
 
-    void setFrom (const sf::Vector2f& u);
-    void setTo   (const sf::Vector2f& v);
-    void setWidth(             float  w);
+    void setFrom (const sf::Vector2f& u) override;
+    void setTo   (const sf::Vector2f& v) override;
+    void setWidth(             float  w) override;
 
     /**
      * @brief Process property changes.
@@ -110,9 +110,9 @@ public:
      */
     explicit DashedLineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w);
 
-    void setFrom (const sf::Vector2f& u);
-    void setTo   (const sf::Vector2f& v);
-    void setWidth(             float  w);
+    void setFrom (const sf::Vector2f& u) override;
+    void setTo   (const sf::Vector2f& v) override;
+    void setWidth(             float  w) override;
 
     /**
      * @brief Process property changes.
@@ -122,15 +122,15 @@ public:
 
 class GraphViewer::ArrowHead: public GraphViewer::LineShape {
 private:
-    static constexpr float widthFactor   = 4.0;
-    static constexpr float lengthFactor  = 4.0;
-    static constexpr float advanceFactor = 1.0;
+    static const float widthFactor;
+    static const float lengthFactor;
+    static const float advanceFactor;
 public:
     explicit ArrowHead(const sf::Vector2f& u, const sf::Vector2f& v, float w);
 
-    void setFrom (const sf::Vector2f& u);
-    void setTo   (const sf::Vector2f& v);
-    void setWidth(             float  w);
+    void setFrom (const sf::Vector2f& u) override;
+    void setTo   (const sf::Vector2f& v) override;
+    void setWidth(             float  w) override;
 
     /**
      * @brief Process property changes.

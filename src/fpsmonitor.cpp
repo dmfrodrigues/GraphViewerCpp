@@ -18,5 +18,5 @@ void FPSMonitor::count(){
 }
 
 float FPSMonitor::getFPS() const{
-    return float(q.size())/(std::chrono::duration_cast<std::chrono::milliseconds>(Dt).count()/1000.0);
+    return float(q.size())/(float(std::chrono::duration_cast<std::chrono::milliseconds>(Dt).count())/1000.0f);
 }

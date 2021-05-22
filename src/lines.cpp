@@ -5,6 +5,10 @@
 using namespace std;
 using namespace sf;
 
+const float GraphViewer::ArrowHead::widthFactor   = 4.0;
+const float GraphViewer::ArrowHead::lengthFactor  = 4.0;
+const float GraphViewer::ArrowHead::advanceFactor = 1.0;
+
 GraphViewer::LineShape::LineShape(const Vector2f& u, const Vector2f& v, float w):
     VertexArray(Quads),
     u(u),v(v),w(w)
@@ -71,7 +75,7 @@ void GraphViewer::DashedLineShape::setTo   (const Vector2f& v){ LineShape::setTo
 void GraphViewer::DashedLineShape::setWidth(             float  w){ LineShape::setWidth(w); process(); }
 
 void GraphViewer::DashedLineShape::process(){
-    float interDashesSpace = 4.0*getWidth();
+    float interDashesSpace = 4.0f*getWidth();
     const Vector2f &u = getFrom();
     const Vector2f &v = getTo  ();
     Vector2f v_u = v-u;
@@ -87,10 +91,11 @@ void GraphViewer::DashedLineShape::process(){
     resize(0);
 
     // Most dashes
-    int nDashes = magnitude/interDashesSpace;
+    int nDashes = (int)(magnitude/interDashesSpace);
+    float nDashesFloat = (float) nDashes;
     for(int i = 0; i < nDashes; ++i){
-        Vector2f u1 = u + v_u*interDashesSpace*float(i         );
-        Vector2f v1 = u + v_u*interDashesSpace*float(i+dashFill);
+        Vector2f u1 = u + v_u*interDashesSpace*(float(i)         );
+        Vector2f v1 = u + v_u*interDashesSpace*(float(i)+dashFill);
         
         append(Vertex(u1-edgeNorm));
         append(Vertex(u1+edgeNorm));
@@ -99,8 +104,8 @@ void GraphViewer::DashedLineShape::process(){
     }
 
     // Last dash
-    Vector2f u1 = u + v_u*    interDashesSpace*float(nDashes         )            ;
-    Vector2f v1 = u + v_u*min(interDashesSpace*float(nDashes+dashFill), magnitude);
+    Vector2f u1 = u + v_u*    interDashesSpace*(nDashesFloat         )            ;
+    Vector2f v1 = u + v_u*min(interDashesSpace*(nDashesFloat+dashFill), magnitude);
         
     append(Vertex(u1-edgeNorm));
     append(Vertex(u1+edgeNorm));

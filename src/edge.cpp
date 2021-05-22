@@ -1,16 +1,9 @@
 #include "graphviewer.h"
 
 #include <cmath>
-#include <iostream>
 
 using namespace std;
 using namespace sf;
-
-GraphViewer::Edge::Edge(){
-    text.setFont(GraphViewer::FONT);
-    text.setCharacterSize(GraphViewer::FONT_SIZE);
-    text.setFillColor(Color::Black);
-}
 
 GraphViewer::Edge::Edge(
     GraphViewer::id_t id,
@@ -86,11 +79,11 @@ void GraphViewer::Edge::update(){
     shape->setFillColor(getColor());
 
     string tmpLabel = getLabel();
-    if(getWeight() != nullptr) tmpLabel += (tmpLabel == "" ? "" : " ") + string("w: ") + to_string(int(*getWeight()));
-    if(getFlow  () != nullptr) tmpLabel += (tmpLabel == "" ? "" : " ") + string("f: ") + to_string(int(*getFlow  ()));
+    if(getWeight() != nullptr) tmpLabel += (tmpLabel.empty() ? "" : " ") + string("w: ") + to_string(int(*getWeight()));
+    if(getFlow  () != nullptr) tmpLabel += (tmpLabel.empty() ? "" : " ") + string("f: ") + to_string(int(*getFlow  ()));
     text.setString(tmpLabel);
     FloatRect bounds = text.getLocalBounds();
-    text.setPosition((u->getPosition() + v->getPosition())/2.0f - Vector2f(bounds.width/2.0, 0.8*bounds.height));
+    text.setPosition((u->getPosition() + v->getPosition())/2.0f - Vector2f(bounds.width/2.0f, 0.8f*bounds.height));
 }
 
 void GraphViewer::Edge::enable() {
