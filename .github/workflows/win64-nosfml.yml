@@ -1,10 +1,10 @@
-name: lib-win64
+name: win64-nosfml
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master , dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ master , dev ]
 
 jobs:
   build:
@@ -23,16 +23,6 @@ jobs:
         cd mingw-w64
         curl -L https://www.dropbox.com/s/u51ejh08x3velu4/x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z?dl=1 --output x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z
         7z x x86_64-7.3.0-release-posix-seh-rt_v5-rev0.7z -y -ox86_64-7.3.0-release-posix-seh-rt_v5-rev0
-
-    - name: Install SFML
-      shell: cmd
-      run: |
-        C:
-        cd C:\
-        mkdir sfml
-        cd sfml
-        curl -L https://www.sfml-dev.org/files/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip --output SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip
-        7z x SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit.zip -y -oSFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit
 
     - name: Checkout submodules
       shell: cmd

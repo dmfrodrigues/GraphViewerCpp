@@ -10,6 +10,7 @@
 #include "fpsmonitor.h"
 
 #include <SFML/Graphics.hpp>
+#include <condition_variable>
 
 /**
  * @brief Class to save and represent a graph.
@@ -725,7 +726,8 @@ private:
     sf::View *debug_view = nullptr;             ///< @brief Debug view, to draw debug information.
     std::thread *main_thread = nullptr;         ///< @brief Main thread.
     bool windowOpen = false;
-    std::mutex windowInitialization;            ///< @brief Mutex: createWindow only returns once window is created.
+    std::condition_variable isWindowOpenCV;     ///< @brief Condition variable to check if window is open.
+    std::mutex isWindowOpenCVMutex;             ///< @brief Mutex of isWindowOpenCV condition variable.
 
     bool enabledNodes     = true;               ///< @brief Node drawing enabled.
     bool enabledNodesText = true;               ///< @brief Node text drawing enabled.

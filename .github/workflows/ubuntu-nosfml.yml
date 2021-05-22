@@ -1,10 +1,10 @@
-name: lib-ubuntu
+name: ubuntu-nosfml
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master , dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ master , dev ]
 
 jobs:
   build:
@@ -12,10 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install SFML
+    - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y libsfml-dev
+        sudo apt install -y libfreetype-dev libx11-dev libxrandr-dev libudev-dev libflac-dev libgl1-mesa-dev libopenal-dev libvorbis-dev
 
     - name: Checkout submodules
       shell: bash

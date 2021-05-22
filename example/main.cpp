@@ -5,14 +5,18 @@
 
 #include "graphviewer.h"
 
-#ifndef WIN32
+#ifdef __linux__
+    #define X11_DEFINED
+#endif
+
+#ifdef X11_DEFINED
     #include <X11/Xlib.h>
 #endif
 
 GraphViewer* drawGraphFromFile(std::string name);
 
 int main() {
-    #ifndef WIN32
+    #ifdef X11_DEFINED
         XInitThreads();
     #endif
     GraphViewer *gv1 = drawGraphFromFile("random");
