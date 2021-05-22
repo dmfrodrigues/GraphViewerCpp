@@ -13,7 +13,7 @@ endif()
 
 find_library(SFML_LIB NAMES sfml-graphics sfml-window sfml-system)
 message(SFML_LIB)
-message(${SFML_MESSAGE})
+message(${SFML_LIB})
 if(NOT SFML_LIB)
     message("DID NOT FIND SFML, COMPILING IT")
     add_subdirectory(SFML)
