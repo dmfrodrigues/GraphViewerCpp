@@ -7,6 +7,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories("${PROJECT_SOURCE_DIR}/../SFML/include")
+link_directories("${PROJECT_SOURCE_DIR}/../SFML/lib")
 
 add_subdirectory(.. build)
 
