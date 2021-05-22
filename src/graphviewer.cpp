@@ -29,9 +29,6 @@ void GraphViewer::ZipEdges::append(const VertexArray &a){
 }
 const vector<Vertex>& GraphViewer::ZipEdges::getVertices() const{ return vertices; }
 
-const int DEFAULT_WIDTH  = 800;
-const int DEFAULT_HEIGHT = 600;
-
 string getPath(const string &filename){
     const size_t last_slash_idx = min(filename.rfind('\\'), filename.rfind('/'));
     if(last_slash_idx == string::npos){

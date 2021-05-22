@@ -492,6 +492,9 @@ public:
     };
     
 public:
+    static const int DEFAULT_WIDTH  = 800;
+    static const int DEFAULT_HEIGHT = 600;
+
     /**
      * @brief Construct a new graph.
      */
@@ -503,7 +506,7 @@ public:
      * @param width Window width (in pixels)
      * @param height Window height (in pixels)
      */
-    void createWindow(unsigned int width = 800, unsigned int height = 600);
+    void createWindow(unsigned int width = DEFAULT_WIDTH, unsigned int height = DEFAULT_HEIGHT);
 
     bool isWindowOpen() const;
 
@@ -798,12 +801,12 @@ private:
     /**
      * @brief Window width.
      */
-    unsigned int width;
+    unsigned int width = DEFAULT_WIDTH;
 
     /**
      * @brief Window height.
      */
-    unsigned int height;
+    unsigned int height = DEFAULT_HEIGHT;
 };
 
 #include "lines.h"
