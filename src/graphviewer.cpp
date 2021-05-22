@@ -378,12 +378,12 @@ void GraphViewer::onScroll(float delta){
 }
 
 void GraphViewer::recalculateView(){
-    Vector2f size = static_cast<Vector2f>(window->getSize());
+    Vector2f size((float) window->getSize().x, (float) window->getSize().y);
     *view = View(center, size*scale);
     *debug_view = View(FloatRect(0.0, 0.0, size.x, size.y));
 }
 
-bool GraphViewer::isWindowOpen() {
+bool GraphViewer::isWindowOpen() const {
     lock_guard<mutex> lock(graphMutex);
     return windowOpen;
 }

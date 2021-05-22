@@ -5,12 +5,6 @@
 using namespace std;
 using namespace sf;
 
-GraphViewer::Node::Node(){
-    text.setFont(GraphViewer::FONT);
-    text.setCharacterSize(GraphViewer::FONT_SIZE);
-    text.setFillColor(Color::Black);
-    update();
-}
 GraphViewer::Node::Node(GraphViewer::id_t id, const Vector2f &position):
     id(id),
     position(position)

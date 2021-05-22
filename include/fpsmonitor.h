@@ -35,7 +35,7 @@ public:
      * 
      * @param ms Time interval in milliseconds
      */
-    FPSMonitor(int ms);
+    explicit FPSMonitor(int ms);
 
     /**
      * @brief Set the time interval

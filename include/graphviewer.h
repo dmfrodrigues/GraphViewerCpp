@@ -72,16 +72,12 @@ public:
 
     private:
         /**
-         * @brief Construct a new Node object
-         */
-        Node();
-        /**
          * @brief Construct a new Node object with ID and position
          * 
          * @param id        Unique node ID
          * @param position  Node position in the window, in pixels
          */
-        Node(id_t id, const sf::Vector2f &position);
+        explicit Node(id_t id, const sf::Vector2f &position);
     
     public:
         /**
@@ -291,10 +287,6 @@ public:
 
     private:
         /**
-         * @brief Construct a new Edge object
-         */
-        Edge();
-        /**
          * @brief Construct a new Edge object with ID, origin/destination nodes
          *        and direction.
          * 
@@ -303,7 +295,7 @@ public:
          * @param v             Pointer to destination node
          * @param edge_type     Edge type (directed or undirected)
          */
-        Edge(id_t id, Node &u, Node &v, EdgeType edge_type = UNDIRECTED);
+        explicit Edge(id_t id, Node &u, Node &v, EdgeType edge_type = UNDIRECTED);
         
     public:
         /**
@@ -503,7 +495,7 @@ public:
     /**
      * @brief Construct a new graph.
      */
-    GraphViewer();
+    explicit GraphViewer();
 
     /**
      * @brief Create the visualization window.
@@ -513,7 +505,7 @@ public:
      */
     void createWindow(unsigned int width = 800, unsigned int height = 600);
 
-    bool isWindowOpen();
+    bool isWindowOpen() const;
 
     /**
      * @brief Close visualization window.
@@ -767,7 +759,7 @@ private:
      * @brief Mutex protecting structures that are being drawn and that can
      * be updated by another thread at the same time.
      */
-    std::mutex graphMutex;
+    mutable std::mutex graphMutex;
     std::unordered_map<id_t, Node*> nodes;   ///< @brief Nodes map.
     std::unordered_map<id_t, Edge*> edges;   ///< @brief Edges map.
 
