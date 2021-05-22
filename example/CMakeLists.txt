@@ -6,8 +6,10 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 set(CMAKE_CXX_STANDARD 14)
 
-# GraphViewerCpp
+include_directories("${PROJECT_SOURCE_DIR}/../SFML/include")
+
 add_subdirectory(.. build)
+
 include_directories(../include)
 
 add_executable(example main.cpp)
