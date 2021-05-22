@@ -1,5 +1,5 @@
-#ifndef _GRAPH_VIEWER_H_
-#define _GRAPH_VIEWER_H_
+#ifndef GRAPH_VIEWER_H
+#define GRAPH_VIEWER_H
 
 #include <string>
 #include <thread>
@@ -53,7 +53,7 @@ public:
         id_t id;                                    ///< @brief Node ID.
         sf::Vector2f position;                      ///< @brief Node position.
         float size = 10.0;                          ///< @brief Node size.
-        std::string label = "";                     ///< @brief Node label.
+        std::string label;                          ///< @brief Node label.
         sf::Color color = sf::Color::Red;           ///< @brief Node color.
         sf::Texture icon;                           ///< @brief Node icon.
         bool isIcon = false;                        ///< @brief True if node is icon, false otherwise.
@@ -270,7 +270,7 @@ public:
         Node *u = nullptr;                  ///< @brief Edge origin node.
         Node *v = nullptr;                  ///< @brief Edge destination node.
         EdgeType edge_type;                 ///< @brief Edge type.
-        std::string label = "";             ///< @brief Edge label.
+        std::string label;                  ///< @brief Edge label.
         sf::Color color = sf::Color::Black; ///< @brief Edge color.
         bool dashed = false;                ///< @brief True if edge is dashed, false if full.
         float thickness = 5.0;              ///< @brief Edge thickness, in pixels.
@@ -519,9 +519,9 @@ public:
 
     const sf::Vector2f& getCenter() const;
 
-    void setScale(double scale);
+    void setScale(float scale);
 
-    double getScale() const;
+    float getScale() const;
 
     /**
      * @brief Add node.
@@ -811,4 +811,4 @@ private:
 
 #include "lines.h"
 
-#endif
+#endif // GRAPH_VIEWER_H

@@ -1,5 +1,5 @@
-#ifndef FPSMONITOR_H_INCLUDED
-#define FPSMONITOR_H_INCLUDED
+#ifndef FPS_MONITOR_H_INCLUDED
+#define FPS_MONITOR_H_INCLUDED
 
 #include <chrono>
 #include <queue>
@@ -57,4 +57,4 @@ public:
     float getFPS() const;
 };
 
-#endif // FPSMONITOR_H_INCLUDED
+#endif // FPS_MONITOR_H_INCLUDED

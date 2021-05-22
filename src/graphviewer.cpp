@@ -89,7 +89,7 @@ const sf::Vector2f &GraphViewer::getCenter() const{
     return center;
 }
 
-void GraphViewer::setScale(double scale){
+void GraphViewer::setScale(float scale){
     {
         lock_guard<mutex> lock(graphMutex);
         this->scale = scale;
@@ -100,7 +100,7 @@ void GraphViewer::setScale(double scale){
     }
 }
 
-double GraphViewer::getScale() const {
+float GraphViewer::getScale() const {
     return scale;
 }
 
@@ -186,7 +186,7 @@ void GraphViewer::setBackground(const string &path, const sf::Vector2f &position
     background_sprite.setTexture(background_texture);
     background_sprite.setPosition(position);
     background_sprite.setScale(scale);
-    background_sprite.setColor(sf::Color(255, 255, 255, alpha*255.0));
+    background_sprite.setColor(sf::Color(255, 255, 255, (unsigned char)(alpha*255.0)));
 }
 
 void GraphViewer::clearBackground(){
@@ -244,7 +244,7 @@ void GraphViewer::run(){
         isWindowOpenCV.notify_all();
     }
     while (window->isOpen()){
-        Event event;
+        Event event{};
         while (window->pollEvent(event)){
             switch(event.type){
                 case Event::Closed            : window->close(); break;
@@ -256,8 +256,8 @@ void GraphViewer::run(){
                             isLeftClickPressed = true;
                             centerInitial = center;
                             posMouseInitial = Vector2f(
-                                event.mouseButton.x,
-                                event.mouseButton.y
+                                (float) event.mouseButton.x,
+                                (float) event.mouseButton.y
                             );
                             break;
                         default: break;
@@ -273,13 +273,16 @@ void GraphViewer::run(){
                     break;
                 case Event::MouseMoved:
                     if(isLeftClickPressed){
-                        Vector2f mouse_pos(event.mouseMove.x, event.mouseMove.y);
+                        Vector2f mouse_pos(
+                            (float) event.mouseMove.x,
+                            (float) event.mouseMove.y
+                        );
                         center = centerInitial - (mouse_pos - posMouseInitial)*scale;
                         recalculateView();
                     }
                     break;
                 case Event::TextEntered:
-                    switch(toupper(event.text.unicode)){
+                    switch(toupper((int) event.text.unicode)){
                         case 'D': debug_mode = !debug_mode; break;
                         default: break;
                     }
@@ -360,7 +363,7 @@ void GraphViewer::drawDebug(){
     Vector2f size = Vector2f(window->getSize());
     FloatRect bounds = debug_text.getLocalBounds();
     debug_text.setOrigin(0, bounds.height);
-    debug_text.setPosition(Vector2f(0.2*DEBUG_FONT_SIZE, size.y-0.7*DEBUG_FONT_SIZE));
+    debug_text.setPosition(Vector2f(0.2f*DEBUG_FONT_SIZE, size.y-0.7f*DEBUG_FONT_SIZE));
 
     window->draw(debug_text);
 }
