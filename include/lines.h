@@ -15,7 +15,7 @@ public:
      */
     explicit LineShape(const sf::Vector2f& u, const sf::Vector2f& v, float w);
 
-    /**
+    virtual /**
      * @brief Set origin position.
      * 
      * @param u     Origin position.
@@ -28,7 +28,7 @@ public:
      */
     const sf::Vector2f& getFrom() const;
 
-    /**
+    virtual /**
      * @brief Set destination position.
      * 
      * @param v     Destination position.
@@ -41,7 +41,7 @@ public:
      */
     const sf::Vector2f& getTo() const;
 
-    /**
+    virtual /**
      * @brief Set line width.
      * 
      * @param w     Line width, in pixels
@@ -122,15 +122,15 @@ public:
 
 class GraphViewer::ArrowHead: public GraphViewer::LineShape {
 private:
-    static constexpr float widthFactor   = 4.0;
-    static const     float lengthFactor;
-    static constexpr float advanceFactor = 1.0;
+    static const float widthFactor;
+    static const float lengthFactor;
+    static const float advanceFactor;
 public:
     explicit ArrowHead(const sf::Vector2f& u, const sf::Vector2f& v, float w);
 
-    void setFrom (const sf::Vector2f& u);
-    void setTo   (const sf::Vector2f& v);
-    void setWidth(             float  w);
+    void setFrom (const sf::Vector2f& u) override;
+    void setTo   (const sf::Vector2f& v) override;
+    void setWidth(             float  w) override;
 
     /**
      * @brief Process property changes.

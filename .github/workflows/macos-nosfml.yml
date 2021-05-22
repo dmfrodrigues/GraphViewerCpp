@@ -1,8 +1,8 @@
-name: macos
+name: macos-nosfml
 
 on:
   push:
-    branches: [ master , dev , mac ]
+    branches: [ master , dev ]
   pull_request:
     branches: [ master , dev ]
 
@@ -11,11 +11,6 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-
-    # - name: Install SFML
-    #   run: |
-    #     sudo apt update
-    #     sudo apt install -y libsfml-dev
 
     - name: Checkout submodules
       shell: bash
