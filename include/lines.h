@@ -123,7 +123,7 @@ public:
 class GraphViewer::ArrowHead: public GraphViewer::LineShape {
 private:
     static constexpr float widthFactor   = 4.0;
-    static constexpr float lengthFactor  = 4.0;
+    static const     float lengthFactor;
     static constexpr float advanceFactor = 1.0;
 public:
     explicit ArrowHead(const sf::Vector2f& u, const sf::Vector2f& v, float w);

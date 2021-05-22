@@ -5,6 +5,8 @@
 using namespace std;
 using namespace sf;
 
+const float GraphViewer::ArrowHead::lengthFactor = 4.0;
+
 GraphViewer::LineShape::LineShape(const Vector2f& u, const Vector2f& v, float w):
     VertexArray(Quads),
     u(u),v(v),w(w)
