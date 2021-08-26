@@ -228,16 +228,12 @@ void GraphViewer::updateZip(){
     }
 }
 
-void GraphViewer::createWindowInternal(){
+void GraphViewer::run(){
     ContextSettings settings;
     settings.antialiasingLevel = 0;
     GraphViewer::createWindowMutex.lock();
     window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
     GraphViewer::createWindowMutex.unlock();
-}
-
-void GraphViewer::run(){
-    createWindowInternal();
 
     view = new View(window->getDefaultView());
     debug_view = new View(window->getDefaultView());

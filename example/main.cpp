@@ -20,9 +20,11 @@ int main() {
     GraphViewer *gv1 = drawGraphFromFile("random");
     GraphViewer *gv2 = drawGraphFromFile("star");
     GraphViewer *gv3 = drawGraphFromFile("rainbow");
+#ifndef __APPLE__
     gv1->join();
     gv2->join();
     gv3->join();
+#endif
     delete gv1;
     delete gv2;
     delete gv3;
