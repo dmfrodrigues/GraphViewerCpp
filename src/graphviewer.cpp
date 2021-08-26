@@ -62,6 +62,10 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
+#ifdef __APPLE__
+    createWindowInternal();
+#endif
+
     main_thread = new thread(&GraphViewer::run, this);
     unique_lock<mutex> lock(isWindowOpenCVMutex);
     isWindowOpenCV.wait(lock);
@@ -223,12 +227,18 @@ void GraphViewer::updateZip(){
     }
 }
 
-void GraphViewer::run(){
+void GraphViewer::createWindowInternal(){
     ContextSettings settings;
     settings.antialiasingLevel = 8;
     GraphViewer::createWindowMutex.lock();
     window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
     GraphViewer::createWindowMutex.unlock();
+}
+
+void GraphViewer::run(){
+#ifndef __APPLE__
+    createWindowInternal();
+#endif    
 
     view = new View(window->getDefaultView());
     debug_view = new View(window->getDefaultView());

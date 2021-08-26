@@ -767,6 +767,13 @@ private:
     std::unordered_map<id_t, Edge*> edges;   ///< @brief Edges map.
 
     /**
+     * @brief Create the actual window.
+     * 
+     * This is an internal function, and it may be called in a different place depending on the OS,
+     * since some OS have limitations as to which threads can create windows (e.g. MacOS).
+     */
+    void createWindowInternal();
+    /**
      * @brief Main entry point for event processing.
      * 
      * This function is the entry point for the window thread, and manages
