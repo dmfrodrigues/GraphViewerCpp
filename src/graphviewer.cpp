@@ -201,7 +201,9 @@ void GraphViewer::clearBackground(){
 }
 
 void GraphViewer::join(){
+#ifndef __APPLE__
     main_thread->join();
+#endif
 }
 
 void GraphViewer::setEnabledNodes(bool b){ enabledNodes = b; }
