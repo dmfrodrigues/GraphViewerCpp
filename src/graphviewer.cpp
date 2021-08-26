@@ -229,7 +229,7 @@ void GraphViewer::updateZip(){
 
 void GraphViewer::createWindowInternal(){
     ContextSettings settings;
-    settings.antialiasingLevel = 2;
+    settings.antialiasingLevel = 0;
     GraphViewer::createWindowMutex.lock();
     window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
     GraphViewer::createWindowMutex.unlock();
