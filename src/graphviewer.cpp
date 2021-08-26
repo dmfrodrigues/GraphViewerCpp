@@ -6,6 +6,10 @@
 using namespace std;
 using namespace sf;
 
+#ifdef __APPLE__
+    #define WORKER_THREAD_CANT_HANDLE
+#endif
+
 std::mutex GraphViewer::createWindowMutex;
 
 const GraphViewer::Color GraphViewer::BLACK   = sf::Color::Black;
@@ -62,7 +66,7 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
-#ifndef __APPLE__
+#ifndef WORKER_THREAD_CANT_HANDLE
     main_thread = new thread(&GraphViewer::run, this);
     unique_lock<mutex> lock(isWindowOpenCVMutex);
     isWindowOpenCV.wait(lock);
@@ -201,7 +205,7 @@ void GraphViewer::clearBackground(){
 }
 
 void GraphViewer::join(){
-#ifndef __APPLE__
+#ifndef WORKER_THREAD_CANT_HANDLE
     main_thread->join();
 #endif
 }
