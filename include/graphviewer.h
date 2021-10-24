@@ -50,9 +50,14 @@ public:
         friend Edge;
         friend GraphViewer;
     private:
+        static float defaultSize;                   ///< @brief Default node size.
+    public:
+        static void setDefaultSize(float size = 10.0);
+        static float getDefaultSize();
+    private:
         id_t id;                                    ///< @brief Node ID.
         sf::Vector2f position;                      ///< @brief Node position.
-        float size = 10.0;                          ///< @brief Node size.
+        float size = defaultSize;                   ///< @brief Node size.
         std::string label;                          ///< @brief Node label.
         sf::Color color = sf::Color::Red;           ///< @brief Node color.
         sf::Texture icon;                           ///< @brief Node icon.

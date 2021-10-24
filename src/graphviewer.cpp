@@ -10,6 +10,16 @@ using namespace sf;
     #define WORKER_THREAD_CANT_HANDLE
 #endif
 
+float GraphViewer::Node::defaultSize = 10.0;
+
+void GraphViewer::Node::setDefaultSize(float size){
+    defaultSize = size;
+}
+
+float GraphViewer::Node::getDefaultSize() {
+    return defaultSize;
+}
+
 std::mutex GraphViewer::createWindowMutex;
 
 const GraphViewer::Color GraphViewer::BLACK   = sf::Color::Black;
