@@ -236,11 +236,7 @@ void GraphViewer::updateZip(){
 
 void GraphViewer::run(){
     ContextSettings settings;
-#ifdef __APPLE__
-    settings.antialiasingLevel = 0;
-#else
     settings.antialiasingLevel = 8;
-#endif
     GraphViewer::createWindowMutex.lock();
     window = new RenderWindow(VideoMode(this->width, this->height), "GraphViewer", Style::Default, settings);
     GraphViewer::createWindowMutex.unlock();
