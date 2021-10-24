@@ -52,7 +52,25 @@ public:
     private:
         static float defaultSize;                   ///< @brief Default node size.
     public:
+        /**
+         * @brief Set default node size.
+         * 
+         * A convenience function.
+         * 
+         * @see GraphViewer::Node::setSize(float)
+         * 
+         * @param size Node size, in pixels
+         */
         static void setDefaultSize(float size = 10.0);
+        /**
+         * @brief Get default node size.
+         * 
+         * A convenience function.
+         * 
+         * @see GraphViewer::Node::getSize()
+         * 
+         * @return Node size, in pixels
+         */
         static float getDefaultSize();
     private:
         id_t id;                                    ///< @brief Node ID.
