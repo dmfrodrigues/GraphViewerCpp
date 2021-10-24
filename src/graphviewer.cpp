@@ -6,6 +6,10 @@
 using namespace std;
 using namespace sf;
 
+#ifdef __APPLE__
+    #define WORKER_THREAD_CANT_HANDLE
+#endif
+
 float GraphViewer::Node::defaultSize = 10.0;
 
 void GraphViewer::Node::setDefaultSize(float size){
@@ -72,9 +76,14 @@ void GraphViewer::createWindow(unsigned int width, unsigned int height){
     this->width  = width;
     this->height = height;
 
+#ifndef WORKER_THREAD_CANT_HANDLE
     main_thread = new thread(&GraphViewer::run, this);
     unique_lock<mutex> lock(isWindowOpenCVMutex);
     isWindowOpenCV.wait(lock);
+#else
+    GraphViewer::run();
+#endif
+
 }
 
 void GraphViewer::closeWindow(){
@@ -206,7 +215,9 @@ void GraphViewer::clearBackground(){
 }
 
 void GraphViewer::join(){
+#ifndef WORKER_THREAD_CANT_HANDLE
     main_thread->join();
+#endif
 }
 
 void GraphViewer::setEnabledNodes(bool b){ enabledNodes = b; }

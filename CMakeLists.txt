@@ -35,7 +35,7 @@ add_library(graphviewer STATIC
 target_compile_options(graphviewer PRIVATE ${CMAKE_CXX_LIB})
 target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    message("DETECTED LINUX")
+    message("Detected Linux, linking some libraries for GraphViewerCpp to work")
     target_link_libraries(${PROJECT_NAME} pthread)
     target_link_libraries(${PROJECT_NAME} X11)
 endif()
