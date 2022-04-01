@@ -612,6 +612,11 @@ public:
      */
     void removeEdge(id_t id);
 
+    void addDrawable(const std::string &id, const sf::Drawable *drawable);
+    void removeDrawable(const std::string &id);
+
+    sf::RenderWindow *getWindow();
+
 private:
     void removeEdge_noLock(id_t id);
 
@@ -788,6 +793,7 @@ private:
     mutable std::mutex graphMutex;
     std::unordered_map<id_t, Node*> nodes;   ///< @brief Nodes map.
     std::unordered_map<id_t, Edge*> edges;   ///< @brief Edges map.
+    std::unordered_map<std::string, const sf::Drawable *> drawables; ///< @brief Other drawables.
 
     /**
      * @brief Main entry point for event processing.

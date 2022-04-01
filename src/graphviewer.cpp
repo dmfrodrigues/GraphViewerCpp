@@ -190,6 +190,21 @@ void GraphViewer::removeEdge_noLock(GraphViewer::id_t id){
     if(zipEdges) updateZip();
 }
 
+void GraphViewer::addDrawable(const std::string &id, const sf::Drawable *drawable){
+    lock_guard<mutex> lock(graphMutex);
+    drawables[id] = drawable;
+}
+
+void GraphViewer::removeDrawable(const std::string &id){
+    lock_guard<mutex> lock(graphMutex);
+    delete drawables.at(id);
+    drawables.erase(id);
+}
+
+sf::RenderWindow *GraphViewer::getWindow(){
+    return window;
+}
+
 void GraphViewer::setBackgroundColor(const sf::Color &color){
     lock_guard<mutex> lock(graphMutex);
     background_color = color;
@@ -363,6 +378,11 @@ void GraphViewer::draw() {
             if(node.getText().getString() != "")
                 window->draw(node.getText());
         }
+    }
+
+    for(const std::pair<std::string, const sf::Drawable*> p: drawables){
+        std::cout << "Drawing " << p.first << std::endl;
+        window->draw(*p.second);
     }
 
     fps_monitor.count();
