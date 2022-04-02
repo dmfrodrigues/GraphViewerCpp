@@ -381,7 +381,6 @@ void GraphViewer::draw() {
     }
 
     for(const std::pair<std::string, const sf::Drawable*> p: drawables){
-        std::cout << "Drawing " << p.first << std::endl;
         window->draw(*p.second);
     }
 
